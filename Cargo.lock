@@ -1486,6 +1486,7 @@ name = "pgx-pg-sys"
 version = "0.5.6"
 dependencies = [
  "bindgen",
+ "cfg-if",
  "eyre",
  "libc",
  "memoffset",
