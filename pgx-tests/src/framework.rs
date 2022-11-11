@@ -7,6 +7,7 @@ All rights reserved.
 Use of this source code is governed by the MIT license that can be found in the LICENSE file.
 */
 
+use std::cell::Cell;
 use std::process::{Command, Stdio};
 
 use eyre::{eyre, WrapErr};
@@ -15,7 +16,9 @@ use owo_colors::OwoColorize;
 use pgx::prelude::*;
 use pgx_pg_config::{createdb, get_target_dir, PgConfig, Pgx, C_LOCALE_FLAGS};
 use postgres::error::DbError;
+use postgres::SimpleQueryMessage;
 use std::collections::HashMap;
+use std::error::Error;
 use std::fmt::Write as _;
 use std::io::{BufRead, BufReader, Write};
 use std::path::PathBuf;
@@ -27,6 +30,150 @@ struct SetupState {
     installed: bool,
     loglines: LogLines,
     system_session_id: String,
+}
+
+struct PgTestClient {
+    pg_client: postgres::Client,
+    session_id: String,
+    loglines: LogLines,
+}
+
+#[derive(Debug)]
+struct PgTestClientError {
+    loglines: Vec<String>,
+    error: Box<dyn std::error::Error>,
+}
+
+unsafe impl Send for PgTestClientError {}
+unsafe impl Sync for PgTestClientError {}
+// struct PgTestClientError {}
+
+// impl std::fmt::Debug for PgTestClientError {
+//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//         let e = self.source().unwrap();
+//         writeln!(f, "{}\n", e)?;
+//         Ok(())
+//     }
+// }
+
+impl std::error::Error for PgTestClientError {
+    // fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+    //     // Some(&self.0)
+    //     Some(&self.source())
+    // }
+}
+
+impl std::fmt::Display for PgTestClientError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        // for line in &self.loglines {
+        //     // write!(f, "");
+        //     writeln!(f, "{line}");
+        // }
+        // Ok(())
+
+        println!("PgTestClientError: loglines = {:#?}", self.loglines);
+
+        let mut formatted_logs = String::new();
+        for line in &self.loglines {
+            // formatted_logs.push_str(format!("{}"))
+            formatted_logs.write_str(line);
+        }
+
+        write!(f, "{formatted_logs}")
+    }
+}
+
+impl PgTestClient {
+    pub fn new(pg_client: postgres::Client, session_id: String, loglines: LogLines) -> Self {
+        Self { pg_client, session_id, loglines }
+    }
+
+    fn session_logs(&self) -> Vec<String> {
+        // let mut loglines = self.loglines.lock().unwrap();
+        // let session_lines = loglines.entry(self.session_id).or_insert_with(Vec::new);
+        // session_lines.push(line);
+        // for line in loglines.entry(self.session_id).or_insert_with(Vec::new) {}
+
+        // let session_logs = self.loglines.lock()?
+        // let f = session_logs.get(&self.session_id).or(vec![]);
+        // loglines.get(self.session_id)
+
+        let mut session_lines: Vec<String> = vec![];
+
+        println!("session_id: {}", &self.session_id);
+        // let f = self.loglines.lock().and_then(|e| e.get(&self.session_id))
+
+        let f = self.loglines.lock().unwrap();
+
+        println!("LOGLINES: {:#?}", f);
+
+        match f.get(&self.session_id) {
+            Some(g) => {
+                for line in g {
+                    session_lines.push(line.clone());
+                }
+            }
+            None => return vec![],
+        }
+        // for line in self.loglines.lock().unwrap().get(&self.session_id).unwrap() {
+        // for line in self.loglines.lock().unwrap().get(&self.session_id).and_then()
+        // session_lines.push(line.clone());
+        // }
+
+        session_lines
+    }
+
+    pub fn simple_query(
+        // &mut self,
+        &mut self,
+        query: &str,
+    ) -> eyre::Result<Vec<SimpleQueryMessage>, PgTestClientError> {
+        self.pg_client
+            .simple_query(query)
+            .map_err(|e| PgTestClientError { loglines: self.session_logs(), error: Box::new(e) })
+    }
+
+    // pub fn transaction(&mut self) -> Result<Transaction<'_>, Error> {
+    pub fn pg_transaction<F, T>(
+        &mut self,
+        mut f: F,
+        // ) -> eyre::Result<postgres::Transaction<'_>, PgTestClientError>
+    ) -> eyre::Result<T, PgTestClientError>
+    where
+        T: IntoIterator,
+        F: FnMut(postgres::Transaction) -> eyre::Result<T, PgTestClientError>,
+    {
+        // let result = match self.pg_client.transaction() {
+        // let mut client = self.pg_client.clone();
+        // let result = match self.pg_client.transaction() {
+
+        let result = match self.pg_client.transaction() {
+            Ok(tx) => f(tx).map_err(|e| PgTestClientError {
+                // loglines: self.session_logs().clone(),
+                loglines: vec!["a".to_string(), "b".to_string()],
+                error: Box::new(e),
+            })?,
+            Err(e) => panic!("dfjhkalsjfdlk"),
+        };
+
+        // let result = match client.transaction() {
+        //     // run the test function in a transaction
+        //     Ok(mut tx) => {
+        //         let result = tx.simple_query(&format!("SELECT \"{schema}\".\"{sql_funcname}\"();"));
+
+        //         if result.is_ok() {
+        //             // and abort the transaction when complete
+        //             tx.rollback().expect("test rollback didn't work");
+        //         }
+
+        //         result
+        //     }
+
+        //     Err(e) => panic!("attempt to run test tx failed:\n{e}"),
+        // };
+        Ok(result)
+        // Ok(())
+    }
 }
 
 static TEST_MUTEX: Lazy<Mutex<SetupState>> = Lazy::new(|| {
@@ -123,9 +270,31 @@ pub fn run_test(
 ) -> eyre::Result<()> {
     let (loglines, system_session_id) = initialize_test_framework(postgresql_conf)?;
 
-    let (mut client, session_id) = client()?;
+    // let (mut client, session_id) = client()?;
+    // let mut pg_test_client = client(loglines.clone())?;
+    let mut pg_test_client = client(loglines.clone())?;
 
     let schema = "tests"; // get_extension_schema();
+
+    let result = pg_test_client.pg_transaction(|mut tx| {
+        let tx_result = tx.simple_query(&format!("SELECT \"{schema}\".\"{sql_funcname}\"();"));
+
+        if tx_result.is_ok() {
+            // tx.rollback().wrap_err("OH NO")?;
+            tx.rollback().map_err(|e| PgTestClientError {
+                loglines: vec![],
+                // loglines: pg_test_client.session_logs(),
+                error: Box::new(e),
+            })?
+        }
+
+        Ok(tx_result)
+    });
+
+    if let Err(e) = result {
+        return Err(eyre!("FIXME"));
+    }
+    /*
     let result = match client.transaction() {
         // run the test function in a transaction
         Ok(mut tx) => {
@@ -141,61 +310,66 @@ pub fn run_test(
 
         Err(e) => panic!("attempt to run test tx failed:\n{e}"),
     };
+    */
 
-    if let Err(e) = result {
-        let error_as_string = format!("error in test tx: {e}");
+    /*
+        if let Err(e) = result {
+            let error_as_string = format!("error in test tx: {e}");
 
-        let cause = e.into_source();
-        if let Some(e) = cause {
-            if let Some(dberror) = e.downcast_ref::<DbError>() {
-                // we got an ERROR
-                let received_error_message: &str = dberror.message();
+            let cause = e.into_source();
+            if let Some(e) = cause {
+                if let Some(dberror) = e.downcast_ref::<DbError>() {
+                    // we got an ERROR
+                    let received_error_message: &str = dberror.message();
 
-                if let Some(expected_error_message) = expected_error {
-                    // and we expected an error, so assert what we got is what we expect
-                    assert_eq!(received_error_message, expected_error_message);
-                    Ok(())
+                    if let Some(expected_error_message) = expected_error {
+                        // and we expected an error, so assert what we got is what we expect
+                        assert_eq!(received_error_message, expected_error_message);
+                        Ok(())
+                    } else {
+                        // we weren't expecting an error
+                        // wait a second for Postgres to get log messages written to stderr
+                        std::thread::sleep(std::time::Duration::from_millis(1000));
+
+                        let mut pg_location = String::from("Postgres location: ");
+                        pg_location.push_str(match dberror.file() {
+                            Some(file) => file,
+                            None => "<unknown>",
+                        });
+                        if let Some(ln) = dberror.line() {
+                            let _ = write!(pg_location, ":{ln}");
+                        };
+
+                        let mut rust_location = String::from("Rust location: ");
+                        rust_location.push_str(match dberror.where_() {
+                            Some(place) => place,
+                            None => "<unknown>",
+                        });
+                        // then we can panic with those messages plus those that belong to the system
+                        panic!(
+                            "\n{sys}...\n{sess}\n{e}\n{pg}\n{rs}\n\n",
+                            sys = format_loglines(&system_session_id, &loglines),
+                            sess = format_loglines(&session_id, &loglines),
+                            e = received_error_message.bold().red(),
+                            pg = pg_location.dimmed().white(),
+                            rs = rust_location.yellow()
+                        );
+                    }
                 } else {
-                    // we weren't expecting an error
-                    // wait a second for Postgres to get log messages written to stderr
-                    std::thread::sleep(std::time::Duration::from_millis(1000));
-
-                    let mut pg_location = String::from("Postgres location: ");
-                    pg_location.push_str(match dberror.file() {
-                        Some(file) => file,
-                        None => "<unknown>",
-                    });
-                    if let Some(ln) = dberror.line() {
-                        let _ = write!(pg_location, ":{ln}");
-                    };
-
-                    let mut rust_location = String::from("Rust location: ");
-                    rust_location.push_str(match dberror.where_() {
-                        Some(place) => place,
-                        None => "<unknown>",
-                    });
-                    // then we can panic with those messages plus those that belong to the system
-                    panic!(
-                        "\n{sys}...\n{sess}\n{e}\n{pg}\n{rs}\n\n",
-                        sys = format_loglines(&system_session_id, &loglines),
-                        sess = format_loglines(&session_id, &loglines),
-                        e = received_error_message.bold().red(),
-                        pg = pg_location.dimmed().white(),
-                        rs = rust_location.yellow()
-                    );
+                    panic!("Failed downcast to DbError:\n{e}")
                 }
             } else {
-                panic!("Failed downcast to DbError:\n{e}")
+                panic!("Error without deeper source cause:\n{e}\n", e = error_as_string.bold().red())
             }
+        } else if let Some(message) = expected_error {
+            // we expected an ERROR, but didn't get one
+            return Err(eyre!("Expected error: {message}"));
         } else {
-            panic!("Error without deeper source cause:\n{e}\n", e = error_as_string.bold().red())
+            Ok(())
         }
-    } else if let Some(message) = expected_error {
-        // we expected an ERROR, but didn't get one
-        return Err(eyre!("Expected error: {message}"));
-    } else {
-        Ok(())
-    }
+    */
+
+    Ok(())
 }
 
 fn format_loglines(session_id: &str, loglines: &LogLines) -> String {
@@ -231,7 +405,7 @@ fn initialize_test_framework(
         let pg_config = get_pg_config()?;
         dropdb()?;
         createdb(&pg_config, get_pg_dbname(), true, false)?;
-        create_extension()?;
+        create_extension(state.loglines.clone())?;
         state.installed = true;
         state.system_session_id = system_session_id;
     }
@@ -255,7 +429,8 @@ fn get_pg_config() -> eyre::Result<PgConfig> {
     Ok(pg_config)
 }
 
-pub fn client() -> eyre::Result<(postgres::Client, String)> {
+// pub fn client() -> eyre::Result<(postgres::Client, String)> {
+fn client(loglines: LogLines) -> eyre::Result<PgTestClient> {
     let pg_config = get_pg_config()?;
     let mut client = postgres::Config::new()
         .host(pg_config.host())
@@ -277,22 +452,36 @@ pub fn client() -> eyre::Result<(postgres::Client, String)> {
         None => Err(eyre!("Failed to obtain a client Session ID from Postgres"))?,
     };
 
-    query_wrapper(Some("SET log_min_messages TO 'INFO';".to_string()), None, |query, _| {
-        client.simple_query(query.unwrap().as_str())
-    })
-    .wrap_err("Postgres Client setup failed to SET log_min_messages TO 'INFO'")?;
+    // let mut pg_test_client = PgTestClient::new(Cell::new(client), session_id, loglines);
+    let mut pg_test_client = PgTestClient::new(client, session_id, loglines);
 
-    query_wrapper(Some("SET log_min_duration_statement TO 1000;".to_string()), None, |query, _| {
-        client.simple_query(query.unwrap().as_str())
-    })
-    .wrap_err("Postgres Client setup failed to SET log_min_duration_statement TO 1000;")?;
+    pg_test_client
+        .simple_query("SET log_min_messages TO 'INFO';")
+        .wrap_err("Postgres Client setup failed to SET log_min_messages TO 'INFO'")?;
 
-    query_wrapper(Some("SET log_statement TO 'all';".to_string()), None, |query, _| {
-        client.simple_query(query.unwrap().as_str())
-    })
-    .wrap_err("Postgres Client setup failed to SET log_statement TO 'all';")?;
+    // query_wrapper(Some("SET log_min_messages TO 'INFO';".to_string()), None, |query, _| {
+    //     client.simple_query(query.unwrap().as_str())
+    // })
+    // .wrap_err("Postgres Client setup failed to SET log_min_messages TO 'INFO'")?;
 
-    Ok((client, session_id))
+    pg_test_client
+        .simple_query("SET log_min_duration_statement TO 1000;")
+        .wrap_err("Postgres Client setup failed to SET log_min_messages TO 'INFO'")?;
+
+    // query_wrapper(Some("SET log_min_duration_statement TO 1000;".to_string()), None, |query, _| {
+    //     client.simple_query(query.unwrap().as_str())
+    // })
+    // .wrap_err("Postgres Client setup failed to SET log_min_duration_statement TO 1000;")?;
+    pg_test_client
+        .simple_query("SET log_statement TO 'all';")
+        .wrap_err("Postgres Client setup failed to SET log_min_messages TO 'INFO'")?;
+
+    // query_wrapper(Some("SET log_statement TO 'all';".to_string()), None, |query, _| {
+    //     client.simple_query(query.unwrap().as_str())
+    // })
+    // .wrap_err("Postgres Client setup failed to SET log_statement TO 'all';")?;
+
+    Ok(pg_test_client)
 }
 
 fn install_extension() -> eyre::Result<()> {
@@ -540,6 +729,7 @@ fn monitor_pg(mut command: Command, cmd_string: String, loglines: LogLines) -> (
 
             let mut loglines = loglines.lock().unwrap();
             let session_lines = loglines.entry(session_id).or_insert_with(Vec::new);
+            println!("PUSHING LINE: {line}");
             session_lines.push(line);
         }
 
@@ -590,19 +780,31 @@ fn dropdb() -> eyre::Result<()> {
     Ok(())
 }
 
-fn create_extension() -> eyre::Result<()> {
-    let (mut client, _) = client()?;
+fn create_extension(loglines: LogLines) -> eyre::Result<()> {
+    // let (mut client, _) = client(loglines)?;
+    let mut pg_test_client = client(loglines)?;
     let extension_name = get_extension_name();
 
-    query_wrapper(
-        Some(format!("CREATE EXTENSION {} CASCADE;", &extension_name)),
-        None,
-        |query, _| client.simple_query(query.unwrap().as_str()),
-    )
-    .wrap_err(format!(
-        "There was an issue creating the extension '{}' in Postgres: ",
-        &extension_name
-    ))?;
+    // query_wrapper(
+    //     Some(format!("CREATE EXTENSION {} CASCADE;", &extension_name)),
+    //     None,
+    //     |query, _| client.simple_query(query.unwrap().as_str()),
+    // )
+    // .wrap_err(format!(
+    //     "There was an issue creating the extension '{}' in Postgres: ",
+    //     &extension_name
+    // ))?;
+
+    pg_test_client
+        .simple_query(format!("CREATEEEEE EXTENSION {} CASCADE;", &extension_name).as_str())
+        .map_err(|e| {
+            println!("11111111111111111111: {}", pg_test_client.session_id);
+            // PgTestClientError { loglines: pg_test_client.session_logs(), error: Box::new(e) }
+            PgTestClientError {
+                loglines: vec!["aaaaa".to_string(), "bbbbbb".to_string()],
+                error: Box::new(e),
+            }
+        })?;
 
     Ok(())
 }

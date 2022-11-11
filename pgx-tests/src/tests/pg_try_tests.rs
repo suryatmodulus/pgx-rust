@@ -74,7 +74,7 @@ mod tests {
         assert_eq!(42, result)
     }
 
-    #[pg_test(error = "unwrapped a panic")]
+    #[pg_test(error = "unwrapped a paniccccccccccccccccccccccc")]
     fn test_pg_try_execute_with_error() {
         PgTryBuilder::new(|| panic!("unwrapped a panic")).execute();
     }

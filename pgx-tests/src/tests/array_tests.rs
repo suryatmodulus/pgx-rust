@@ -266,8 +266,11 @@ mod tests {
         assert_eq!(json.0, json! {{"values": [1,2,3,null,4]}});
     }
 
-    #[pg_test(error = "array contains NULL")]
+    #[pg_test(error = "array contains NULLLLLLLLLLLLL")]
+    // #[pg_test(error = "array contains NULL")]
     fn test_serde_serialize_array_i32_deny_null() {
+        pgx::warning!("warn message");
+        pgx::log!("log message");
         Spi::get_one::<Json>("SELECT serde_serialize_array_i32_deny_null(ARRAY[1,2,3,null, 4])")
             .expect("returned json was null");
     }
