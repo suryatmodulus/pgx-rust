@@ -33,9 +33,7 @@ pub(crate) mod to_sql;
 pub(crate) mod used_type;
 
 pub use aggregate::entity::{AggregateTypeEntity, PgAggregateEntity};
-pub use aggregate::{
-    AggregateType, AggregateTypeList, FinalizeModify, ParallelOption, PgAggregate,
-};
+pub use aggregate::{AggregateType, AggregateTypeList, FinalizeModify, ParallelOption, PgAggregate};
 pub use control_file::ControlFile;
 pub use extension_sql::entity::{ExtensionSqlEntity, SqlDeclaredEntity};
 pub use extension_sql::{ExtensionSql, ExtensionSqlFile, SqlDeclared};
@@ -205,17 +203,25 @@ impl ToSql for SqlGraphEntity {
                 if context.graph.neighbors_undirected(context.externs.get(item).unwrap().clone()).any(|neighbor| {
                     let neighbor_item = &context.graph[neighbor];
                     match neighbor_item {
-                        SqlGraphEntity::Type(PostgresTypeEntity { in_fn, in_fn_module_path, out_fn, out_fn_module_path, .. }) => {
-                            let is_in_fn = item.full_path.starts_with(in_fn_module_path) && item.full_path.ends_with(in_fn);
+                        SqlGraphEntity::Type(PostgresTypeEntity {
+                            in_fn,
+                            in_fn_module_path,
+                            out_fn,
+                            out_fn_module_path,
+                            ..
+                        }) => {
+                            let is_in_fn =
+                                item.full_path.starts_with(in_fn_module_path) && item.full_path.ends_with(in_fn);
                             if is_in_fn {
                                 tracing::trace!(r#type = %neighbor_item.dot_identifier(), "Skipping, is an in_fn.");
                             }
-                            let is_out_fn = item.full_path.starts_with(out_fn_module_path) && item.full_path.ends_with(out_fn);
+                            let is_out_fn =
+                                item.full_path.starts_with(out_fn_module_path) && item.full_path.ends_with(out_fn);
                             if is_out_fn {
                                 tracing::trace!(r#type = %neighbor_item.dot_identifier(), "Skipping, is an out_fn.");
                             }
                             is_in_fn || is_out_fn
-                        },
+                        }
                         _ => false,
                     }
                 }) {

@@ -1,6 +1,4 @@
-use std::ops::{
-    Add, AddAssign, Deref, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign,
-};
+use std::ops::{Add, AddAssign, Deref, Div, DivAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign};
 
 use crate::numeric_support::call_numeric_func;
 use crate::{pg_sys, AnyNumeric, Numeric};

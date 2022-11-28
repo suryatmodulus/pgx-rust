@@ -88,11 +88,7 @@ impl ToSql for ExtensionSqlEntity {
                     -- creates:\n\
                     {}\n\
                 ",
-                    self.creates
-                        .iter()
-                        .map(|i| format!("--   {}", i))
-                        .collect::<Vec<_>>()
-                        .join("\n")
+                    self.creates.iter().map(|i| format!("--   {}", i)).collect::<Vec<_>>().join("\n")
                 ) + "\n"
             } else {
                 "".to_string()
@@ -103,11 +99,7 @@ impl ToSql for ExtensionSqlEntity {
                    -- requires:\n\
                     {}\n\
                 ",
-                    self.requires
-                        .iter()
-                        .map(|i| format!("--   {}", i))
-                        .collect::<Vec<_>>()
-                        .join("\n")
+                    self.requires.iter().map(|i| format!("--   {}", i)).collect::<Vec<_>>().join("\n")
                 ) + "\n"
             } else {
                 "".to_string()
@@ -144,15 +136,9 @@ pub enum SqlDeclaredEntity {
 impl Display for SqlDeclaredEntity {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            SqlDeclaredEntity::Type(data) => {
-                f.write_str(&(String::from("Type(") + &data.name + ")"))
-            }
-            SqlDeclaredEntity::Enum(data) => {
-                f.write_str(&(String::from("Enum(") + &data.name + ")"))
-            }
-            SqlDeclaredEntity::Function(data) => {
-                f.write_str(&(String::from("Function ") + &data.name + ")"))
-            }
+            SqlDeclaredEntity::Type(data) => f.write_str(&(String::from("Type(") + &data.name + ")")),
+            SqlDeclaredEntity::Enum(data) => f.write_str(&(String::from("Enum(") + &data.name + ")")),
+            SqlDeclaredEntity::Function(data) => f.write_str(&(String::from("Function ") + &data.name + ")")),
         }
     }
 }
@@ -186,9 +172,7 @@ impl SqlDeclaredEntity {
             "Enum" => Self::Enum(data),
             "Function" => Self::Function(data),
             _ => {
-                return Err(eyre::eyre!(
-                    "Can only declare `Type(Ident)`, `Enum(Ident)` or `Function(Ident)`"
-                ))
+                return Err(eyre::eyre!("Can only declare `Type(Ident)`, `Enum(Ident)` or `Function(Ident)`"))
             }
         };
         Ok(retval)

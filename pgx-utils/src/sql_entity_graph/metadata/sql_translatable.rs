@@ -172,9 +172,7 @@ where
         match T::type_name() {
             id if id == u8::type_name() => Ok(Returns::One(SqlMapping::As(format!("bytea")))),
             _ => match T::return_sql() {
-                Ok(Returns::One(SqlMapping::As(val))) => {
-                    Ok(Returns::One(SqlMapping::As(format!("{val}[]"))))
-                }
+                Ok(Returns::One(SqlMapping::As(val))) => Ok(Returns::One(SqlMapping::As(format!("{val}[]")))),
                 Ok(Returns::One(SqlMapping::Composite { array_brackets: _ })) => {
                     Ok(Returns::One(SqlMapping::Composite { array_brackets: true }))
                 }

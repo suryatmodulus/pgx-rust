@@ -220,9 +220,7 @@ impl<T, AllocatedBy: WhoAllocated<T>> PgBox<T, AllocatedBy> {
     #[inline]
     pub fn alloc() -> PgBox<T, AllocatedByRust> {
         PgBox::<T, AllocatedByRust> {
-            ptr: Some(unsafe {
-                NonNull::new_unchecked(pg_sys::palloc(std::mem::size_of::<T>()) as *mut T)
-            }),
+            ptr: Some(unsafe { NonNull::new_unchecked(pg_sys::palloc(std::mem::size_of::<T>()) as *mut T) }),
             __marker: PhantomData,
         }
     }
@@ -242,9 +240,7 @@ impl<T, AllocatedBy: WhoAllocated<T>> PgBox<T, AllocatedBy> {
     #[inline]
     pub fn alloc0() -> PgBox<T, AllocatedByRust> {
         PgBox::<T, AllocatedByRust> {
-            ptr: Some(unsafe {
-                NonNull::new_unchecked(pg_sys::palloc0(std::mem::size_of::<T>()) as *mut T)
-            }),
+            ptr: Some(unsafe { NonNull::new_unchecked(pg_sys::palloc0(std::mem::size_of::<T>()) as *mut T) }),
             __marker: PhantomData,
         }
     }

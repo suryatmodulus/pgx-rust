@@ -145,11 +145,7 @@ impl Spi {
         .unwrap()
     }
 
-    pub fn get_three<
-        A: FromDatum + IntoDatum,
-        B: FromDatum + IntoDatum,
-        C: FromDatum + IntoDatum,
-    >(
+    pub fn get_three<A: FromDatum + IntoDatum, B: FromDatum + IntoDatum, C: FromDatum + IntoDatum>(
         query: &str,
     ) -> (Option<A>, Option<B>, Option<C>) {
         Spi::connect(|client| {
@@ -186,8 +182,7 @@ impl Spi {
         args: Vec<(PgOid, Option<pg_sys::Datum>)>,
     ) -> (Option<A>, Option<B>, Option<C>) {
         Spi::connect(|client| {
-            let (a, b, c) =
-                client.select(query, Some(1), Some(args)).first().get_three::<A, B, C>();
+            let (a, b, c) = client.select(query, Some(1), Some(args)).first().get_three::<A, B, C>();
             Ok(Some((a, b, c)))
         })
         .unwrap()
@@ -219,13 +214,9 @@ impl Spi {
     }
 
     /// explain a query with args, returning its result in json form
-    pub fn explain_with_args(
-        query: &str,
-        args: Option<Vec<(PgOid, Option<pg_sys::Datum>)>>,
-    ) -> Json {
+    pub fn explain_with_args(query: &str, args: Option<Vec<(PgOid, Option<pg_sys::Datum>)>>) -> Json {
         Spi::connect(|mut client| {
-            let table =
-                client.update(&format!("EXPLAIN (format json) {}", query), None, args).first();
+            let table = client.update(&format!("EXPLAIN (format json) {}", query), None, args).first();
             Ok(Some(table.get_one::<Json>().expect("failed to get json EXPLAIN result")))
         })
         .unwrap()
@@ -241,9 +232,7 @@ impl Spi {
 
     /// execute SPI commands via the provided `SpiClient` and return a value from SPI which is
     /// automatically copied into the `CurrentMemoryContext` at the time of this function call
-    pub fn connect<R, F: FnOnce(SpiClient) -> std::result::Result<Option<R>, SpiError>>(
-        f: F,
-    ) -> Option<R> {
+    pub fn connect<R, F: FnOnce(SpiClient) -> std::result::Result<Option<R>, SpiError>>(f: F) -> Option<R> {
         /// a struct to manage our SPI connection lifetime
         struct SpiConnection;
         impl SpiConnection {
@@ -408,9 +397,7 @@ impl SpiTupleTable {
         (a, b)
     }
 
-    pub fn get_three<A: FromDatum, B: FromDatum, C: FromDatum>(
-        &self,
-    ) -> (Option<A>, Option<B>, Option<C>) {
+    pub fn get_three<A: FromDatum, B: FromDatum, C: FromDatum>(&self) -> (Option<A>, Option<B>, Option<C>) {
         let a = self.get_datum::<A>(1);
         let b = self.get_datum::<B>(2);
         let c = self.get_datum::<C>(3);
@@ -426,8 +413,8 @@ impl SpiTupleTable {
         } else {
             match self.tupdesc {
                 Some(tupdesc) => unsafe {
-                    let heap_tuple = std::slice::from_raw_parts((*self.table).vals, self.size)
-                        [self.current as usize];
+                    let heap_tuple =
+                        std::slice::from_raw_parts((*self.table).vals, self.size)[self.current as usize];
 
                     // SAFETY:  we know heap_tuple is valid because we just made it
                     Some(SpiHeapTupleData::new(tupdesc, heap_tuple))
@@ -451,11 +438,10 @@ impl SpiTupleTable {
                     if ordinal < 1 || ordinal > natts {
                         None
                     } else {
-                        let heap_tuple = std::slice::from_raw_parts((*self.table).vals, self.size)
-                            [self.current as usize];
+                        let heap_tuple =
+                            std::slice::from_raw_parts((*self.table).vals, self.size)[self.current as usize];
                         let mut is_null = false;
-                        let datum =
-                            pg_sys::SPI_getbinval(heap_tuple, tupdesc, ordinal, &mut is_null);
+                        let datum = pg_sys::SPI_getbinval(heap_tuple, tupdesc, ordinal, &mut is_null);
 
                         T::from_datum_in_memory_context(
                             PgMemoryContexts::CurrentMemoryContext
@@ -553,10 +539,7 @@ impl SpiHeapTupleData {
     /// The ordinal position is 1-based.
     ///
     /// If the specified ordinal is out of bounds a `Err(SpiError::NoAttribute)` is returned
-    pub fn by_ordinal(
-        &self,
-        ordinal: usize,
-    ) -> std::result::Result<&SpiHeapTupleDataEntry, SpiError> {
+    pub fn by_ordinal(&self, ordinal: usize) -> std::result::Result<&SpiHeapTupleDataEntry, SpiError> {
         match self.entries.get(&ordinal) {
             Some(datum) => Ok(datum),
             None => Err(SpiError::NoAttribute),
@@ -596,10 +579,7 @@ impl SpiHeapTupleData {
     /// Get a mutable typed Datum value from this HeapTuple by its field name.  
     ///
     /// If the specified name does not exist a `Err(SpiError::NoAttribute)` is returned
-    pub fn by_name_mut(
-        &mut self,
-        name: &str,
-    ) -> std::result::Result<&mut SpiHeapTupleDataEntry, SpiError> {
+    pub fn by_name_mut(&mut self, name: &str) -> std::result::Result<&mut SpiHeapTupleDataEntry, SpiError> {
         use crate::pg_sys::AsPgCStr;
         unsafe {
             let fnumber = pg_sys::SPI_fnumber(self.tupdesc, name.as_pg_cstr());

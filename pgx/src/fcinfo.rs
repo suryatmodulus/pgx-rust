@@ -138,11 +138,7 @@ mod pg_12_13_14_15 {
         let datum = get_nullable_datum(fcinfo, num);
         unsafe {
             if T::GET_TYPOID {
-                T::from_polymorphic_datum(
-                    datum.value,
-                    datum.isnull,
-                    super::pg_getarg_type(fcinfo, num),
-                )
+                T::from_polymorphic_datum(datum.value, datum.isnull, super::pg_getarg_type(fcinfo, num))
             } else {
                 T::from_datum(datum.value, datum.isnull)
             }
@@ -216,10 +212,7 @@ pub unsafe fn pg_getarg_type(fcinfo: pg_sys::FunctionCallInfo, num: usize) -> pg
 /// this is intended for Postgres functions that take an actual `cstring` argument, not for getting
 /// a varlena argument type as a CStr.
 #[inline]
-pub fn pg_getarg_cstr<'a>(
-    fcinfo: pg_sys::FunctionCallInfo,
-    num: usize,
-) -> Option<&'a std::ffi::CStr> {
+pub fn pg_getarg_cstr<'a>(fcinfo: pg_sys::FunctionCallInfo, num: usize) -> Option<&'a std::ffi::CStr> {
     match pg_getarg_pointer(fcinfo, num) {
         Some(ptr) => Some(unsafe { std::ffi::CStr::from_ptr(ptr) }),
         None => None,
@@ -241,8 +234,8 @@ pub unsafe fn pg_func_extra<ReturnType, DefaultValue: FnOnce() -> ReturnType>(
     let fcinfo = PgBox::from_pg(fcinfo);
     let mut flinfo = PgBox::from_pg(fcinfo.flinfo);
     if flinfo.fn_extra.is_null() {
-        flinfo.fn_extra = PgMemoryContexts::For(flinfo.fn_mcxt).leak_and_drop_on_delete(default())
-            as void_mut_ptr;
+        flinfo.fn_extra =
+            PgMemoryContexts::For(flinfo.fn_mcxt).leak_and_drop_on_delete(default()) as void_mut_ptr;
     }
 
     PgBox::from_pg(flinfo.fn_extra as *mut ReturnType)
@@ -408,17 +401,13 @@ pub unsafe fn srf_is_first_call(fcinfo: pg_sys::FunctionCallInfo) -> bool {
 }
 
 #[inline]
-pub unsafe fn srf_first_call_init(
-    fcinfo: pg_sys::FunctionCallInfo,
-) -> PgBox<pg_sys::FuncCallContext> {
+pub unsafe fn srf_first_call_init(fcinfo: pg_sys::FunctionCallInfo) -> PgBox<pg_sys::FuncCallContext> {
     let funcctx = pg_sys::init_MultiFuncCall(fcinfo);
     PgBox::from_pg(funcctx)
 }
 
 #[inline]
-pub unsafe fn srf_per_call_setup(
-    fcinfo: pg_sys::FunctionCallInfo,
-) -> PgBox<pg_sys::FuncCallContext> {
+pub unsafe fn srf_per_call_setup(fcinfo: pg_sys::FunctionCallInfo) -> PgBox<pg_sys::FuncCallContext> {
     let funcctx = pg_sys::per_MultiFuncCall(fcinfo);
     PgBox::from_pg(funcctx)
 }

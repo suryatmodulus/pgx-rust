@@ -111,8 +111,7 @@ mod tests {
 
     #[pg_test]
     fn test_pg_try_ignore_panic() {
-        let result =
-            PgTryBuilder::new(|| panic!("unwrapped a panic")).catch_others(|_| 99).execute();
+        let result = PgTryBuilder::new(|| panic!("unwrapped a panic")).catch_others(|_| 99).execute();
         assert_eq!(99, result);
     }
 
@@ -151,10 +150,8 @@ mod tests {
     #[pg_test]
     fn test_pg_try_finally_with_catch() {
         let mut finally = false;
-        let result = PgTryBuilder::new(|| panic!("panic"))
-            .catch_others(|_| 99)
-            .finally(|| finally = true)
-            .execute();
+        let result =
+            PgTryBuilder::new(|| panic!("panic")).catch_others(|_| 99).finally(|| finally = true).execute();
         assert_eq!(99, result);
         assert_eq!(true, finally);
     }

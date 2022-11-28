@@ -172,8 +172,7 @@ impl Parse for ExtensionSql {
                 _ => (),
             }
         }
-        let name =
-            name.ok_or_else(|| syn::Error::new(input.span(), "expected `name` to be set"))?;
+        let name = name.ok_or_else(|| syn::Error::new(input.span(), "expected `name` to be set"))?;
         Ok(Self { sql, attrs, name })
     }
 }
@@ -299,10 +298,12 @@ impl Parse for SqlDeclared {
             "Type" => SqlDeclared::Type(identifier_str),
             "Enum" => SqlDeclared::Enum(identifier_str),
             "Function" => SqlDeclared::Function(identifier_str),
-            _ => return Err(syn::Error::new(
-                variant.span(),
-                "SQL declared entities must be `Type(ident)`, `Enum(ident)`, or `Function(ident)`",
-            )),
+            _ => {
+                return Err(syn::Error::new(
+                    variant.span(),
+                    "SQL declared entities must be `Type(ident)`, `Enum(ident)`, or `Function(ident)`",
+                ))
+            }
         };
         Ok(this)
     }

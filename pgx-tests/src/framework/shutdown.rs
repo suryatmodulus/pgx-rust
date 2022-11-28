@@ -91,9 +91,7 @@ impl ShutdownHook {
         let result = panic::catch_unwind(AssertUnwindSafe(callback));
         if let Err(e) = result {
             let msg = failure_message(&e);
-            write_stderr(&format!(
-                "error: shutdown hook (registered at {source}) panicked: {msg}\n"
-            ));
+            write_stderr(&format!("error: shutdown hook (registered at {source}) panicked: {msg}\n"));
             Err(())
         } else {
             Ok(())

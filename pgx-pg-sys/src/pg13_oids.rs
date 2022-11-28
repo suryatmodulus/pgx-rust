@@ -343,9 +343,7 @@ impl PgBuiltInOids {
             crate::DATERANGEARRAYOID => Some(crate::PgBuiltInOids::DATERANGEARRAYOID),
             crate::INT8RANGEARRAYOID => Some(crate::PgBuiltInOids::INT8RANGEARRAYOID),
             crate::CSTRINGARRAYOID => Some(crate::PgBuiltInOids::CSTRINGARRAYOID),
-            crate::HEAP_TABLE_AM_HANDLER_OID => {
-                Some(crate::PgBuiltInOids::HEAP_TABLE_AM_HANDLER_OID)
-            }
+            crate::HEAP_TABLE_AM_HANDLER_OID => Some(crate::PgBuiltInOids::HEAP_TABLE_AM_HANDLER_OID),
             _ => None,
         }
     }

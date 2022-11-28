@@ -101,8 +101,7 @@ pub fn pg_test(attr: TokenStream, item: TokenStream) -> TokenStream {
             };
 
             let sql_funcname = func.sig.ident.to_string();
-            let test_func_name =
-                Ident::new(&format!("pg_{}", func.sig.ident.to_string()), func.span());
+            let test_func_name = Ident::new(&format!("pg_{}", func.sig.ident.to_string()), func.span());
 
             let attributes = func.attrs;
             let mut att_stream = proc_macro2::TokenStream::new();
@@ -617,7 +616,9 @@ fn impl_postgres_enum(ast: DeriveInput) -> proc_macro2::TokenStream {
         let label_string = label_ident.to_string();
 
         from_datum.extend(quote! { #label_string => Some(#enum_ident::#label_ident), });
-        into_datum.extend(quote! { #enum_ident::#label_ident => Some(::pgx::lookup_enum_by_label(#enum_name, #label_string)), });
+        into_datum.extend(
+            quote! { #enum_ident::#label_ident => Some(::pgx::lookup_enum_by_label(#enum_name, #label_string)), },
+        );
     }
 
     stream.extend(quote! {
@@ -1059,8 +1060,7 @@ pub fn pg_trigger(attrs: TokenStream, input: TokenStream) -> TokenStream {
         use syn::punctuated::Punctuated;
         use syn::Token;
 
-        let attributes =
-            Punctuated::<PgTriggerAttribute, Token![,]>::parse_terminated.parse(attrs)?;
+        let attributes = Punctuated::<PgTriggerAttribute, Token![,]>::parse_terminated.parse(attrs)?;
         let item_fn: syn::ItemFn = syn::parse(input)?;
         let trigger_item = PgTrigger::new(item_fn, attributes)?;
         let trigger_tokens = trigger_item.to_token_stream();

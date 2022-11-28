@@ -81,8 +81,7 @@ impl PostgresHash {
     }
 
     pub fn from_derive_input(derive_input: DeriveInput) -> Result<Self, syn::Error> {
-        let to_sql_config =
-            ToSqlConfig::from_attributes(derive_input.attrs.as_slice())?.unwrap_or_default();
+        let to_sql_config = ToSqlConfig::from_attributes(derive_input.attrs.as_slice())?.unwrap_or_default();
         Self::new(derive_input.ident, to_sql_config)
     }
 }

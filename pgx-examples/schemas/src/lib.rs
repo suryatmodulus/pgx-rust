@@ -93,8 +93,7 @@ mod tests {
         assert_eq!(
             "Hello from some_schema",
             // "hello_some_schema()" is in "some_schema", so it needs to be qualified
-            Spi::get_one::<&str>("SELECT some_schema.hello_some_schema()")
-                .expect("SPI result was NULL")
+            Spi::get_one::<&str>("SELECT some_schema.hello_some_schema()").expect("SPI result was NULL")
         );
     }
 

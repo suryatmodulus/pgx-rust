@@ -61,9 +61,7 @@ impl PgXactCallbackEvent {
             pg_sys::XactEvent_XACT_EVENT_COMMIT => PgXactCallbackEvent::Commit,
             pg_sys::XactEvent_XACT_EVENT_PARALLEL_ABORT => PgXactCallbackEvent::ParallelAbort,
             pg_sys::XactEvent_XACT_EVENT_PARALLEL_COMMIT => PgXactCallbackEvent::ParallelCommit,
-            pg_sys::XactEvent_XACT_EVENT_PARALLEL_PRE_COMMIT => {
-                PgXactCallbackEvent::ParallelPreCommit
-            }
+            pg_sys::XactEvent_XACT_EVENT_PARALLEL_PRE_COMMIT => PgXactCallbackEvent::ParallelPreCommit,
             pg_sys::XactEvent_XACT_EVENT_PREPARE => PgXactCallbackEvent::Prepare,
             pg_sys::XactEvent_XACT_EVENT_PRE_COMMIT => PgXactCallbackEvent::PreCommit,
             pg_sys::XactEvent_XACT_EVENT_PRE_PREPARE => PgXactCallbackEvent::PrePrepare,
@@ -99,9 +97,7 @@ impl XactCallbackReceipt {
 }
 
 /// An internal wrapper for a callback closure
-struct XactCallbackWrapper(
-    Box<dyn FnOnce() + std::panic::UnwindSafe + std::panic::RefUnwindSafe + 'static>,
-);
+struct XactCallbackWrapper(Box<dyn FnOnce() + std::panic::UnwindSafe + std::panic::RefUnwindSafe + 'static>);
 
 /// Shorthand for the type representing the map of callbacks
 type CallbackMap = HashMap<PgXactCallbackEvent, Vec<Rc<RefCell<Option<XactCallbackWrapper>>>>>;
@@ -253,9 +249,7 @@ impl PgSubXactCallbackEvent {
         match event {
             pg_sys::SubXactEvent_SUBXACT_EVENT_ABORT_SUB => PgSubXactCallbackEvent::AbortSub,
             pg_sys::SubXactEvent_SUBXACT_EVENT_COMMIT_SUB => PgSubXactCallbackEvent::CommitSub,
-            pg_sys::SubXactEvent_SUBXACT_EVENT_PRE_COMMIT_SUB => {
-                PgSubXactCallbackEvent::PreCommitSub
-            }
+            pg_sys::SubXactEvent_SUBXACT_EVENT_PRE_COMMIT_SUB => PgSubXactCallbackEvent::PreCommitSub,
             pg_sys::SubXactEvent_SUBXACT_EVENT_START_SUB => PgSubXactCallbackEvent::StartSub,
             _ => panic!("Unrecognized SubXactEvent: {}", event),
         }
@@ -297,13 +291,9 @@ struct SubXactCallbackWrapper(
     >,
 );
 
-type SubCallbackMap =
-    HashMap<PgSubXactCallbackEvent, Vec<Rc<RefCell<Option<SubXactCallbackWrapper>>>>>;
+type SubCallbackMap = HashMap<PgSubXactCallbackEvent, Vec<Rc<RefCell<Option<SubXactCallbackWrapper>>>>>;
 
-pub fn register_subxact_callback<F>(
-    which_event: PgSubXactCallbackEvent,
-    f: F,
-) -> SubXactCallbackReceipt
+pub fn register_subxact_callback<F>(which_event: PgSubXactCallbackEvent, f: F) -> SubXactCallbackReceipt
 where
     F: Fn(pg_sys::SubTransactionId, pg_sys::SubTransactionId)
         + std::panic::UnwindSafe

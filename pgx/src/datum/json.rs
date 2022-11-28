@@ -32,11 +32,7 @@ pub struct JsonString(pub String);
 /// for json
 impl FromDatum for Json {
     #[inline]
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        _: pg_sys::Oid,
-    ) -> Option<Json> {
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, _: pg_sys::Oid) -> Option<Json> {
         if is_null {
             None
         } else {
@@ -52,27 +48,19 @@ impl FromDatum for Json {
 
 /// for jsonb
 impl FromDatum for JsonB {
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        _: pg_sys::Oid,
-    ) -> Option<JsonB> {
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, _: pg_sys::Oid) -> Option<JsonB> {
         if is_null {
             None
         } else {
             let varlena = datum.cast_mut_ptr();
             let detoasted = pg_sys::pg_detoast_datum_packed(varlena);
 
-            let cstr = direct_function_call::<&std::ffi::CStr>(
-                pg_sys::jsonb_out,
-                vec![Some(detoasted.into())],
-            )
-            .expect("failed to convert jsonb to a cstring");
+            let cstr =
+                direct_function_call::<&std::ffi::CStr>(pg_sys::jsonb_out, vec![Some(detoasted.into())])
+                    .expect("failed to convert jsonb to a cstring");
 
-            let value = serde_json::from_str(
-                cstr.to_str().expect("text version of jsonb is not valid UTF8"),
-            )
-            .expect("failed to parse JsonB value");
+            let value = serde_json::from_str(cstr.to_str().expect("text version of jsonb is not valid UTF8"))
+                .expect("failed to parse JsonB value");
 
             // free the cstring returned from direct_function_call -- we don't need it anymore
             pg_sys::pfree(cstr.as_ptr() as void_mut_ptr);
@@ -107,8 +95,7 @@ impl FromDatum for JsonString {
             let data = vardata_any(detoasted);
 
             let result =
-                std::str::from_utf8_unchecked(std::slice::from_raw_parts(data as *mut u8, len))
-                    .to_owned();
+                std::str::from_utf8_unchecked(std::slice::from_raw_parts(data as *mut u8, len)).to_owned();
 
             if detoasted != varlena {
                 pg_sys::pfree(detoasted as void_mut_ptr);
@@ -135,12 +122,9 @@ impl IntoDatum for Json {
 impl IntoDatum for JsonB {
     fn into_datum(self) -> Option<pg_sys::Datum> {
         let string = serde_json::to_string(&self.0).expect("failed to serialize JsonB value");
-        let cstring =
-            std::ffi::CString::new(string).expect("string version of jsonb is not valid UTF8");
+        let cstring = std::ffi::CString::new(string).expect("string version of jsonb is not valid UTF8");
 
-        unsafe {
-            direct_function_call_as_datum(pg_sys::jsonb_in, vec![Some(cstring.as_ptr().into())])
-        }
+        unsafe { direct_function_call_as_datum(pg_sys::jsonb_in, vec![Some(cstring.as_ptr().into())]) }
     }
 
     fn type_oid() -> u32 {
@@ -182,9 +166,7 @@ impl Serialize for JsonString {
     where
         S: Serializer,
     {
-        serde_json::to_value(self.0.as_str())
-            .expect("JsonString is not valid JSON")
-            .serialize(serializer)
+        serde_json::to_value(self.0.as_str()).expect("JsonString is not valid JSON").serialize(serializer)
     }
 }
 

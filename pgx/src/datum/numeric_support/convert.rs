@@ -4,9 +4,7 @@ use pgx_pg_sys::PgTryBuilder;
 
 use crate::numeric::make_typmod;
 use crate::numeric_support::error::Error;
-use crate::{
-    direct_function_call, direct_function_call_as_datum, pg_sys, AnyNumeric, IntoDatum, Numeric,
-};
+use crate::{direct_function_call, direct_function_call_as_datum, pg_sys, AnyNumeric, IntoDatum, Numeric};
 
 pub use super::convert_anynumeric::*;
 pub use super::convert_numeric::*;
@@ -39,10 +37,7 @@ pub(crate) fn from_primitive_helper<I: IntoDatum, const P: u32, const S: u32>(
 
             if P != 0 || S != 0 {
                 // and if it has a precision or a scale, try to coerce it into those constraints
-                direct_function_call(
-                    pg_sys::numeric,
-                    vec![numeric_datum, make_typmod(P, S).into_datum()],
-                )
+                direct_function_call(pg_sys::numeric, vec![numeric_datum, make_typmod(P, S).into_datum()])
             } else {
                 numeric_datum
             }

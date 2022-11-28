@@ -69,17 +69,14 @@ pub struct BackgroundWorker {}
 impl BackgroundWorker {
     /// What is our name?
     pub fn get_name() -> &'static str {
-        #[cfg(any(
-            feature = "pg11",
-            feature = "pg12",
-            feature = "pg13",
-            feature = "pg14",
-            feature = "pg15"
-        ))]
+        #[cfg(any(feature = "pg11", feature = "pg12", feature = "pg13", feature = "pg14", feature = "pg15"))]
         const LEN: usize = 96;
 
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
             CStr::from_ptr(std::mem::transmute::<&[c_char; LEN], *const c_char>(
                 &(*pg_sys::MyBgworkerEntry).bgw_name,
             ))
@@ -93,7 +90,10 @@ impl BackgroundWorker {
         const LEN: usize = 128;
 
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
             CStr::from_ptr(std::mem::transmute::<&[c_char; LEN], *const c_char>(
                 &(*pg_sys::MyBgworkerEntry).bgw_extra,
             ))
@@ -105,7 +105,10 @@ impl BackgroundWorker {
     /// Have we received a SIGUP?
     pub fn sighup_received() -> bool {
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
         }
         // toggle the bool to false, returning whatever it was
         GOT_SIGHUP.swap(false, Ordering::SeqCst)
@@ -114,7 +117,10 @@ impl BackgroundWorker {
     /// Have we received a SIGTERM?
     pub fn sigterm_received() -> bool {
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
         }
         // toggle the bool to false, returning whatever it was
         GOT_SIGTERM.swap(false, Ordering::SeqCst)
@@ -125,7 +131,10 @@ impl BackgroundWorker {
     /// Returns true if we're still supposed to be alive and haven't received a SIGTERM
     pub fn wait_latch(timeout: Option<Duration>) -> bool {
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
         }
         match timeout {
             Some(t) => wait_latch(
@@ -140,7 +149,10 @@ impl BackgroundWorker {
     /// Is this `BackgroundWorker` allowed to continue?
     pub fn worker_continue() -> bool {
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
         }
         pg_sys::WL_POSTMASTER_DEATH as i32 != 0
     }
@@ -149,7 +161,10 @@ impl BackgroundWorker {
     /// connect to via SPI
     pub fn connect_worker_to_spi(dbname: Option<&str>, username: Option<&str>) {
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
         }
         let db = dbname.and_then(|rs| CString::new(rs).ok());
         let db: *const c_char = db.as_ref().map_or(std::ptr::null(), |i| i.as_ptr());
@@ -179,7 +194,10 @@ impl BackgroundWorker {
     /// ```
     pub fn attach_signal_handlers(wake: SignalWakeFlags) {
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
             if wake.contains(SignalWakeFlags::SIGHUP) {
                 pg_sys::pqsignal(pg_sys::SIGHUP as i32, Some(worker_spi_sighup));
             }
@@ -196,7 +214,10 @@ impl BackgroundWorker {
         transaction_body: F,
     ) -> R {
         unsafe {
-            assert!(!pg_sys::MyBgworkerEntry.is_null(), "BackgroundWorker associated functions can only be called from a registered background worker");
+            assert!(
+                !pg_sys::MyBgworkerEntry.is_null(),
+                "BackgroundWorker associated functions can only be called from a registered background worker"
+            );
             pg_sys::SetCurrentStatementStartTimestamp();
             pg_sys::StartTransactionCommand();
             pg_sys::PushActiveSnapshot(pg_sys::GetTransactionSnapshot());
@@ -424,9 +445,8 @@ impl BackgroundWorkerBuilder {
     /// If set, then the configured start time becomes `BgWorkerStartTIme::RecoveryFinished`
     /// as accessing SPI prior to possible database recovery is not possible
     pub fn enable_spi_access(mut self: Self) -> Self {
-        self.bgw_flags = self.bgw_flags
-            | BGWflags::BGWORKER_SHMEM_ACCESS
-            | BGWflags::BGWORKER_BACKEND_DATABASE_CONNECTION;
+        self.bgw_flags =
+            self.bgw_flags | BGWflags::BGWORKER_SHMEM_ACCESS | BGWflags::BGWORKER_BACKEND_DATABASE_CONNECTION;
         self.bgw_start_time = BgWorkerStartTime::RecoveryFinished;
         self
     }
@@ -562,13 +582,7 @@ impl BackgroundWorkerBuilder {
 /// the builder is useful for building this structure.
 impl<'a> Into<pg_sys::BackgroundWorker> for &'a BackgroundWorkerBuilder {
     fn into(self) -> pg_sys::BackgroundWorker {
-        #[cfg(any(
-            feature = "pg11",
-            feature = "pg12",
-            feature = "pg13",
-            feature = "pg14",
-            feature = "pg15"
-        ))]
+        #[cfg(any(feature = "pg11", feature = "pg12", feature = "pg13", feature = "pg14", feature = "pg15"))]
         let bgw = pg_sys::BackgroundWorker {
             bgw_name: RpgffiChar::from(&self.bgw_name[..]).0,
             bgw_type: RpgffiChar::from(&self.bgw_type[..]).0,
@@ -591,12 +605,8 @@ impl<'a> Into<pg_sys::BackgroundWorker> for &'a BackgroundWorkerBuilder {
 
 fn wait_latch(timeout: i64, wakeup_flags: WLflags) -> i32 {
     unsafe {
-        let latch = pg_sys::WaitLatch(
-            pg_sys::MyLatch,
-            wakeup_flags.bits(),
-            timeout,
-            pg_sys::PG_WAIT_EXTENSION,
-        );
+        let latch =
+            pg_sys::WaitLatch(pg_sys::MyLatch, wakeup_flags.bits(), timeout, pg_sys::PG_WAIT_EXTENSION);
         pg_sys::ResetLatch(pg_sys::MyLatch);
         pg_sys::check_for_interrupts!();
 
@@ -604,13 +614,7 @@ fn wait_latch(timeout: i64, wakeup_flags: WLflags) -> i32 {
     }
 }
 
-#[cfg(any(
-    feature = "pg11",
-    feature = "pg12",
-    feature = "pg13",
-    feature = "pg14",
-    feature = "pg15"
-))]
+#[cfg(any(feature = "pg11", feature = "pg12", feature = "pg13", feature = "pg14", feature = "pg15"))]
 type RpgffiChar = RpgffiChar96;
 
 struct RpgffiChar64([c_char; 64]);

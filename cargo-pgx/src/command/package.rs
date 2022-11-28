@@ -52,9 +52,8 @@ impl CommandExecute for Package {
         let metadata = crate::metadata::metadata(&self.features, self.manifest_path.as_ref())
             .wrap_err("couldn't get cargo metadata")?;
         crate::metadata::validate(&metadata)?;
-        let package_manifest_path =
-            crate::manifest::manifest_path(&metadata, self.package.as_ref())
-                .wrap_err("Couldn't get manifest path")?;
+        let package_manifest_path = crate::manifest::manifest_path(&metadata, self.package.as_ref())
+            .wrap_err("Couldn't get manifest path")?;
         let package_manifest =
             Manifest::from_path(&package_manifest_path).wrap_err("Couldn't parse manifest")?;
 
@@ -64,8 +63,7 @@ impl CommandExecute for Package {
         };
         let pg_version = format!("pg{}", pg_config.major_version()?);
 
-        let features =
-            crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
+        let features = crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
         let profile = CargoProfile::from_flags(!self.debug, self.profile.as_deref())?;
         let out_dir = if let Some(out_dir) = self.out_dir {
             out_dir
@@ -123,8 +121,8 @@ fn build_base_path(
 ) -> eyre::Result<PathBuf> {
     let mut target_dir = get_target_dir()?;
     let pgver = pg_config.major_version()?;
-    let extname = get_property(manifest_path, "extname")?
-        .ok_or(eyre!("could not determine extension name"))?;
+    let extname =
+        get_property(manifest_path, "extname")?.ok_or(eyre!("could not determine extension name"))?;
     target_dir.push(profile.target_subdir());
     target_dir.push(format!("{}-pg{}", extname, pgver));
     Ok(target_dir)

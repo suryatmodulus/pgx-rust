@@ -159,8 +159,8 @@ impl PgConfig {
             }
         }
         minor = &minor[0..end_index];
-        let minor = u16::from_str(minor)
-            .map_err(|e| eyre!("invalid minor version number `{}`: {:?}", minor, e))?;
+        let minor =
+            u16::from_str(minor).map_err(|e| eyre!("invalid minor version number `{}`: {:?}", minor, e))?;
         return Ok((major, minor));
     }
 
@@ -278,9 +278,10 @@ impl PgConfig {
     }
 
     fn run(&self, arg: &str) -> eyre::Result<String> {
-        let pg_config = self.pg_config.clone().unwrap_or_else(|| {
-            std::env::var("PG_CONFIG").unwrap_or_else(|_| "pg_config".to_string()).into()
-        });
+        let pg_config = self
+            .pg_config
+            .clone()
+            .unwrap_or_else(|| std::env::var("PG_CONFIG").unwrap_or_else(|_| "pg_config".to_string()).into());
 
         match Command::new(&pg_config).arg(arg).output() {
             Ok(output) => Ok(String::from_utf8(output.stdout).unwrap().trim().to_string()),
@@ -370,9 +371,7 @@ impl Pgx {
                         }
                         Ok(pgx)
                     }
-                    Err(e) => {
-                        Err(e).wrap_err_with(|| format!("Could not read `{}`", path.display()))
-                    }
+                    Err(e) => Err(e).wrap_err_with(|| format!("Could not read `{}`", path.display())),
                 }
             }
         }
@@ -382,10 +381,7 @@ impl Pgx {
         self.pg_configs.push(pg_config);
     }
 
-    pub fn iter(
-        &self,
-        which: PgConfigSelector,
-    ) -> impl std::iter::Iterator<Item = eyre::Result<&PgConfig>> {
+    pub fn iter(&self, which: PgConfigSelector) -> impl std::iter::Iterator<Item = eyre::Result<&PgConfig>> {
         match which {
             PgConfigSelector::All => {
                 let mut configs = self.pg_configs.iter().collect::<Vec<_>>();
@@ -478,11 +474,7 @@ pub fn createdb(
         .arg("-h")
         .arg(pg_config.host())
         .arg("-p")
-        .arg(if is_test {
-            pg_config.test_port()?.to_string()
-        } else {
-            pg_config.port()?.to_string()
-        })
+        .arg(if is_test { pg_config.test_port()?.to_string() } else { pg_config.port()?.to_string() })
         .arg(dbname)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
@@ -494,9 +486,7 @@ pub fn createdb(
     })?;
 
     let output = child.wait_with_output().wrap_err_with(|| {
-        format!(
-            "failed waiting for spawned process to create database using command: '{command_str}': "
-        )
+        format!("failed waiting for spawned process to create database using command: '{command_str}': ")
     })?;
 
     if !output.status.success() {
@@ -522,10 +512,7 @@ fn does_db_exist(pg_config: &PgConfig, dbname: &str) -> eyre::Result<bool> {
         .arg(pg_config.port()?.to_string())
         .arg("template1")
         .arg("-c")
-        .arg(&format!(
-            "select count(*) from pg_database where datname = '{}';",
-            dbname.replace("'", "''")
-        ))
+        .arg(&format!("select count(*) from pg_database where datname = '{}';", dbname.replace("'", "''")))
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
 
@@ -561,20 +548,15 @@ fn parse_version() {
         ("PostgreSQL 10.22-", 10, 22),
     ];
     for (s, major_expected, minor_expected) in versions {
-        let (major, minor) =
-            PgConfig::parse_version_str(s).expect("Unable to parse version string");
+        let (major, minor) = PgConfig::parse_version_str(s).expect("Unable to parse version string");
         assert_eq!(major, major_expected, "Major varsion should match");
         assert_eq!(minor, minor_expected, "Minor version should match");
     }
 
     // Check some invalid version strings
     let _ = PgConfig::parse_version_str("10.22").expect_err("Parsed invalid version string");
-    let _ =
-        PgConfig::parse_version_str("PostgresSQL 10").expect_err("Parsed invalid version string");
-    let _ =
-        PgConfig::parse_version_str("PostgresSQL 10.").expect_err("Parsed invalid version string");
-    let _ =
-        PgConfig::parse_version_str("PostgresSQL 12.f").expect_err("Parsed invalid version string");
-    let _ =
-        PgConfig::parse_version_str("PostgresSQL .53").expect_err("Parsed invalid version string");
+    let _ = PgConfig::parse_version_str("PostgresSQL 10").expect_err("Parsed invalid version string");
+    let _ = PgConfig::parse_version_str("PostgresSQL 10.").expect_err("Parsed invalid version string");
+    let _ = PgConfig::parse_version_str("PostgresSQL 12.f").expect_err("Parsed invalid version string");
+    let _ = PgConfig::parse_version_str("PostgresSQL .53").expect_err("Parsed invalid version string");
 }

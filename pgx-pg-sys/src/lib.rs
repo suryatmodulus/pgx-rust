@@ -356,21 +356,14 @@ mod all_versions {
     ///     ((RangeTblEntry *) list_nth(rangetable, (rangetable_index)-1))
     /// ```
     #[inline]
-    pub unsafe fn rt_fetch(
-        index: super::Index,
-        range_table: *mut super::List,
-    ) -> *mut super::RangeTblEntry {
+    pub unsafe fn rt_fetch(index: super::Index, range_table: *mut super::List) -> *mut super::RangeTblEntry {
         pgx_list_nth(range_table, index as i32 - 1) as *mut super::RangeTblEntry
     }
 
     #[inline]
-    pub fn HeapTupleHeaderGetXmin(
-        htup_header: super::HeapTupleHeader,
-    ) -> Option<super::TransactionId> {
+    pub fn HeapTupleHeaderGetXmin(htup_header: super::HeapTupleHeader) -> Option<super::TransactionId> {
         extern "C" {
-            pub fn pgx_HeapTupleHeaderGetXmin(
-                htup_header: super::HeapTupleHeader,
-            ) -> super::TransactionId;
+            pub fn pgx_HeapTupleHeaderGetXmin(htup_header: super::HeapTupleHeader) -> super::TransactionId;
         }
 
         if htup_header.is_null() {
@@ -381,9 +374,7 @@ mod all_versions {
     }
 
     #[inline]
-    pub fn HeapTupleHeaderGetRawCommandId(
-        htup_header: super::HeapTupleHeader,
-    ) -> Option<super::CommandId> {
+    pub fn HeapTupleHeaderGetRawCommandId(htup_header: super::HeapTupleHeader) -> Option<super::CommandId> {
         extern "C" {
             pub fn pgx_HeapTupleHeaderGetRawCommandId(
                 htup_header: super::HeapTupleHeader,
@@ -426,8 +417,7 @@ mod all_versions {
     /// )
     #[inline]
     pub unsafe fn HeapTupleHeaderXminInvalid(htup_header: super::HeapTupleHeader) -> bool {
-        (*htup_header).t_infomask
-            & (crate::HEAP_XMIN_COMMITTED as u16 | crate::HEAP_XMIN_INVALID as u16)
+        (*htup_header).t_infomask & (crate::HEAP_XMIN_COMMITTED as u16 | crate::HEAP_XMIN_INVALID as u16)
             == crate::HEAP_XMIN_INVALID as u16
     }
 
@@ -450,8 +440,7 @@ mod all_versions {
         if BufferIsLocal(buffer) {
             *crate::LocalBufferBlockPointers.offset(((-buffer) - 1) as isize)
         } else {
-            crate::BufferBlocks
-                .offset((((buffer as crate::Size) - 1) * crate::BLCKSZ as usize) as isize)
+            crate::BufferBlocks.offset((((buffer as crate::Size) - 1) * crate::BLCKSZ as usize) as isize)
                 as crate::Block
         }
     }

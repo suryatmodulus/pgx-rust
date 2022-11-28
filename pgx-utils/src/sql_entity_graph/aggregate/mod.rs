@@ -27,9 +27,7 @@ use proc_macro2::{Ident, Span, TokenStream as TokenStream2};
 use quote::{quote, ToTokens, TokenStreamExt};
 use syn::parse::{Parse, ParseStream};
 use syn::spanned::Spanned;
-use syn::{
-    parse_quote, Expr, ImplItemConst, ImplItemMethod, ImplItemType, ItemFn, ItemImpl, Path, Type,
-};
+use syn::{parse_quote, Expr, ImplItemConst, ImplItemMethod, ImplItemType, ItemFn, ItemImpl, Path, Type};
 
 use crate::sql_entity_graph::ToSqlConfig;
 
@@ -104,8 +102,7 @@ pub struct PgAggregate {
 
 impl PgAggregate {
     pub fn new(mut item_impl: ItemImpl) -> Result<Self, syn::Error> {
-        let to_sql_config =
-            ToSqlConfig::from_attributes(item_impl.attrs.as_slice())?.unwrap_or_default();
+        let to_sql_config = ToSqlConfig::from_attributes(item_impl.attrs.as_slice())?.unwrap_or_default();
         let target_path = get_target_path(&item_impl)?;
         let target_ident = get_target_ident(&target_path)?;
 
@@ -195,47 +192,41 @@ impl PgAggregate {
                 type OrderedSetArgs = ();
             })
         }
-        let (direct_args_with_names, direct_arg_names) = if let Some(ref order_by_direct_args) =
-            type_ordered_set_args_value
-        {
-            let direct_args = order_by_direct_args
-                .found
-                .iter()
-                .map(|x| {
-                    (x.name.clone(), x.used_ty.resolved_ty.clone(), x.used_ty.original_ty.clone())
-                })
-                .collect::<Vec<_>>();
-            let direct_arg_names = ARG_NAMES[0..direct_args.len()]
-                .iter()
-                .zip(direct_args.iter())
-                .map(|(default_name, (custom_name, _ty, _orig))| {
-                    Ident::new(
-                        &custom_name.clone().unwrap_or_else(|| default_name.to_string()),
-                        Span::mixed_site(),
-                    )
-                })
-                .collect::<Vec<_>>();
-            let direct_args_with_names = direct_args
-                .iter()
-                .zip(direct_arg_names.iter())
-                .map(|(arg, name)| {
-                    let arg_ty = &arg.2; // original_type
-                    parse_quote! {
-                        #name: #arg_ty
-                    }
-                })
-                .collect::<Vec<syn::FnArg>>();
-            (direct_args_with_names, direct_arg_names)
-        } else {
-            (Vec::default(), Vec::default())
-        };
+        let (direct_args_with_names, direct_arg_names) =
+            if let Some(ref order_by_direct_args) = type_ordered_set_args_value {
+                let direct_args = order_by_direct_args
+                    .found
+                    .iter()
+                    .map(|x| (x.name.clone(), x.used_ty.resolved_ty.clone(), x.used_ty.original_ty.clone()))
+                    .collect::<Vec<_>>();
+                let direct_arg_names = ARG_NAMES[0..direct_args.len()]
+                    .iter()
+                    .zip(direct_args.iter())
+                    .map(|(default_name, (custom_name, _ty, _orig))| {
+                        Ident::new(
+                            &custom_name.clone().unwrap_or_else(|| default_name.to_string()),
+                            Span::mixed_site(),
+                        )
+                    })
+                    .collect::<Vec<_>>();
+                let direct_args_with_names = direct_args
+                    .iter()
+                    .zip(direct_arg_names.iter())
+                    .map(|(arg, name)| {
+                        let arg_ty = &arg.2; // original_type
+                        parse_quote! {
+                            #name: #arg_ty
+                        }
+                    })
+                    .collect::<Vec<syn::FnArg>>();
+                (direct_args_with_names, direct_arg_names)
+            } else {
+                (Vec::default(), Vec::default())
+            };
 
         // `Args` is an optional value, we default to nothing.
         let type_args = get_impl_type_by_name(&item_impl_snapshot, "Args").ok_or_else(|| {
-            syn::Error::new(
-                item_impl_snapshot.span(),
-                "`#[pg_aggregate]` requires the `Args` type defined.",
-            )
+            syn::Error::new(item_impl_snapshot.span(), "`#[pg_aggregate]` requires the `Args` type defined.")
         })?;
         let type_args_value = AggregateTypeList::new(type_args.ty.clone())?;
         let args = type_args_value
@@ -247,10 +238,7 @@ impl PgAggregate {
             .iter()
             .zip(args.iter())
             .map(|(default_name, (custom_name, ty))| {
-                Ident::new(
-                    &custom_name.clone().unwrap_or_else(|| default_name.to_string()),
-                    ty.span(),
-                )
+                Ident::new(&custom_name.clone().unwrap_or_else(|| default_name.to_string()), ty.span())
             })
             .collect::<Vec<_>>();
         let args_with_names = args
@@ -278,8 +266,7 @@ impl PgAggregate {
         let fn_state = get_impl_func_by_name(&item_impl_snapshot, "state");
 
         let fn_state_name = if let Some(found) = fn_state {
-            let fn_name =
-                Ident::new(&format!("{}_state", snake_case_target_ident), found.sig.ident.span());
+            let fn_name = Ident::new(&format!("{}_state", snake_case_target_ident), found.sig.ident.span());
             let pg_extern_attr = pg_extern_attr(found);
 
             pg_externs.push(parse_quote! {
@@ -302,8 +289,7 @@ impl PgAggregate {
 
         let fn_combine = get_impl_func_by_name(&item_impl_snapshot, "combine");
         let fn_combine_name = if let Some(found) = fn_combine {
-            let fn_name =
-                Ident::new(&format!("{}_combine", snake_case_target_ident), found.sig.ident.span());
+            let fn_name = Ident::new(&format!("{}_combine", snake_case_target_ident), found.sig.ident.span());
             let pg_extern_attr = pg_extern_attr(found);
             pg_externs.push(parse_quote! {
                 #[allow(non_snake_case, clippy::too_many_arguments)]
@@ -327,10 +313,8 @@ impl PgAggregate {
 
         let fn_finalize = get_impl_func_by_name(&item_impl_snapshot, "finalize");
         let fn_finalize_name = if let Some(found) = fn_finalize {
-            let fn_name = Ident::new(
-                &format!("{}_finalize", snake_case_target_ident),
-                found.sig.ident.span(),
-            );
+            let fn_name =
+                Ident::new(&format!("{}_finalize", snake_case_target_ident), found.sig.ident.span());
             let pg_extern_attr = pg_extern_attr(found);
 
             if direct_args_with_names.len() > 0 {
@@ -368,8 +352,7 @@ impl PgAggregate {
 
         let fn_serial = get_impl_func_by_name(&item_impl_snapshot, "serial");
         let fn_serial_name = if let Some(found) = fn_serial {
-            let fn_name =
-                Ident::new(&format!("{}_serial", snake_case_target_ident), found.sig.ident.span());
+            let fn_name = Ident::new(&format!("{}_serial", snake_case_target_ident), found.sig.ident.span());
             let pg_extern_attr = pg_extern_attr(found);
             pg_externs.push(parse_quote! {
                 #[allow(non_snake_case, clippy::too_many_arguments)]
@@ -393,10 +376,8 @@ impl PgAggregate {
 
         let fn_deserial = get_impl_func_by_name(&item_impl_snapshot, "deserial");
         let fn_deserial_name = if let Some(found) = fn_deserial {
-            let fn_name = Ident::new(
-                &format!("{}_deserial", snake_case_target_ident),
-                found.sig.ident.span(),
-            );
+            let fn_name =
+                Ident::new(&format!("{}_deserial", snake_case_target_ident), found.sig.ident.span());
             let pg_extern_attr = pg_extern_attr(found);
             pg_externs.push(parse_quote! {
                 #[allow(non_snake_case, clippy::too_many_arguments)]
@@ -420,10 +401,8 @@ impl PgAggregate {
 
         let fn_moving_state = get_impl_func_by_name(&item_impl_snapshot, "moving_state");
         let fn_moving_state_name = if let Some(found) = fn_moving_state {
-            let fn_name = Ident::new(
-                &format!("{}_moving_state", snake_case_target_ident),
-                found.sig.ident.span(),
-            );
+            let fn_name =
+                Ident::new(&format!("{}_moving_state", snake_case_target_ident), found.sig.ident.span());
             let pg_extern_attr = pg_extern_attr(found);
 
             pg_externs.push(parse_quote! {
@@ -454,8 +433,7 @@ impl PgAggregate {
             None
         };
 
-        let fn_moving_state_inverse =
-            get_impl_func_by_name(&item_impl_snapshot, "moving_state_inverse");
+        let fn_moving_state_inverse = get_impl_func_by_name(&item_impl_snapshot, "moving_state_inverse");
         let fn_moving_state_inverse_name = if let Some(found) = fn_moving_state_inverse {
             let fn_name = Ident::new(
                 &format!("{}_moving_state_inverse", snake_case_target_ident),
@@ -492,10 +470,8 @@ impl PgAggregate {
 
         let fn_moving_finalize = get_impl_func_by_name(&item_impl_snapshot, "moving_finalize");
         let fn_moving_finalize_name = if let Some(found) = fn_moving_finalize {
-            let fn_name = Ident::new(
-                &format!("{}_moving_finalize", snake_case_target_ident),
-                found.sig.ident.span(),
-            );
+            let fn_name =
+                Ident::new(&format!("{}_moving_finalize", snake_case_target_ident), found.sig.ident.span());
             let pg_extern_attr = pg_extern_attr(found);
             let maybe_comma: Option<syn::Token![,]> =
                 if direct_args_with_names.len() > 0 { Some(parse_quote! {,}) } else { None };
@@ -528,8 +504,7 @@ impl PgAggregate {
             type_ordered_set_args: type_ordered_set_args_value,
             type_moving_state: type_moving_state_value,
             type_stype: type_stype,
-            const_parallel: get_impl_const_by_name(&item_impl_snapshot, "PARALLEL")
-                .map(|x| x.expr.clone()),
+            const_parallel: get_impl_const_by_name(&item_impl_snapshot, "PARALLEL").map(|x| x.expr.clone()),
             const_finalize_modify: get_impl_const_by_name(&item_impl_snapshot, "FINALIZE_MODIFY")
                 .map(|x| x.expr.clone()),
             const_moving_finalize_modify: get_impl_const_by_name(
@@ -537,11 +512,8 @@ impl PgAggregate {
                 "MOVING_FINALIZE_MODIFY",
             )
             .map(|x| x.expr.clone()),
-            const_initial_condition: get_impl_const_by_name(
-                &item_impl_snapshot,
-                "INITIAL_CONDITION",
-            )
-            .and_then(get_const_litstr),
+            const_initial_condition: get_impl_const_by_name(&item_impl_snapshot, "INITIAL_CONDITION")
+                .and_then(get_const_litstr),
             const_ordered_set: get_impl_const_by_name(&item_impl_snapshot, "ORDERED_SET")
                 .and_then(get_const_litbool)
                 .unwrap_or(false),
@@ -560,15 +532,21 @@ impl PgAggregate {
             fn_moving_state: fn_moving_state_name,
             fn_moving_state_inverse: fn_moving_state_inverse_name,
             fn_moving_finalize: fn_moving_finalize_name,
-            hypothetical: if let Some(value) =
-                get_impl_const_by_name(&item_impl_snapshot, "HYPOTHETICAL")
-            {
+            hypothetical: if let Some(value) = get_impl_const_by_name(&item_impl_snapshot, "HYPOTHETICAL") {
                 match &value.expr {
                     syn::Expr::Lit(expr_lit) => match &expr_lit.lit {
                         syn::Lit::Bool(lit) => lit.value,
-                        _ => return Err(syn::Error::new(value.span(), "`#[pg_aggregate]` required the `HYPOTHETICAL` value to be a literal boolean.")),
+                        _ => return Err(syn::Error::new(
+                            value.span(),
+                            "`#[pg_aggregate]` required the `HYPOTHETICAL` value to be a literal boolean.",
+                        )),
                     },
-                    _ => return Err(syn::Error::new(value.span(), "`#[pg_aggregate]` required the `HYPOTHETICAL` value to be a literal boolean.")),
+                    _ => {
+                        return Err(syn::Error::new(
+                            value.span(),
+                            "`#[pg_aggregate]` required the `HYPOTHETICAL` value to be a literal boolean.",
+                        ))
+                    }
                 }
             } else {
                 false
@@ -578,10 +556,10 @@ impl PgAggregate {
     }
 
     fn entity_tokens(&self) -> ItemFn {
-        let target_path = get_target_path(&self.item_impl)
-            .expect("Expected constructed PgAggregate to have target path.");
-        let target_ident = get_target_ident(&target_path)
-            .expect("Expected constructed PgAggregate to have target ident.");
+        let target_path =
+            get_target_path(&self.item_impl).expect("Expected constructed PgAggregate to have target path.");
+        let target_ident =
+            get_target_ident(&target_path).expect("Expected constructed PgAggregate to have target ident.");
         let snake_case_target_ident =
             Ident::new(&target_ident.to_string().to_case(Case::Snake), target_ident.span());
         let sql_graph_entity_fn_name = syn::Ident::new(
@@ -593,8 +571,7 @@ impl PgAggregate {
         let type_args_iter = &self.type_args.entity_tokens();
         let type_order_by_args_iter = self.type_ordered_set_args.iter().map(|x| x.entity_tokens());
 
-        let type_moving_state_entity_tokens =
-            self.type_moving_state.clone().map(|v| v.entity_tokens());
+        let type_moving_state_entity_tokens = self.type_moving_state.clone().map(|v| v.entity_tokens());
         let type_moving_state_entity_tokens_iter = type_moving_state_entity_tokens.iter();
         let type_stype = self.type_stype.entity_tokens();
         let const_ordered_set = self.const_ordered_set;
@@ -699,10 +676,12 @@ fn get_target_path(item_impl: &ItemImpl) -> Result<Path, syn::Error> {
             if last_segment.ident.to_string() == "PgVarlena" {
                 match &last_segment.arguments {
                     syn::PathArguments::AngleBracketed(angled) => {
-                        let first = angled.args.first().ok_or_else(|| syn::Error::new(
+                        let first = angled.args.first().ok_or_else(|| {
+                            syn::Error::new(
                             type_path.span(),
                             "`#[pg_aggregate]` only works with `PgVarlena` declarations if they have a type contained.",
-                        ))?;
+                        )
+                        })?;
                         match &first {
                             syn::GenericArgument::Type(Type::Path(ty_path)) => ty_path.path.clone(),
                             _ => return Err(syn::Error::new(
@@ -710,21 +689,20 @@ fn get_target_path(item_impl: &ItemImpl) -> Result<Path, syn::Error> {
                                 "`#[pg_aggregate]` only works with `PgVarlena` declarations if they have a type path contained.",
                             )),
                         }
-                    },
-                    _ => return Err(syn::Error::new(
-                        type_path.span(),
-                        "`#[pg_aggregate]` only works with `PgVarlena` declarations if they have a type contained.",
-                    )),
+                    }
+                    _ => {
+                        return Err(syn::Error::new(
+                            type_path.span(),
+                            "`#[pg_aggregate]` only works with `PgVarlena` declarations if they have a type contained.",
+                        ))
+                    }
                 }
             } else {
                 type_path.path.clone()
             }
         }
         something_else => {
-            return Err(syn::Error::new(
-                something_else.span(),
-                "`#[pg_aggregate]` only works with types.",
-            ))
+            return Err(syn::Error::new(something_else.span(), "`#[pg_aggregate]` only works with types."))
         }
     };
     Ok(target_ident)
@@ -847,9 +825,7 @@ fn remap_self_to_target(ty: &mut syn::Type, target: &syn::Ident) {
                     PathArguments::AngleBracketed(ref mut angle_args) => {
                         for arg in angle_args.args.iter_mut() {
                             match arg {
-                                GenericArgument::Type(inner_ty) => {
-                                    remap_self_to_target(inner_ty, target)
-                                }
+                                GenericArgument::Type(inner_ty) => remap_self_to_target(inner_ty, target),
                                 _ => (),
                             }
                         }

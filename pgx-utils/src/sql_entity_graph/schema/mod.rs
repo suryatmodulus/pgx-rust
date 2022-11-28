@@ -71,10 +71,8 @@ impl ToTokens for Schema {
         // End of hack
 
         let mut updated_content = content_items.clone();
-        let sql_graph_entity_fn_name = syn::Ident::new(
-            &format!("__pgx_internals_schema_{}_{}", ident, postfix),
-            Span::call_site(),
-        );
+        let sql_graph_entity_fn_name =
+            syn::Ident::new(&format!("__pgx_internals_schema_{}_{}", ident, postfix), Span::call_site());
         updated_content.push(syn::parse_quote! {
                 #[no_mangle]
                 #[doc(hidden)]

@@ -42,18 +42,16 @@ mod tests {
 
     #[pg_test]
     fn test_return_a_f64_numeric() {
-        let result =
-            Spi::get_one::<bool>("SELECT 64.64646464::numeric = tests.return_a_f64_numeric();")
-                .expect("failed to get SPI result");
+        let result = Spi::get_one::<bool>("SELECT 64.64646464::numeric = tests.return_a_f64_numeric();")
+            .expect("failed to get SPI result");
         assert!(result);
     }
 
     #[pg_test]
     fn test_return_a_u64_numeric() {
-        let result = Spi::get_one::<bool>(
-            "SELECT 18446744073709551615::numeric = tests.return_a_u64_numeric();",
-        )
-        .expect("failed to get SPI result");
+        let result =
+            Spi::get_one::<bool>("SELECT 18446744073709551615::numeric = tests.return_a_u64_numeric();")
+                .expect("failed to get SPI result");
         assert!(result);
     }
 
@@ -191,13 +189,9 @@ mod tests {
 
     #[pg_test]
     fn test_ordering() {
-        let mut v =
-            vec![(3, AnyNumeric::from(3)), (2, AnyNumeric::from(2)), (1, AnyNumeric::from(1))];
+        let mut v = vec![(3, AnyNumeric::from(3)), (2, AnyNumeric::from(2)), (1, AnyNumeric::from(1))];
 
         v.sort_by(|a, b| a.1.cmp(&b.1));
-        assert_eq!(
-            v,
-            vec![(1, AnyNumeric::from(1)), (2, AnyNumeric::from(2)), (3, AnyNumeric::from(3)),]
-        )
+        assert_eq!(v, vec![(1, AnyNumeric::from(1)), (2, AnyNumeric::from(2)), (3, AnyNumeric::from(3)),])
     }
 }

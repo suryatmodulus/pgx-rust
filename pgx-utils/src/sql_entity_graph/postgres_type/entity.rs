@@ -123,9 +123,7 @@ impl ToSql for PostgresTypeEntity {
             .graph
             .neighbors_undirected(self_index)
             .find_map(|neighbor| match &context.graph[neighbor] {
-                SqlGraphEntity::Function(func) if func.full_path == in_fn_path => {
-                    Some((neighbor, func))
-                }
+                SqlGraphEntity::Function(func) if func.full_path == in_fn_path => Some((neighbor, func)),
                 _ => None,
             })
             .ok_or_else(|| eyre!("Could not find in_fn graph entity."))?;
@@ -153,9 +151,7 @@ impl ToSql for PostgresTypeEntity {
             .graph
             .neighbors_undirected(self_index)
             .find_map(|neighbor| match &context.graph[neighbor] {
-                SqlGraphEntity::Function(func) if func.full_path == out_fn_path => {
-                    Some((neighbor, func))
-                }
+                SqlGraphEntity::Function(func) if func.full_path == out_fn_path => Some((neighbor, func)),
                 _ => None,
             })
             .ok_or_else(|| eyre!("Could not find out_fn graph entity."))?;
@@ -177,7 +173,8 @@ impl ToSql for PostgresTypeEntity {
         );
         tracing::trace!(sql = %shell_type);
 
-        let materialized_type = format!("\n\
+        let materialized_type = format!(
+            "\n\
                                 -- {file}:{line}\n\
                                 -- {full_path}\n\
                                 CREATE TYPE {schema}{name} (\n\
@@ -187,17 +184,17 @@ impl ToSql for PostgresTypeEntity {
                                     \tSTORAGE = extended\n\
                                 );\
                             ",
-                                        full_path = item.full_path,
-                                        file = item.file,
-                                        line = item.line,
-                                        schema = context.schema_prefix_for(&self_index),
-                                        name = item.name,
-                                        schema_prefix_in_fn = context.schema_prefix_for(&in_fn_graph_index),
-                                        in_fn = item.in_fn,
-                                        in_fn_path = in_fn_path,
-                                        schema_prefix_out_fn = context.schema_prefix_for(&out_fn_graph_index),
-                                        out_fn = item.out_fn,
-                                        out_fn_path = out_fn_path,
+            full_path = item.full_path,
+            file = item.file,
+            line = item.line,
+            schema = context.schema_prefix_for(&self_index),
+            name = item.name,
+            schema_prefix_in_fn = context.schema_prefix_for(&in_fn_graph_index),
+            in_fn = item.in_fn,
+            in_fn_path = in_fn_path,
+            schema_prefix_out_fn = context.schema_prefix_for(&out_fn_graph_index),
+            out_fn = item.out_fn,
+            out_fn_path = out_fn_path,
         );
         tracing::trace!(sql = %materialized_type);
 

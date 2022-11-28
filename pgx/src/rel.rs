@@ -9,8 +9,7 @@ Use of this source code is governed by the MIT license that can be found in the 
 
 //! Provides a safe wrapper around Postgres' `pg_sys::RelationData` struct
 use crate::{
-    direct_function_call, name_data_to_str, pg_sys, FromDatum, IntoDatum, PgBox, PgList,
-    PgTupleDesc,
+    direct_function_call, name_data_to_str, pg_sys, FromDatum, IntoDatum, PgBox, PgList, PgTupleDesc,
 };
 use pgx_utils::sql_entity_graph::metadata::{
     ArgumentError, Returns, ReturnsError, SqlMapping, SqlTranslatable,
@@ -129,13 +128,8 @@ impl PgRelation {
     /// dropped.
     pub fn open_with_name_and_share_lock(relname: &str) -> std::result::Result<Self, &'static str> {
         unsafe {
-            match direct_function_call::<pg_sys::Oid>(
-                pg_sys::to_regclass,
-                vec![relname.into_datum()],
-            ) {
-                Some(oid) => {
-                    Ok(PgRelation::with_lock(oid, pg_sys::AccessShareLock as pg_sys::LOCKMODE))
-                }
+            match direct_function_call::<pg_sys::Oid>(pg_sys::to_regclass, vec![relname.into_datum()]) {
+                Some(oid) => Ok(PgRelation::with_lock(oid, pg_sys::AccessShareLock as pg_sys::LOCKMODE)),
                 None => Err("no such relation"),
             }
         }
@@ -177,8 +171,7 @@ impl PgRelation {
     /// relation to which it is attached
     pub fn heap_relation(&self) -> Option<PgRelation> {
         // SAFETY: we know self.boxed and its members are correct as we created it
-        let rd_index: PgBox<pg_sys::FormData_pg_index> =
-            unsafe { PgBox::from_pg(self.boxed.rd_index) };
+        let rd_index: PgBox<pg_sys::FormData_pg_index> = unsafe { PgBox::from_pg(self.boxed.rd_index) };
         if rd_index.is_null() {
             None
         } else {
@@ -187,14 +180,10 @@ impl PgRelation {
     }
 
     /// Return an iterator of indices, as `PgRelation`s, attached to this relation
-    pub fn indices(
-        &self,
-        lockmode: pg_sys::LOCKMODE,
-    ) -> impl std::iter::Iterator<Item = PgRelation> {
+    pub fn indices(&self, lockmode: pg_sys::LOCKMODE) -> impl std::iter::Iterator<Item = PgRelation> {
         // SAFETY: we know self.boxed is a valid pointer as we created it
-        let list = unsafe {
-            PgList::<pg_sys::Oid>::from_pg(pg_sys::RelationGetIndexList(self.boxed.as_ptr()))
-        };
+        let list =
+            unsafe { PgList::<pg_sys::Oid>::from_pg(pg_sys::RelationGetIndexList(self.boxed.as_ptr())) };
 
         list.iter_oid()
             .filter(|oid| *oid != pg_sys::InvalidOid)
@@ -308,10 +297,7 @@ impl FromDatum for PgRelation {
         if is_null {
             None
         } else {
-            Some(PgRelation::with_lock(
-                datum.value() as _,
-                pg_sys::AccessShareLock as pg_sys::LOCKMODE,
-            ))
+            Some(PgRelation::with_lock(datum.value() as _, pg_sys::AccessShareLock as pg_sys::LOCKMODE))
         }
     }
 }
@@ -340,9 +326,7 @@ impl Drop for PgRelation {
             if self.need_close {
                 match self.lockmode {
                     None => unsafe { pg_sys::RelationClose(self.boxed.as_ptr()) },
-                    Some(lockmode) => unsafe {
-                        pg_sys::relation_close(self.boxed.as_ptr(), lockmode)
-                    },
+                    Some(lockmode) => unsafe { pg_sys::relation_close(self.boxed.as_ptr(), lockmode) },
                 }
             }
         }

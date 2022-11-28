@@ -69,8 +69,7 @@ macro_rules! anynumeric_from_float {
                 #[cfg(any(feature = "pg11", feature = "pg12", feature = "pg13"))]
                 {
                     if value.is_infinite() {
-                        return from_primitive_helper::<_, 0, 0>(value, pg_sys::$func)
-                            .map(|n| n.into());
+                        return from_primitive_helper::<_, 0, 0>(value, pg_sys::$func).map(|n| n.into());
                     }
                 }
 
@@ -109,8 +108,7 @@ impl FromStr for AnyNumeric {
         unsafe {
             let ptr = s.as_pg_cstr();
             let cstr = CStr::from_ptr(ptr);
-            let numeric =
-                from_primitive_helper::<_, 0, 0>(cstr, pg_sys::numeric_in).map(|n| n.into());
+            let numeric = from_primitive_helper::<_, 0, 0>(cstr, pg_sys::numeric_in).map(|n| n.into());
             pg_sys::pfree(ptr.cast());
             numeric
         }

@@ -48,8 +48,8 @@ impl Clone for AnyNumeric {
     /// Performs a deep clone of this [`AnyNumeric`] into the [`pg_sys::CurrentMemoryContext`].
     fn clone(&self) -> Self {
         unsafe {
-            let copy = PgMemoryContexts::CurrentMemoryContext
-                .copy_ptr_into(self.inner, varsize(self.inner.cast()));
+            let copy =
+                PgMemoryContexts::CurrentMemoryContext.copy_ptr_into(self.inner, varsize(self.inner.cast()));
             AnyNumeric { inner: copy, need_pfree: true }
         }
     }
@@ -67,9 +67,8 @@ impl Drop for AnyNumeric {
 
 impl Display for AnyNumeric {
     fn fmt(&self, fmt: &mut Formatter<'_>) -> fmt::Result {
-        let numeric_out = unsafe {
-            direct_function_call::<&CStr>(pg_sys::numeric_out, vec![self.as_datum()]).unwrap()
-        };
+        let numeric_out =
+            unsafe { direct_function_call::<&CStr>(pg_sys::numeric_out, vec![self.as_datum()]).unwrap() };
         let s = numeric_out.to_str().expect("numeric_out is not a valid UTF8 string");
         fmt.pad(s)
     }
@@ -135,10 +134,7 @@ impl AnyNumeric {
 
     /// Compute the logarithm of this [`AnyNumeric`] in the given base
     pub fn log(&self, base: AnyNumeric) -> Self {
-        unsafe {
-            direct_function_call(pg_sys::numeric_log, vec![self.as_datum(), base.as_datum()])
-                .unwrap()
-        }
+        unsafe { direct_function_call(pg_sys::numeric_log, vec![self.as_datum(), base.as_datum()]).unwrap() }
     }
 
     /// Raise `e` to the power of `x`
@@ -164,9 +160,7 @@ impl AnyNumeric {
     /// Calculate the greatest common divisor of this an another [`AnyNumeric`]
     #[cfg(not(any(feature = "pg11", feature = "pg12")))]
     pub fn gcd(&self, n: &AnyNumeric) -> AnyNumeric {
-        unsafe {
-            direct_function_call(pg_sys::numeric_gcd, vec![self.as_datum(), n.as_datum()]).unwrap()
-        }
+        unsafe { direct_function_call(pg_sys::numeric_gcd, vec![self.as_datum(), n.as_datum()]).unwrap() }
     }
 
     /// Output function for numeric data type, suppressing insignificant trailing
@@ -231,9 +225,7 @@ impl<const P: u32, const S: u32> Numeric<P, S> {
     /// assert_eq!(rescaled, 42.4);
     /// ```
     #[inline]
-    pub fn rescale<const NEW_P: u32, const NEW_S: u32>(
-        self,
-    ) -> Result<Numeric<NEW_P, NEW_S>, Error> {
+    pub fn rescale<const NEW_P: u32, const NEW_S: u32>(self) -> Result<Numeric<NEW_P, NEW_S>, Error> {
         from_primitive_helper::<_, NEW_P, NEW_S>(self, pg_sys::numeric)
     }
 }

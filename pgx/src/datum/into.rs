@@ -13,8 +13,7 @@ Use of this source code is governed by the MIT license that can be found in the 
 //! cast of the primitive type to pg_sys::Datum
 
 use crate::{
-    pg_sys, rust_byte_slice_to_bytea, rust_regtypein, rust_str_to_text_p, PgBox, PgOid,
-    WhoAllocated,
+    pg_sys, rust_byte_slice_to_bytea, rust_regtypein, rust_str_to_text_p, PgBox, PgOid, WhoAllocated,
 };
 use pgx_pg_sys::Oid;
 

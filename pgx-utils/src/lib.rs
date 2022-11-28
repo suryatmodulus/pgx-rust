@@ -220,9 +220,7 @@ pub fn categorize_type(ty: &Type) -> CategorizedType {
                                 let result = categorize_type(ty);
 
                                 return match result {
-                                    CategorizedType::Iterator(i) => {
-                                        CategorizedType::OptionalIterator(i)
-                                    }
+                                    CategorizedType::Iterator(i) => CategorizedType::OptionalIterator(i),
 
                                     _ => result,
                                 };
@@ -307,9 +305,7 @@ pub fn categorize_trait_bound(bound: &TypeParamBound) -> CategorizedType {
                         PathArguments::AngleBracketed(a) => {
                             let args = &a.args;
                             if args.len() > 1 {
-                                panic!(
-                                    "Only one generic type is supported when returning an Iterator"
-                                )
+                                panic!("Only one generic type is supported when returning an Iterator")
                             }
 
                             match args.first().unwrap() {
@@ -321,15 +317,15 @@ pub fn categorize_trait_bound(bound: &TypeParamBound) -> CategorizedType {
                                             for e in &tuple.elems {
                                                 types.push(quote! {#e}.to_string());
                                             }
-                                        },
-                                        _ => {
-                                            types.push(quote! {#ty}.to_string())
                                         }
+                                        _ => types.push(quote! {#ty}.to_string()),
                                     }
 
                                     return CategorizedType::Iterator(types);
                                 }
-                                _ => panic!("Only binding type arguments are supported when returning an Iterator")
+                                _ => panic!(
+                                    "Only binding type arguments are supported when returning an Iterator"
+                                ),
                             }
                         }
                     }
@@ -364,8 +360,7 @@ pub fn staticize_lifetimes(value: &mut syn::Type) {
                             match arg {
                                 // rename lifetimes to the static lifetime so the TypeIds match.
                                 syn::GenericArgument::Lifetime(lifetime) => {
-                                    lifetime.ident =
-                                        syn::Ident::new("static", lifetime.ident.span());
+                                    lifetime.ident = syn::Ident::new("static", lifetime.ident.span());
                                 }
 
                                 // recurse
@@ -468,8 +463,7 @@ pub fn anonymize_lifetimes(value: &mut syn::Type) {
                                     for bound in constraint.bounds.iter_mut() {
                                         match bound {
                                             syn::TypeParamBound::Lifetime(lifetime) => {
-                                                lifetime.ident =
-                                                    syn::Ident::new("_", lifetime.ident.span())
+                                                lifetime.ident = syn::Ident::new("_", lifetime.ident.span())
                                             }
                                             _ => {}
                                         }

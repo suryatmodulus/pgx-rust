@@ -51,10 +51,7 @@ fn query_wrapper<F, T>(
 ) -> eyre::Result<T>
 where
     T: IntoIterator,
-    F: FnMut(
-        Option<String>,
-        Option<&[&(dyn postgres::types::ToSql + Sync)]>,
-    ) -> Result<T, postgres::Error>,
+    F: FnMut(Option<String>, Option<&[&(dyn postgres::types::ToSql + Sync)]>) -> Result<T, postgres::Error>,
 {
     let result = f(query.clone(), query_params.clone());
 
@@ -89,9 +86,8 @@ where
                     let hint = dberror.hint().unwrap_or("None");
                     let schema = dberror.hint().unwrap_or("None");
                     let table = dberror.table().unwrap_or("None");
-                    let more_info = format!(
-                        "\ndetail: {detail}\nhint: {hint}\nschema: {schema}\ntable: {table}"
-                    );
+                    let more_info =
+                        format!("\ndetail: {detail}\nhint: {hint}\nschema: {schema}\ntable: {table}");
                     message.push_str(more_info.as_str());
                 }
             }
@@ -194,16 +190,12 @@ fn format_loglines(session_id: &str, loglines: &LogLines) -> String {
     result
 }
 
-fn initialize_test_framework(
-    postgresql_conf: Vec<&'static str>,
-) -> eyre::Result<(LogLines, String)> {
+fn initialize_test_framework(postgresql_conf: Vec<&'static str>) -> eyre::Result<(LogLines, String)> {
     let mut state = TEST_MUTEX.lock().unwrap_or_else(|_| {
         // This used to immediately throw an std::process::exit(1), but it
         // would consume both stdout and stderr, resulting in error messages
         // not being displayed unless you were running tests with --nocapture.
-        panic!(
-            "Could not obtain test mutex. A previous test may have hard-aborted while holding it."
-        );
+        panic!("Could not obtain test mutex. A previous test may have hard-aborted while holding it.");
     });
 
     if !state.installed {
@@ -230,9 +222,7 @@ fn get_pg_config() -> eyre::Result<PgConfig> {
 
     let pg_config = pgx
         .get(&format!("pg{}", pg_version))
-        .wrap_err_with(|| {
-            format!("Error getting pg_config: {} is not a valid postgres version", pg_version)
-        })
+        .wrap_err_with(|| format!("Error getting pg_config: {} is not a valid postgres version", pg_version))
         .unwrap()
         .clone();
 
@@ -347,10 +337,7 @@ fn install_extension() -> eyre::Result<()> {
     let command_str = format!("{:?}", command);
 
     let child = command.spawn().wrap_err_with(|| {
-        format!(
-            "Failed to spawn process for installing extension using command: '{}': ",
-            command_str
-        )
+        format!("Failed to spawn process for installing extension using command: '{}': ", command_str)
     })?;
 
     let output = child.wait_with_output().wrap_err_with(|| {
@@ -377,8 +364,7 @@ fn initdb(postgresql_conf: Vec<&'static str>) -> eyre::Result<()> {
 
     if !pgdata.is_dir() {
         let pg_config = get_pg_config()?;
-        let mut command =
-            Command::new(pg_config.initdb_path().wrap_err("unable to determine initdb path")?);
+        let mut command = Command::new(pg_config.initdb_path().wrap_err("unable to determine initdb path")?);
 
         command
             .args(get_c_locale_flags())
@@ -390,10 +376,7 @@ fn initdb(postgresql_conf: Vec<&'static str>) -> eyre::Result<()> {
         let command_str = format!("{:?}", command);
 
         let child = command.spawn().wrap_err_with(|| {
-            format!(
-                "Failed to spawn process for initializing database using command: '{}': ",
-                command_str
-            )
+            format!("Failed to spawn process for initializing database using command: '{}': ", command_str)
         })?;
 
         let output = child.wait_with_output().wrap_err_with(|| {
@@ -433,9 +416,7 @@ fn modify_postgresql_conf(pgdata: PathBuf, postgresql_conf: Vec<&'static str>) -
     }
 
     postgresql_conf_file
-        .write_all(
-            format!("unix_socket_directories = '{}'", Pgx::home().unwrap().display()).as_bytes(),
-        )
+        .write_all(format!("unix_socket_directories = '{}'", Pgx::home().unwrap().display()).as_bytes())
         .wrap_err("couldn't append `unix_socket_directories` setting to postgresql.conf")?;
     Ok(())
 }
@@ -477,10 +458,9 @@ fn monitor_pg(mut command: Command, cmd_string: String, loglines: LogLines) -> S
         // clean up due to a SIGNAL?
         add_shutdown_hook(move || unsafe {
             libc::kill(pid as libc::pid_t, libc::SIGTERM);
-            let message_string = std::ffi::CString::new(
-                format!("stopping postgres (pid={pid})\n").bold().blue().to_string(),
-            )
-            .unwrap();
+            let message_string =
+                std::ffi::CString::new(format!("stopping postgres (pid={pid})\n").bold().blue().to_string())
+                    .unwrap();
             // IMPORTANT: Rust string literals are not naturally null-terminated
             libc::printf("%s\0".as_ptr().cast(), message_string.as_ptr());
         });
@@ -580,15 +560,10 @@ fn create_extension() -> eyre::Result<()> {
     let (mut client, _) = client()?;
     let extension_name = get_extension_name();
 
-    query_wrapper(
-        Some(format!("CREATE EXTENSION {} CASCADE;", &extension_name)),
-        None,
-        |query, _| client.simple_query(query.unwrap().as_str()),
-    )
-    .wrap_err(format!(
-        "There was an issue creating the extension '{}' in Postgres: ",
-        &extension_name
-    ))?;
+    query_wrapper(Some(format!("CREATE EXTENSION {} CASCADE;", &extension_name)), None, |query, _| {
+        client.simple_query(query.unwrap().as_str())
+    })
+    .wrap_err(format!("There was an issue creating the extension '{}' in Postgres: ", &extension_name))?;
 
     Ok(())
 }
@@ -610,15 +585,10 @@ pub(crate) fn get_pg_dbname() -> &'static str {
 }
 
 pub(crate) fn get_pg_user() -> String {
-    std::env::var("USER")
-        .unwrap_or_else(|_| panic!("USER environment var is unset or invalid UTF-8"))
+    std::env::var("USER").unwrap_or_else(|_| panic!("USER environment var is unset or invalid UTF-8"))
 }
 
-pub fn get_named_capture(
-    regex: &regex::Regex,
-    name: &'static str,
-    against: &str,
-) -> Option<String> {
+pub fn get_named_capture(regex: &regex::Regex, name: &'static str, against: &str) -> Option<String> {
     match regex.captures(against) {
         Some(cap) => Some(cap[name].to_string()),
         None => None,

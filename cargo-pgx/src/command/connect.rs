@@ -62,8 +62,8 @@ impl CommandExecute for Connect {
                     let package_manifest_path =
                         crate::manifest::manifest_path(&metadata, self.package.as_ref())
                             .wrap_err("Couldn't get manifest path")?;
-                    let package_manifest = Manifest::from_path(&package_manifest_path)
-                        .wrap_err("Couldn't parse manifest")?;
+                    let package_manifest =
+                        Manifest::from_path(&package_manifest_path).wrap_err("Couldn't parse manifest")?;
 
                     let default_pg_version = crate::manifest::default_pg_version(&package_manifest)
                         .ok_or(eyre!("no provided `pg$VERSION` flag."))?;
@@ -72,15 +72,13 @@ impl CommandExecute for Connect {
             },
             None => {
                 // We should infer from the manifest.
-                let metadata =
-                    crate::metadata::metadata(&Default::default(), self.manifest_path.as_ref())
-                        .wrap_err("couldn't get cargo metadata")?;
+                let metadata = crate::metadata::metadata(&Default::default(), self.manifest_path.as_ref())
+                    .wrap_err("couldn't get cargo metadata")?;
                 crate::metadata::validate(&metadata)?;
-                let package_manifest_path =
-                    crate::manifest::manifest_path(&metadata, self.package.as_ref())
-                        .wrap_err("Couldn't get manifest path")?;
-                let package_manifest = Manifest::from_path(&package_manifest_path)
-                    .wrap_err("Couldn't parse manifest")?;
+                let package_manifest_path = crate::manifest::manifest_path(&metadata, self.package.as_ref())
+                    .wrap_err("Couldn't get manifest path")?;
+                let package_manifest =
+                    Manifest::from_path(&package_manifest_path).wrap_err("Couldn't parse manifest")?;
 
                 let default_pg_version = crate::manifest::default_pg_version(&package_manifest)
                     .ok_or(eyre!("no provided `pg$VERSION` flag."))?;
@@ -92,13 +90,11 @@ impl CommandExecute for Connect {
             Some(dbname) => dbname,
             None => {
                 // We should infer from package
-                let metadata =
-                    crate::metadata::metadata(&Default::default(), self.manifest_path.as_ref())
-                        .wrap_err("couldn't get cargo metadata")?;
+                let metadata = crate::metadata::metadata(&Default::default(), self.manifest_path.as_ref())
+                    .wrap_err("couldn't get cargo metadata")?;
                 crate::metadata::validate(&metadata)?;
-                let package_manifest_path =
-                    crate::manifest::manifest_path(&metadata, self.package.as_ref())
-                        .wrap_err("Couldn't get manifest path")?;
+                let package_manifest_path = crate::manifest::manifest_path(&metadata, self.package.as_ref())
+                    .wrap_err("Couldn't get manifest path")?;
 
                 get_property(&package_manifest_path, "extname")
                     .wrap_err("could not determine extension name")?

@@ -9,10 +9,7 @@ use std::panic::{catch_unwind, resume_unwind, AssertUnwindSafe, RefUnwindSafe, U
 /// rethrows (or throws a new) error.
 pub struct PgTryBuilder<'a, R, F: FnOnce() -> R + UnwindSafe> {
     func: F,
-    when: BTreeMap<
-        PgSqlErrorCode,
-        Box<dyn FnMut(CaughtError) -> R + 'a + UnwindSafe + RefUnwindSafe>,
-    >,
+    when: BTreeMap<PgSqlErrorCode, Box<dyn FnMut(CaughtError) -> R + 'a + UnwindSafe + RefUnwindSafe>>,
     others: Option<Box<dyn FnMut(CaughtError) -> R + 'a + UnwindSafe + RefUnwindSafe>>,
     rust: Option<Box<dyn FnMut(CaughtError) -> R + 'a + UnwindSafe + RefUnwindSafe>>,
     finally: Option<Box<dyn FnMut() + 'a>>,
@@ -89,10 +86,7 @@ impl<'a, R, F: FnOnce() -> R + UnwindSafe> PgTryBuilder<'a, R, F> {
     /// Postgres error may very well leave your database in an undesirable state.  This is your
     /// responsibility.
     #[must_use = "must call `PgTryBuilder::execute(self)` in order for it to run"]
-    pub fn catch_others(
-        mut self,
-        f: impl FnMut(CaughtError) -> R + 'a + UnwindSafe + RefUnwindSafe,
-    ) -> Self {
+    pub fn catch_others(mut self, f: impl FnMut(CaughtError) -> R + 'a + UnwindSafe + RefUnwindSafe) -> Self {
         self.others = Some(Box::new(f));
         self
     }

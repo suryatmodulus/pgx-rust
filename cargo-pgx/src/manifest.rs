@@ -13,10 +13,7 @@ use pgx_pg_config::SUPPORTED_MAJOR_VERSIONS;
 use std::path::PathBuf;
 
 #[tracing::instrument(skip_all)]
-pub(crate) fn manifest_path(
-    metadata: &Metadata,
-    package_name: Option<&String>,
-) -> eyre::Result<PathBuf> {
+pub(crate) fn manifest_path(metadata: &Metadata, package_name: Option<&String>) -> eyre::Result<PathBuf> {
     let manifest_path = if let Some(package_name) = package_name {
         let found = metadata
             .packages

@@ -48,15 +48,11 @@ impl PgVarlenaInOutFuncs for IntegerAvgState {
         let mut split = input.to_bytes().split(|b| *b == b',');
         let sum = split
             .next()
-            .map(|value| {
-                i32::from_str(unsafe { std::str::from_utf8_unchecked(value) }).expect("invalid i32")
-            })
+            .map(|value| i32::from_str(unsafe { std::str::from_utf8_unchecked(value) }).expect("invalid i32"))
             .expect("expected sum");
         let n = split
             .next()
-            .map(|value| {
-                i32::from_str(unsafe { std::str::from_utf8_unchecked(value) }).expect("invalid i32")
-            })
+            .map(|value| i32::from_str(unsafe { std::str::from_utf8_unchecked(value) }).expect("invalid i32"))
             .expect("expected n");
 
         result.sum = sum;
@@ -80,11 +76,7 @@ impl Aggregate for IntegerAvgState {
     const INITIAL_CONDITION: Option<&'static str> = Some("0,0");
 
     #[pgx(parallel_safe, immutable)]
-    fn state(
-        current: Self::State,
-        arg: Self::Args,
-        _fcinfo: pg_sys::FunctionCallInfo,
-    ) -> Self::State {
+    fn state(current: Self::State, arg: Self::Args, _fcinfo: pg_sys::FunctionCallInfo) -> Self::State {
         Self::state(current, arg)
     }
 
@@ -160,16 +152,16 @@ mod tests {
     fn test_integer_avg_state_sql() {
         Spi::run("CREATE TABLE demo_table (value INTEGER);");
         Spi::run("INSERT INTO demo_table (value) VALUES (1), (2), (3);");
-        let retval = Spi::get_one::<i32>("SELECT DEMOAVG(value) FROM demo_table;")
-            .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<i32>("SELECT DEMOAVG(value) FROM demo_table;").expect("SQL select failed");
         assert_eq!(retval, 2);
     }
     #[pg_test]
     fn test_integer_avg_with_null() {
         Spi::run("CREATE TABLE demo_table (value INTEGER);");
         Spi::run("INSERT INTO demo_table (value) VALUES (1), (NULL), (3);");
-        let retval = Spi::get_one::<i32>("SELECT DEMOAVG(value) FROM demo_table;")
-            .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<i32>("SELECT DEMOAVG(value) FROM demo_table;").expect("SQL select failed");
         assert_eq!(retval, 2);
     }
 }

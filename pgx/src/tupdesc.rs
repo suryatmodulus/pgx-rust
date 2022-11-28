@@ -263,18 +263,9 @@ pub unsafe fn release_tupdesc(ptr: pg_sys::TupleDesc) {
 }
 
 /// `attno` is 0-based
-#[cfg(any(
-    feature = "pg11",
-    feature = "pg12",
-    feature = "pg13",
-    feature = "pg14",
-    feature = "pg15"
-))]
+#[cfg(any(feature = "pg11", feature = "pg12", feature = "pg13", feature = "pg14", feature = "pg15"))]
 #[inline]
-fn tupdesc_get_attr(
-    tupdesc: &PgBox<pg_sys::TupleDescData>,
-    attno: usize,
-) -> &pg_sys::FormData_pg_attribute {
+fn tupdesc_get_attr(tupdesc: &PgBox<pg_sys::TupleDescData>, attno: usize) -> &pg_sys::FormData_pg_attribute {
     let atts = unsafe { tupdesc.attrs.as_slice(tupdesc.natts as usize) };
     &atts[attno]
 }

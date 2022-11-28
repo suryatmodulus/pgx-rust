@@ -58,11 +58,7 @@ impl Parse for PgxArg {
                 nested: content.parse_terminated(syn::NestedMeta::parse)?,
             }))
         } else if input.peek(Token![=]) {
-            Ok(Self::NameValue(NameValueArg {
-                path,
-                eq_token: input.parse()?,
-                value: input.parse()?,
-            }))
+            Ok(Self::NameValue(NameValueArg { path, eq_token: input.parse()?, value: input.parse()? }))
         } else {
             Ok(Self::Path(path))
         }

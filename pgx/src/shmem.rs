@@ -170,13 +170,11 @@ impl PgSharedMem {
         let mut found = false;
         unsafe {
             let shm_name = std::ffi::CString::new(lock.get_name()).expect("CString::new failed");
-            let addin_shmem_init_lock: *mut pg_sys::LWLock =
-                &mut (*pg_sys::MainLWLockArray.add(21)).lock;
+            let addin_shmem_init_lock: *mut pg_sys::LWLock = &mut (*pg_sys::MainLWLockArray.add(21)).lock;
             pg_sys::LWLockAcquire(addin_shmem_init_lock, pg_sys::LWLockMode_LW_EXCLUSIVE);
 
             let fv_shmem =
-                pg_sys::ShmemInitStruct(shm_name.into_raw(), std::mem::size_of::<T>(), &mut found)
-                    as *mut T;
+                pg_sys::ShmemInitStruct(shm_name.into_raw(), std::mem::size_of::<T>(), &mut found) as *mut T;
 
             std::ptr::write(fv_shmem, <T>::default());
 
@@ -188,17 +186,14 @@ impl PgSharedMem {
     /// Must be run from the shared memory init hook, use for rust atomics behind `PgAtomic`
     pub fn shmem_init_atomic<T: atomic_traits::Atomic + Default>(atomic: &PgAtomic<T>) {
         unsafe {
-            let shm_name =
-                std::ffi::CString::new(Uuid::new_v4().to_string()).expect("CString::new() failed");
+            let shm_name = std::ffi::CString::new(Uuid::new_v4().to_string()).expect("CString::new() failed");
 
-            let addin_shmem_init_lock: *mut pg_sys::LWLock =
-                &mut (*pg_sys::MainLWLockArray.add(21)).lock;
+            let addin_shmem_init_lock: *mut pg_sys::LWLock = &mut (*pg_sys::MainLWLockArray.add(21)).lock;
 
             let mut found = false;
             pg_sys::LWLockAcquire(addin_shmem_init_lock, pg_sys::LWLockMode_LW_EXCLUSIVE);
             let fv_shmem =
-                pg_sys::ShmemInitStruct(shm_name.into_raw(), std::mem::size_of::<T>(), &mut found)
-                    as *mut T;
+                pg_sys::ShmemInitStruct(shm_name.into_raw(), std::mem::size_of::<T>(), &mut found) as *mut T;
 
             atomic.attach(fv_shmem);
             let atomic = T::default();
@@ -258,7 +253,4 @@ where
 {
 }
 unsafe impl<T, const N: usize> PGXSharedMemory for heapless::Vec<T, N> {}
-unsafe impl<K: Eq + Hash, V: Default, S, const N: usize> PGXSharedMemory
-    for heapless::IndexMap<K, V, S, N>
-{
-}
+unsafe impl<K: Eq + Hash, V: Default, S, const N: usize> PGXSharedMemory for heapless::IndexMap<K, V, S, N> {}

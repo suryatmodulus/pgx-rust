@@ -79,9 +79,8 @@ impl CommandExecute for Schema {
         let metadata = crate::metadata::metadata(&self.features, self.manifest_path.as_ref())
             .wrap_err("couldn't get cargo metadata")?;
         crate::metadata::validate(&metadata)?;
-        let package_manifest_path =
-            crate::manifest::manifest_path(&metadata, self.package.as_ref())
-                .wrap_err("Couldn't get manifest path")?;
+        let package_manifest_path = crate::manifest::manifest_path(&metadata, self.package.as_ref())
+            .wrap_err("Couldn't get manifest path")?;
         let package_manifest =
             Manifest::from_path(&package_manifest_path).wrap_err("Couldn't parse manifest")?;
 
@@ -115,8 +114,7 @@ impl CommandExecute for Schema {
             }
         };
 
-        let features =
-            crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
+        let features = crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
 
         let profile = CargoProfile::from_flags(self.release, self.profile.as_deref())?;
 
@@ -207,11 +205,8 @@ pub(crate) fn generate_schema(
     check_rust_version()?;
     let manifest = Manifest::from_path(&package_manifest_path)?;
     let (control_file, _extname) = find_control_file(&package_manifest_path)?;
-    let package_name = &manifest
-        .package
-        .as_ref()
-        .ok_or_else(|| eyre!("Could not find crate name in Cargo.toml."))?
-        .name;
+    let package_name =
+        &manifest.package.as_ref().ok_or_else(|| eyre!("Could not find crate name in Cargo.toml."))?.name;
 
     if get_property(&package_manifest_path, "relocatable")? != Some("false".into()) {
         return Err(eyre!(
@@ -275,11 +270,7 @@ pub(crate) fn generate_schema(
 
         let command = command.stderr(Stdio::inherit());
         let command_str = format!("{:?}", command);
-        eprintln!(
-            "{} for SQL generation with features `{}`",
-            "    Building".bold().green(),
-            features_arg,
-        );
+        eprintln!("{} for SQL generation with features `{}`", "    Building".bold().green(), features_arg,);
 
         tracing::debug!(command = %command_str, "Running");
         let cargo_output =
@@ -356,11 +347,8 @@ pub(crate) fn generate_schema(
     let mut num_aggregates = 0_usize;
     for func in &fns_to_call {
         if func.starts_with("__pgx_internals_schema_") {
-            let schema = func
-                .split("_")
-                .skip(5)
-                .next()
-                .expect("Schema extern name was not of expected format");
+            let schema =
+                func.split("_").skip(5).next().expect("Schema extern name was not of expected format");
             seen_schemas.push(schema);
         } else if func.starts_with("__pgx_internals_fn_") {
             num_funcs += 1;
@@ -449,9 +437,8 @@ pub(crate) fn generate_schema(
         }
     };
 
-    let pgx_sql =
-        PgxSql::build(sql_mapping, entities.into_iter(), package_name.to_string(), versioned_so)
-            .wrap_err("SQL generation error")?;
+    let pgx_sql = PgxSql::build(sql_mapping, entities.into_iter(), package_name.to_string(), versioned_so)
+        .wrap_err("SQL generation error")?;
 
     if let Some(out_path) = path {
         let out_path = out_path.as_ref();
@@ -465,14 +452,10 @@ pub(crate) fn generate_schema(
         if let Some(parent) = out_path.parent() {
             std::fs::create_dir_all(parent).wrap_err("Could not create parent directory")?
         }
-        pgx_sql
-            .to_file(out_path)
-            .wrap_err_with(|| eyre!("Could not write SQL to {}", out_path.display()))?;
+        pgx_sql.to_file(out_path).wrap_err_with(|| eyre!("Could not write SQL to {}", out_path.display()))?;
     } else {
         eprintln!("{} SQL entities to {}", "     Writing".bold().green(), "/dev/stdout".cyan(),);
-        pgx_sql
-            .write(&mut std::io::stdout())
-            .wrap_err_with(|| eyre!("Could not write SQL to stdout"))?;
+        pgx_sql.write(&mut std::io::stdout()).wrap_err_with(|| eyre!("Could not write SQL to stdout"))?;
     }
 
     if let Some(dot_path) = dot {
@@ -503,8 +486,7 @@ fn create_stub(
     let mut postmaster_stub_built = postmaster_stub_dir.to_path_buf();
     postmaster_stub_built.push("postmaster_stub.so");
 
-    let postmaster_bin_data =
-        std::fs::read(postmaster_path).wrap_err("couldn't read postmaster")?;
+    let postmaster_bin_data = std::fs::read(postmaster_path).wrap_err("couldn't read postmaster")?;
 
     let mut hasher = std::collections::hash_map::DefaultHasher::new();
     postmaster_bin_data.hash(&mut hasher);
@@ -523,9 +505,8 @@ fn create_stub(
 
     let postmaster_obj_file =
         object::File::parse(&*postmaster_bin_data).wrap_err("couldn't parse postmaster")?;
-    let postmaster_exports = postmaster_obj_file
-        .exports()
-        .wrap_err("couldn't get exports from extension shared object")?;
+    let postmaster_exports =
+        postmaster_obj_file.exports().wrap_err("couldn't get exports from extension shared object")?;
 
     let mut symbols_to_stub = HashSet::new();
     for export in postmaster_exports {
@@ -557,19 +538,15 @@ fn create_stub(
         "--crate-type",
         "cdylib",
         "-o",
-        postmaster_stub_built
-            .to_str()
-            .ok_or(eyre!("could not call postmaster_stub_built.to_str()"))?,
-        postmaster_stub_file
-            .to_str()
-            .ok_or(eyre!("could not call postmaster_stub_file.to_str()"))?,
+        postmaster_stub_built.to_str().ok_or(eyre!("could not call postmaster_stub_built.to_str()"))?,
+        postmaster_stub_file.to_str().ok_or(eyre!("could not call postmaster_stub_file.to_str()"))?,
     ]);
 
     let so_rustc_invocation_str = format!("{:?}", so_rustc_invocation);
     tracing::debug!(command = %so_rustc_invocation_str, "Running");
-    let output = so_rustc_invocation.output().wrap_err_with(|| {
-        eyre!("could not invoke `rustc` on {}", &postmaster_stub_file.display())
-    })?;
+    let output = so_rustc_invocation
+        .output()
+        .wrap_err_with(|| eyre!("could not invoke `rustc` on {}", &postmaster_stub_file.display()))?;
 
     let code = output.status.code().ok_or(eyre!("could not get status code of build"))?;
     tracing::trace!(status_code = %code, command = %so_rustc_invocation_str, "Finished");

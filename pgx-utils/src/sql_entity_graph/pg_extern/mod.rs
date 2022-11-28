@@ -96,9 +96,8 @@ impl PgExtern {
 
         if let Some(ref mut content) = to_sql_config.content {
             let value = content.value();
-            let updated_value = value
-                .replace("@FUNCTION_NAME@", &*(func.sig.ident.to_string() + "_wrapper"))
-                + "\n";
+            let updated_value =
+                value.replace("@FUNCTION_NAME@", &*(func.sig.ident.to_string() + "_wrapper")) + "\n";
             *content = syn::LitStr::new(&updated_value, Span::call_site());
         }
 
@@ -150,10 +149,11 @@ impl PgExtern {
                             in_commented_sql_block = false;
                         } else if in_commented_sql_block {
                             let sql = retval.get_or_insert_with(String::default);
-                            let line = inner.value().trim_start().replace(
-                                "@FUNCTION_NAME@",
-                                &*(self.func.sig.ident.to_string() + "_wrapper"),
-                            ) + "\n";
+                            let line = inner
+                                .value()
+                                .trim_start()
+                                .replace("@FUNCTION_NAME@", &*(self.func.sig.ident.to_string() + "_wrapper"))
+                                + "\n";
                             sql.push_str(&*line);
                         }
                     }
@@ -320,10 +320,8 @@ impl PgExtern {
     }
 
     fn finfo_tokens(&self) -> TokenStream2 {
-        let finfo_name = syn::Ident::new(
-            &format!("pg_finfo_{}_wrapper", self.func.sig.ident),
-            Span::call_site(),
-        );
+        let finfo_name =
+            syn::Ident::new(&format!("pg_finfo_{}_wrapper", self.func.sig.ident), Span::call_site());
         quote_spanned! { self.func.sig.span() =>
             #[no_mangle]
             #[doc(hidden)]
@@ -336,10 +334,8 @@ impl PgExtern {
 
     pub fn wrapper_func(&self) -> TokenStream2 {
         let func_name = &self.func.sig.ident;
-        let func_name_wrapper = Ident::new(
-            &format!("{}_wrapper", &self.func.sig.ident.to_string()),
-            self.func.sig.ident.span(),
-        );
+        let func_name_wrapper =
+            Ident::new(&format!("{}_wrapper", &self.func.sig.ident.to_string()), self.func.sig.ident.span());
         let func_generics = &self.func.sig.generics;
         let is_raw = self.extern_attrs().contains(&Attribute::Raw);
         // We use a `_` prefix to make functions with no args more satisfied during linting.

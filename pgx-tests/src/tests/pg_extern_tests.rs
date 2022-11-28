@@ -10,15 +10,16 @@ Use of this source code is governed by the MIT license that can be found in the 
 use pgx::prelude::*;
 
 #[pg_extern(immutable)]
-fn returns_tuple_with_attributes(
-) -> TableIterator<'static, (name!(arg, String), name!(arg2, String))> {
+fn returns_tuple_with_attributes() -> TableIterator<'static, (name!(arg, String), name!(arg2, String))> {
     TableIterator::once(("hi".to_string(), "bye".to_string()))
 }
 
 // Check we can map a `fdw_handler`
 #[pg_extern]
 fn fdw_handler_return() -> pgx::PgBox<pgx::pg_sys::FdwRoutine> {
-    unimplemented!("Not a functional test, just a signature test for SQL generation. Feel free to make a functional test!")
+    unimplemented!(
+        "Not a functional test, just a signature test for SQL generation. Feel free to make a functional test!"
+    )
 }
 
 #[cfg(any(test, feature = "pg_test"))]
@@ -43,10 +44,9 @@ mod tests {
 
     #[pg_test]
     fn test_immutable() {
-        let result = Spi::get_one::<bool>(
-            "SELECT provolatile = 'i' FROM pg_proc WHERE proname = 'is_immutable'",
-        )
-        .expect("failed to get SPI result");
+        let result =
+            Spi::get_one::<bool>("SELECT provolatile = 'i' FROM pg_proc WHERE proname = 'is_immutable'")
+                .expect("failed to get SPI result");
         assert!(result)
     }
 
@@ -100,9 +100,8 @@ mod tests {
             .expect("failed to get SPI result");
         assert!(replace_result);
 
-        let create_result =
-            Spi::get_one::<i32>(r#"SELECT tests."create_or_replace_method_other"()"#)
-                .expect("failed to get SPI result");
+        let create_result = Spi::get_one::<i32>(r#"SELECT tests."create_or_replace_method_other"()"#)
+            .expect("failed to get SPI result");
         assert_eq!(create_result, 42);
     }
 
@@ -113,9 +112,8 @@ mod tests {
 
     #[pg_test]
     fn test_anyele_type() {
-        let interval_type =
-            Spi::get_one::<i32>(r#"SELECT tests."anyele_type"('5 hours'::interval)"#)
-                .expect("failed to get SPI result");
+        let interval_type = Spi::get_one::<i32>(r#"SELECT tests."anyele_type"('5 hours'::interval)"#)
+            .expect("failed to get SPI result");
         assert_eq!(interval_type as u32, pg_sys::INTERVALOID);
     }
 
@@ -126,8 +124,8 @@ mod tests {
 
     #[pg_test]
     fn test_name() {
-        let result = Spi::get_one::<bool>(r#"SELECT tests."custom_name"()"#)
-            .expect("failed to get SPI result");
+        let result =
+            Spi::get_one::<bool>(r#"SELECT tests."custom_name"()"#).expect("failed to get SPI result");
         assert!(result);
     }
 }

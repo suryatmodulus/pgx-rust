@@ -110,8 +110,7 @@ fn main() -> eyre::Result<()> {
     println!("cargo:rerun-if-changed=include");
     println!("cargo:rerun-if-changed=cshim");
 
-    let pg_configs = if std::env::var("PGX_PG_SYS_GENERATE_BINDINGS_FOR_RELEASE")
-        .unwrap_or("false".into())
+    let pg_configs = if std::env::var("PGX_PG_SYS_GENERATE_BINDINGS_FOR_RELEASE").unwrap_or("false".into())
         == "1"
     {
         pgx.iter(PgConfigSelector::All)
@@ -123,9 +122,7 @@ fn main() -> eyre::Result<()> {
                 } else {
                     println!(
                         "cargo:warning={} contains a configuration for pg{}, which pgx does not support.",
-                        Pgx::config_toml()
-                            .expect("Could not get PGX configuration TOML")
-                            .to_string_lossy(),
+                        Pgx::config_toml().expect("Could not get PGX configuration TOML").to_string_lossy(),
                         t.0
                     );
                     None
@@ -139,18 +136,16 @@ fn main() -> eyre::Result<()> {
                 continue;
             }
             if found.is_some() {
-                return Err(eyre!("Multiple `pg$VERSION` features found, `--no-default-features` may be required."));
+                return Err(eyre!(
+                    "Multiple `pg$VERSION` features found, `--no-default-features` may be required."
+                ));
             }
             found = Some(format!("pg{}", version));
         }
         let found = found.ok_or_else(|| {
             eyre!(
                 "Did not find `pg$VERSION` feature. `pgx-pg-sys` requires one of {} to be set",
-                SUPPORTED_MAJOR_VERSIONS
-                    .iter()
-                    .map(|x| format!("`pg{}`", x))
-                    .collect::<Vec<_>>()
-                    .join(", ")
+                SUPPORTED_MAJOR_VERSIONS.iter().map(|x| format!("`pg{}`", x)).collect::<Vec<_>>().join(", ")
             )
         })?;
         let specific = pgx.get(&found)?;
@@ -187,14 +182,12 @@ fn generate_bindings(
     let rewritten_items = rewrite_items(&bindgen_output, is_for_release)
         .wrap_err_with(|| format!("failed to rewrite items for pg{}", major_version))?;
 
-    let dest_dirs = if std::env::var("PGX_PG_SYS_GENERATE_BINDINGS_FOR_RELEASE")
-        .unwrap_or("false".into())
-        == "1"
-    {
-        vec![build_paths.out_dir.clone(), build_paths.src_dir.clone()]
-    } else {
-        vec![build_paths.out_dir.clone()]
-    };
+    let dest_dirs =
+        if std::env::var("PGX_PG_SYS_GENERATE_BINDINGS_FOR_RELEASE").unwrap_or("false".into()) == "1" {
+            vec![build_paths.out_dir.clone(), build_paths.src_dir.clone()]
+        } else {
+            vec![build_paths.out_dir.clone()]
+        };
     for dest_dir in dest_dirs {
         let mut bindings_file = dest_dir.clone();
         bindings_file.push(&format!("pg{}.rs", major_version));
@@ -209,21 +202,13 @@ fn generate_bindings(
             },
         )
         .wrap_err_with(|| {
-            format!(
-                "Unable to write bindings file for pg{} to `{}`",
-                major_version,
-                bindings_file.display()
-            )
+            format!("Unable to write bindings file for pg{} to `{}`", major_version, bindings_file.display())
         })?;
 
         let mut oids_file = dest_dir.clone();
         oids_file.push(&format!("pg{}_oids.rs", major_version));
         write_rs_file(oids.clone(), &oids_file, quote! {}).wrap_err_with(|| {
-            format!(
-                "Unable to write oids file for pg{} to `{}`",
-                major_version,
-                oids_file.display()
-            )
+            format!("Unable to write oids file for pg{} to `{}`", major_version, oids_file.display())
         })?;
     }
     Ok(())
@@ -323,10 +308,7 @@ fn extract_oids(code: &syn::File) -> proc_macro2::TokenStream {
 }
 
 /// Implement our `PgNode` marker trait for `pg_sys::Node` and its "subclasses"
-fn impl_pg_node(
-    items: &Vec<syn::Item>,
-    is_for_release: bool,
-) -> eyre::Result<proc_macro2::TokenStream> {
+fn impl_pg_node(items: &Vec<syn::Item>, is_for_release: bool) -> eyre::Result<proc_macro2::TokenStream> {
     let mut pgnode_impls = proc_macro2::TokenStream::new();
 
     // we scope must of the computation so we can borrow `items` and then
@@ -471,9 +453,7 @@ impl<'a> From<&'a [syn::Item]> for StructGraph<'a> {
             // grab the first field if it is struct
             let (id, first_field) = match &item {
                 &syn::Item::Struct(syn::ItemStruct {
-                    ident: id,
-                    fields: syn::Fields::Named(fields),
-                    ..
+                    ident: id, fields: syn::Fields::Named(fields), ..
                 }) => {
                     if let Some(first_field) = fields.named.first() {
                         (id.to_string(), first_field)
@@ -626,11 +606,7 @@ fn build_shim(shim_src: &PathBuf, shim_dst: &PathBuf, pg_config: &PgConfig) -> e
     Ok(())
 }
 
-fn build_shim_for_version(
-    shim_src: &PathBuf,
-    shim_dst: &PathBuf,
-    pg_config: &PgConfig,
-) -> eyre::Result<()> {
+fn build_shim_for_version(shim_src: &PathBuf, shim_dst: &PathBuf, pg_config: &PgConfig) -> eyre::Result<()> {
     let path_env = prefix_path(pg_config.parent_path());
     let major_version = pg_config.major_version()?;
 
@@ -641,11 +617,8 @@ fn build_shim_for_version(
     std::fs::create_dir_all(shim_dst).unwrap();
 
     if !std::path::Path::new(&format!("{}/Makefile", shim_dst.display())).exists() {
-        std::fs::copy(
-            format!("{}/Makefile", shim_src.display()),
-            format!("{}/Makefile", shim_dst.display()),
-        )
-        .unwrap();
+        std::fs::copy(format!("{}/Makefile", shim_src.display()), format!("{}/Makefile", shim_dst.display()))
+            .unwrap();
     }
 
     if !std::path::Path::new(&format!("{}/pgx-cshim.c", shim_dst.display())).exists() {
@@ -836,9 +809,7 @@ fn rust_fmt(path: &PathBuf) -> eyre::Result<()> {
     match out {
         Ok(_) => Ok(()),
         Err(e)
-            if e.downcast_ref::<std::io::Error>()
-                .ok_or(eyre!("Couldn't downcast error ref"))?
-                .kind()
+            if e.downcast_ref::<std::io::Error>().ok_or(eyre!("Couldn't downcast error ref"))?.kind()
                 == std::io::ErrorKind::NotFound =>
         {
             Err(e).wrap_err("Failed to run `rustfmt`, is it installed?")

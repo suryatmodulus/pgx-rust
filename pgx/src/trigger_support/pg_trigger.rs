@@ -3,8 +3,8 @@ use crate::pg_sys;
 use crate::pgbox::{AllocatedByPostgres, PgBox};
 use crate::rel::PgRelation;
 use crate::trigger_support::{
-    called_as_trigger, PgTriggerError, PgTriggerLevel, PgTriggerOperation, PgTriggerSafe,
-    PgTriggerWhen, TriggerEvent, TriggerTuple,
+    called_as_trigger, PgTriggerError, PgTriggerLevel, PgTriggerOperation, PgTriggerSafe, PgTriggerWhen,
+    TriggerEvent, TriggerTuple,
 };
 use cstr_core::c_char;
 use std::borrow::Borrow;
@@ -213,8 +213,7 @@ impl PgTrigger {
         // containing a known good `TriggerData` which also contains a known good `Trigger`... and the user aggreed to
         // our `unsafe` constructor safety rules, we choose to trust this is indeed a valid pointer offered to us by
         // PostgreSQL, and that it trusts it.
-        let slice: &[*mut c_char] =
-            unsafe { core::slice::from_raw_parts(tgargs, tgnargs.try_into()?) };
+        let slice: &[*mut c_char] = unsafe { core::slice::from_raw_parts(tgargs, tgnargs.try_into()?) };
         let args = slice
             .into_iter()
             .map(|v| {

@@ -23,11 +23,7 @@ struct Complex {
     y: f64,
 }
 
-extension_sql!(
-    r#"CREATE TYPE complex;"#,
-    name = "create_complex_shell_type",
-    creates = [Type(Complex)]
-);
+extension_sql!(r#"CREATE TYPE complex;"#, name = "create_complex_shell_type", creates = [Type(Complex)]);
 
 unsafe impl SqlTranslatable for Complex {
     fn argument_sql() -> Result<SqlMapping, ArgumentError> {
@@ -42,10 +38,9 @@ unsafe impl SqlTranslatable for Complex {
 #[pg_extern(immutable)]
 fn complex_in(input: &std::ffi::CStr) -> PgBox<Complex, AllocatedByRust> {
     let input_as_str = input.to_str().unwrap();
-    let re = regex::Regex::new(
-        r#"(?P<x>[-+]?([0-9]*\.[0-9]+|[0-9]+)),\s*(?P<y>[-+]?([0-9]*\.[0-9]+|[0-9]+))"#,
-    )
-    .unwrap();
+    let re =
+        regex::Regex::new(r#"(?P<x>[-+]?([0-9]*\.[0-9]+|[0-9]+)),\s*(?P<y>[-+]?([0-9]*\.[0-9]+|[0-9]+))"#)
+            .unwrap();
     let x = get_named_capture(&re, "x", input_as_str).unwrap();
     let y = get_named_capture(&re, "y", input_as_str).unwrap();
     let mut complex = PgBox::<Complex>::alloc();
@@ -88,10 +83,8 @@ mod tests {
     #[pg_test]
     fn test_complex_in() {
         Spi::connect(|client| {
-            let complex = client
-                .select("SELECT '1.1,2.2'::complex;", None, None)
-                .first()
-                .get_one::<PgBox<Complex>>();
+            let complex =
+                client.select("SELECT '1.1,2.2'::complex;", None, None).first().get_one::<PgBox<Complex>>();
 
             assert!(complex.is_some());
 
@@ -113,10 +106,8 @@ mod tests {
     #[pg_test]
     fn test_complex_from_text() {
         Spi::connect(|client| {
-            let complex = client
-                .select("SELECT '1.1, 2.2'::complex;", None, None)
-                .first()
-                .get_one::<PgBox<Complex>>();
+            let complex =
+                client.select("SELECT '1.1, 2.2'::complex;", None, None).first().get_one::<PgBox<Complex>>();
 
             assert!(complex.is_some());
             let complex = complex.unwrap();

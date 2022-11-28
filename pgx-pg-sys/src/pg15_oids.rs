@@ -298,9 +298,7 @@ impl PgBuiltInOids {
             crate::ANYCOMPATIBLENONARRAYOID => Some(crate::PgBuiltInOids::ANYCOMPATIBLENONARRAYOID),
             crate::ANYCOMPATIBLERANGEOID => Some(crate::PgBuiltInOids::ANYCOMPATIBLERANGEOID),
             crate::ANYMULTIRANGEOID => Some(crate::PgBuiltInOids::ANYMULTIRANGEOID),
-            crate::ANYCOMPATIBLEMULTIRANGEOID => {
-                Some(crate::PgBuiltInOids::ANYCOMPATIBLEMULTIRANGEOID)
-            }
+            crate::ANYCOMPATIBLEMULTIRANGEOID => Some(crate::PgBuiltInOids::ANYCOMPATIBLEMULTIRANGEOID),
             crate::PG_BRIN_BLOOM_SUMMARYOID => Some(crate::PgBuiltInOids::PG_BRIN_BLOOM_SUMMARYOID),
             crate::PG_BRIN_MINMAX_MULTI_SUMMARYOID => {
                 Some(crate::PgBuiltInOids::PG_BRIN_MINMAX_MULTI_SUMMARYOID)

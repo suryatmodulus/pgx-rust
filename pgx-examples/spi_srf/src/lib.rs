@@ -69,11 +69,7 @@ fn filter_by_breed(
     breed: &str,
 ) -> TableIterator<
     'static,
-    (
-        name!(dog_name, Option<String>),
-        name!(dog_age, Option<i32>),
-        name!(dog_breed, Option<String>),
-    ),
+    (name!(dog_name, Option<String>), name!(dog_age, Option<i32>), name!(dog_breed, Option<String>)),
 > {
     /*
         This function is a simple example of using SPI to return a set of rows
@@ -89,11 +85,7 @@ fn filter_by_breed(
         let mut tup_table: SpiTupleTable = client.select(query, None, Some(args));
 
         while let Some(row) = tup_table.next() {
-            results.push((
-                row["dog_name"].value(),
-                row["dog_age"].value(),
-                row["dog_breed"].value(),
-            ));
+            results.push((row["dog_name"].value(), row["dog_age"].value(), row["dog_breed"].value()));
         }
 
         Ok(Some(()))

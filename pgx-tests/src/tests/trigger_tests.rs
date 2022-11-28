@@ -62,10 +62,8 @@ mod tests {
         #[pg_trigger]
         fn signature_aliased_argument<'a>(
             trigger: AliasedBorrowedPgTrigger<'a>,
-        ) -> Result<
-            PgHeapTuple<'a, impl WhoAllocated<pgx::pg_sys::HeapTupleData>>,
-            core::str::Utf8Error,
-        > {
+        ) -> Result<PgHeapTuple<'a, impl WhoAllocated<pgx::pg_sys::HeapTupleData>>, core::str::Utf8Error>
+        {
             Ok(trigger.current().unwrap().into_owned())
         }
 
@@ -235,8 +233,8 @@ mod tests {
         "#,
         );
 
-        let retval = Spi::get_one::<&str>("SELECT title FROM tests.before_update_skip;")
-            .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<&str>("SELECT title FROM tests.before_update_skip;").expect("SQL select failed");
         assert_eq!(retval, "Fox");
     }
 
@@ -263,12 +261,10 @@ mod tests {
         current.set_by_name("trigger_relid", trigger_relid)?;
 
         let trigger_old_transition_table_name = trigger.old_transition_table_name()?;
-        current
-            .set_by_name("trigger_old_transition_table_name", trigger_old_transition_table_name)?;
+        current.set_by_name("trigger_old_transition_table_name", trigger_old_transition_table_name)?;
 
         let trigger_new_transition_table_name = trigger.new_transition_table_name()?;
-        current
-            .set_by_name("trigger_new_transition_table_name", trigger_new_transition_table_name)?;
+        current.set_by_name("trigger_new_transition_table_name", trigger_new_transition_table_name)?;
 
         let trigger_table_name = unsafe { trigger.table_name()? };
         current.set_by_name("trigger_table_name", trigger_table_name)?;
@@ -318,31 +314,26 @@ mod tests {
         "#,
         );
 
-        let marker =
-            Spi::get_one::<&str>("SELECT marker FROM tests.before_insert_trigger_metadata;");
+        let marker = Spi::get_one::<&str>("SELECT marker FROM tests.before_insert_trigger_metadata;");
         let trigger_name =
             Spi::get_one::<&str>("SELECT trigger_name FROM tests.before_insert_trigger_metadata;");
         let trigger_when =
             Spi::get_one::<&str>("SELECT trigger_when FROM tests.before_insert_trigger_metadata;");
         let trigger_level =
             Spi::get_one::<&str>("SELECT trigger_level FROM tests.before_insert_trigger_metadata;");
-        let trigger_op =
-            Spi::get_one::<&str>("SELECT trigger_op FROM tests.before_insert_trigger_metadata;");
-        let trigger_relid = Spi::get_one::<pg_sys::Oid>(
-            "SELECT trigger_relid FROM tests.before_insert_trigger_metadata;",
-        );
+        let trigger_op = Spi::get_one::<&str>("SELECT trigger_op FROM tests.before_insert_trigger_metadata;");
+        let trigger_relid =
+            Spi::get_one::<pg_sys::Oid>("SELECT trigger_relid FROM tests.before_insert_trigger_metadata;");
         let trigger_old_transition_table_name = Spi::get_one::<&str>(
             "SELECT trigger_old_transition_table_name FROM tests.before_insert_trigger_metadata;",
         );
         let trigger_new_transition_table_name = Spi::get_one::<&str>(
             "SELECT trigger_new_transition_table_name FROM tests.before_insert_trigger_metadata;",
         );
-        let trigger_table_name = Spi::get_one::<&str>(
-            "SELECT trigger_table_name FROM tests.before_insert_trigger_metadata;",
-        );
-        let trigger_table_schema = Spi::get_one::<&str>(
-            "SELECT trigger_table_schema FROM tests.before_insert_trigger_metadata;",
-        );
+        let trigger_table_name =
+            Spi::get_one::<&str>("SELECT trigger_table_name FROM tests.before_insert_trigger_metadata;");
+        let trigger_table_schema =
+            Spi::get_one::<&str>("SELECT trigger_table_schema FROM tests.before_insert_trigger_metadata;");
         let trigger_extra_args = Spi::get_one::<Vec<String>>(
             "SELECT trigger_extra_args FROM tests.before_insert_trigger_metadata;",
         );
@@ -388,10 +379,8 @@ mod tests {
         current_owned.set_by_name("trigger_level", level.to_string())?;
         current_owned.set_by_name("trigger_op", op.to_string())?;
         current_owned.set_by_name("trigger_relid", relid)?;
-        current_owned
-            .set_by_name("trigger_old_transition_table_name", old_transition_table_name)?;
-        current_owned
-            .set_by_name("trigger_new_transition_table_name", new_transition_table_name)?;
+        current_owned.set_by_name("trigger_old_transition_table_name", old_transition_table_name)?;
+        current_owned.set_by_name("trigger_new_transition_table_name", new_transition_table_name)?;
         current_owned.set_by_name("trigger_table_name", table_name)?;
         current_owned.set_by_name("trigger_table_schema", table_schema)?;
         current_owned.set_by_name("trigger_extra_args", extra_args)?;
@@ -435,20 +424,15 @@ mod tests {
         "#,
         );
 
-        let marker =
-            Spi::get_one::<&str>("SELECT marker FROM tests.before_insert_trigger_metadata_safe;");
-        let trigger_name = Spi::get_one::<&str>(
-            "SELECT trigger_name FROM tests.before_insert_trigger_metadata_safe;",
-        );
-        let trigger_when = Spi::get_one::<&str>(
-            "SELECT trigger_when FROM tests.before_insert_trigger_metadata_safe;",
-        );
-        let trigger_level = Spi::get_one::<&str>(
-            "SELECT trigger_level FROM tests.before_insert_trigger_metadata_safe;",
-        );
-        let trigger_op = Spi::get_one::<&str>(
-            "SELECT trigger_op FROM tests.before_insert_trigger_metadata_safe;",
-        );
+        let marker = Spi::get_one::<&str>("SELECT marker FROM tests.before_insert_trigger_metadata_safe;");
+        let trigger_name =
+            Spi::get_one::<&str>("SELECT trigger_name FROM tests.before_insert_trigger_metadata_safe;");
+        let trigger_when =
+            Spi::get_one::<&str>("SELECT trigger_when FROM tests.before_insert_trigger_metadata_safe;");
+        let trigger_level =
+            Spi::get_one::<&str>("SELECT trigger_level FROM tests.before_insert_trigger_metadata_safe;");
+        let trigger_op =
+            Spi::get_one::<&str>("SELECT trigger_op FROM tests.before_insert_trigger_metadata_safe;");
         let trigger_relid = Spi::get_one::<pg_sys::Oid>(
             "SELECT trigger_relid FROM tests.before_insert_trigger_metadata_safe;",
         );
@@ -458,9 +442,8 @@ mod tests {
         let trigger_new_transition_table_name = Spi::get_one::<&str>(
             "SELECT trigger_new_transition_table_name FROM tests.before_insert_trigger_metadata_safe;",
         );
-        let trigger_table_name = Spi::get_one::<&str>(
-            "SELECT trigger_table_name FROM tests.before_insert_trigger_metadata_safe;",
-        );
+        let trigger_table_name =
+            Spi::get_one::<&str>("SELECT trigger_table_name FROM tests.before_insert_trigger_metadata_safe;");
         let trigger_table_schema = Spi::get_one::<&str>(
             "SELECT trigger_table_schema FROM tests.before_insert_trigger_metadata_safe;",
         );
@@ -520,15 +503,13 @@ mod tests {
         "#,
         );
 
-        let retval = Spi::get_one::<&str>("SELECT species FROM tests.has_sql_option_set;")
-            .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<&str>("SELECT species FROM tests.has_sql_option_set;").expect("SQL select failed");
         assert_eq!(retval, "Fox");
     }
 
     #[pg_trigger]
-    fn noop_postgres(
-        trigger: &pgx::PgTrigger,
-    ) -> Result<PgHeapTuple<'_, AllocatedByPostgres>, TriggerError> {
+    fn noop_postgres(trigger: &pgx::PgTrigger) -> Result<PgHeapTuple<'_, AllocatedByPostgres>, TriggerError> {
         Ok(trigger.current().unwrap())
     }
 
@@ -556,15 +537,13 @@ mod tests {
         "#,
         );
 
-        let retval = Spi::get_one::<&str>("SELECT species FROM tests.has_noop_postgres;")
-            .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<&str>("SELECT species FROM tests.has_noop_postgres;").expect("SQL select failed");
         assert_eq!(retval, "Fox");
     }
 
     #[pg_trigger]
-    fn noop_rust(
-        trigger: &pgx::PgTrigger,
-    ) -> Result<PgHeapTuple<'_, AllocatedByRust>, TriggerError> {
+    fn noop_rust(trigger: &pgx::PgTrigger) -> Result<PgHeapTuple<'_, AllocatedByRust>, TriggerError> {
         Ok(trigger.current().unwrap().into_owned())
     }
 
@@ -592,8 +571,8 @@ mod tests {
         "#,
         );
 
-        let retval = Spi::get_one::<&str>("SELECT species FROM tests.has_noop_rust;")
-            .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<&str>("SELECT species FROM tests.has_noop_rust;").expect("SQL select failed");
         assert_eq!(retval, "Fox");
     }
 }

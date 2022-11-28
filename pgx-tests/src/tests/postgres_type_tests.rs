@@ -183,9 +183,8 @@ mod tests {
 
     #[pg_test]
     fn test_call_with_value() {
-        let result = Spi::get_one::<String>(
-            "SELECT fn_takes_option('1.0,2.0,3'::CustomTextFormatSerializedType);",
-        );
+        let result =
+            Spi::get_one::<String>("SELECT fn_takes_option('1.0,2.0,3'::CustomTextFormatSerializedType);");
         assert_eq!("1,2,3", result.unwrap());
     }
 
@@ -208,9 +207,8 @@ mod tests {
 
     #[pg_test]
     fn test_call_with_enum_value() {
-        let result = Spi::get_one::<String>(
-            "SELECT fn_takes_option_enum('A'::CustomTextFormatSerializedEnumType);",
-        );
+        let result =
+            Spi::get_one::<String>("SELECT fn_takes_option_enum('A'::CustomTextFormatSerializedEnumType);");
         assert_eq!("A", result.unwrap());
     }
 
@@ -241,9 +239,8 @@ mod tests {
 
     #[pg_test]
     fn test_json_enum_type() {
-        let result =
-            Spi::get_one::<JsonEnumType>(r#"SELECT '{"type": "E1", "a": 1.0}'::JsonEnumType"#)
-                .expect("SPI returned NULL");
+        let result = Spi::get_one::<JsonEnumType>(r#"SELECT '{"type": "E1", "a": 1.0}'::JsonEnumType"#)
+            .expect("SPI returned NULL");
         assert!(matches!(result, JsonEnumType::E1 { a } if a == 1.0));
     }
 }

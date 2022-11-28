@@ -27,9 +27,7 @@ where
     }
 
     pub fn get(&self) -> &T {
-        unsafe {
-            self.inner.get().expect("This PgAtomic as not been initialized").as_ref().unwrap()
-        }
+        unsafe { self.inner.get().expect("This PgAtomic as not been initialized").as_ref().unwrap() }
     }
 }
 

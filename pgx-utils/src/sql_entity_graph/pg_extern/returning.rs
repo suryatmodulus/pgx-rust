@@ -43,9 +43,7 @@ impl Returning {
         let mac = &type_macro.mac;
         let archetype = mac.path.segments.last().unwrap();
         match archetype.ident.to_string().as_str() {
-            "composite_type" => {
-                Ok(Returning::Type(UsedType::new(syn::Type::Macro(type_macro.clone()))?))
-            }
+            "composite_type" => Ok(Returning::Type(UsedType::new(syn::Type::Macro(type_macro.clone()))?)),
             _ => unimplemented!("Don't support anything other than `composite_type!()`"),
         }
     }
@@ -79,29 +77,32 @@ impl TryFrom<&syn::ReturnType> for Returning {
                         if saw_option_ident || saw_setof_iterator || saw_table_iterator {
                             let option_inner_path = if saw_option_ident {
                                 match &mut path.segments.last_mut().unwrap().arguments {
-                                    syn::PathArguments::AngleBracketed(args) => {
-                                        match args.args.last_mut().unwrap() {
-                                            syn::GenericArgument::Type(syn::Type::Path(syn::TypePath { qself: _, path })) => path.clone(),
-                                            syn::GenericArgument::Type(_) => {
-                                                let used_ty = UsedType::new(syn::Type::Path(typepath.clone()))?;
-                                                return Ok(Returning::Type(used_ty))
-                                            },
-                                            other => {
-                                                return Err(syn::Error::new(
-                                                    other.span(),
-                                                    &format!(
-                                                    "Got unexpected generic argument for Option inner: {other:?}"
-                                                ),
-                                                ))
-                                            }
+                                    syn::PathArguments::AngleBracketed(args) => match args
+                                        .args
+                                        .last_mut()
+                                        .unwrap()
+                                    {
+                                        syn::GenericArgument::Type(syn::Type::Path(syn::TypePath {
+                                            qself: _,
+                                            path,
+                                        })) => path.clone(),
+                                        syn::GenericArgument::Type(_) => {
+                                            let used_ty = UsedType::new(syn::Type::Path(typepath.clone()))?;
+                                            return Ok(Returning::Type(used_ty));
                                         }
-                                    }
+                                        other => return Err(syn::Error::new(
+                                            other.span(),
+                                            &format!(
+                                                "Got unexpected generic argument for Option inner: {other:?}"
+                                            ),
+                                        )),
+                                    },
                                     other => {
                                         return Err(syn::Error::new(
                                             other.span(),
                                             &format!(
-                                        "Got unexpected path argument for Option inner: {other:?}"
-                                    ),
+                                                "Got unexpected path argument for Option inner: {other:?}"
+                                            ),
                                         ))
                                     }
                                 }
@@ -120,24 +121,21 @@ impl TryFrom<&syn::ReturnType> for Returning {
                             if saw_setof_iterator {
                                 let last_path_segment = option_inner_path.segments.last().unwrap();
                                 let (used_ty, optional) = match &last_path_segment.arguments {
-                                    syn::PathArguments::AngleBracketed(args) => {
-                                        match args.args.last().unwrap() {
-                                        syn::GenericArgument::Type(ty) => {
-                                            match &ty {
-                                                syn::Type::Path(path) => {
-                                                    (UsedType::new(syn::Type::Path(path.clone()))?, saw_option_ident)
-                                                }
-                                                syn::Type::Macro(type_macro) => {
-                                                    (UsedType::new(syn::Type::Macro(type_macro.clone()),)?, saw_option_ident)
-                                                },
-                                                reference @ syn::Type::Reference(_) => {
-                                                    (UsedType::new((*reference).clone(),)?, saw_option_ident)
-                                                },
-                                                ty => {
-                                                    unimplemented!("SetOf Iterator must have an item, got: {ty:?}")
-                                                }
+                                    syn::PathArguments::AngleBracketed(args) => match args.args.last().unwrap() {
+                                        syn::GenericArgument::Type(ty) => match &ty {
+                                            syn::Type::Path(path) => {
+                                                (UsedType::new(syn::Type::Path(path.clone()))?, saw_option_ident)
                                             }
-                                        }
+                                            syn::Type::Macro(type_macro) => {
+                                                (UsedType::new(syn::Type::Macro(type_macro.clone()))?, saw_option_ident)
+                                            }
+                                            reference @ syn::Type::Reference(_) => {
+                                                (UsedType::new((*reference).clone())?, saw_option_ident)
+                                            }
+                                            ty => {
+                                                unimplemented!("SetOf Iterator must have an item, got: {ty:?}")
+                                            }
+                                        },
                                         other => {
                                             return Err(syn::Error::new(
                                                 other.span(),
@@ -146,44 +144,39 @@ impl TryFrom<&syn::ReturnType> for Returning {
                                                 ),
                                             ))
                                         }
-                                    }
-                                    }
+                                    },
                                     other => {
                                         return Err(syn::Error::new(
                                             other.span(),
-                                            &format!(
-                                        "Got unexpected path argument for SetOfIterator: {other:?}"
-                                    ),
+                                            &format!("Got unexpected path argument for SetOfIterator: {other:?}"),
                                         ))
                                     }
                                 };
                                 Ok(Returning::SetOf { ty: used_ty, optional })
                             } else if saw_table_iterator {
                                 let iterator_path = if saw_option_ident {
-                                    let inner_path =
-                                        match &mut path.segments.last_mut().unwrap().arguments {
-                                            syn::PathArguments::AngleBracketed(args) => {
-                                                match args.args.last_mut().unwrap() {
-                                                    syn::GenericArgument::Type(syn::Type::Path(syn::TypePath { qself: _, path })) => path,
-                                                    other => {
-                                                        return Err(syn::Error::new(
-                                                            other.span(),
-                                                            &format!(
-                                                            "Got unexpected generic argument for Option inner: {other:?}"
-                                                        ),
-                                                        ))
-                                                    }
-                                                }
-                                            },
-                                            other => {
-                                                return Err(syn::Error::new(
+                                    let inner_path = match &mut path.segments.last_mut().unwrap().arguments {
+                                        syn::PathArguments::AngleBracketed(args) => {
+                                            match args.args.last_mut().unwrap() {
+                                                syn::GenericArgument::Type(syn::Type::Path(syn::TypePath {
+                                                    qself: _,
+                                                    path,
+                                                })) => path,
+                                                other => return Err(syn::Error::new(
                                                     other.span(),
                                                     &format!(
-                                                    "Got unexpected path argument for Option inner: {other:?}"
-                                                ),
-                                                ))
+                                                        "Got unexpected generic argument for Option inner: {other:?}"
+                                                    ),
+                                                )),
                                             }
-                                        };
+                                        }
+                                        other => return Err(syn::Error::new(
+                                            other.span(),
+                                            &format!(
+                                                "Got unexpected path argument for Option inner: {other:?}"
+                                            ),
+                                        )),
+                                    };
                                     inner_path
                                 } else {
                                     path
@@ -193,42 +186,30 @@ impl TryFrom<&syn::ReturnType> for Returning {
                                 match &mut last_path_segment.arguments {
                                     syn::PathArguments::AngleBracketed(args) => {
                                         match args.args.last_mut().unwrap() {
-                                            syn::GenericArgument::Type(syn::Type::Tuple(
-                                                type_tuple,
-                                            )) => {
+                                            syn::GenericArgument::Type(syn::Type::Tuple(type_tuple)) => {
                                                 for elem in &type_tuple.elems {
                                                     match &elem {
                                                         syn::Type::Path(path) => {
-                                                            let iterated_item =
-                                                                ReturningIteratedItem {
-                                                                    name: None,
-                                                                    used_ty: UsedType::new(
-                                                                        syn::Type::Path(
-                                                                            path.clone(),
-                                                                        ),
-                                                                    )?,
-                                                                };
+                                                            let iterated_item = ReturningIteratedItem {
+                                                                name: None,
+                                                                used_ty: UsedType::new(syn::Type::Path(
+                                                                    path.clone(),
+                                                                ))?,
+                                                            };
                                                             iterated_items.push(iterated_item);
                                                         }
                                                         syn::Type::Macro(type_macro) => {
                                                             let mac = &type_macro.mac;
-                                                            let archetype =
-                                                                mac.path.segments.last().unwrap();
-                                                            match archetype
-                                                                .ident
-                                                                .to_string()
-                                                                .as_str()
-                                                            {
+                                                            let archetype = mac.path.segments.last().unwrap();
+                                                            match archetype.ident.to_string().as_str() {
                                                                 "name" => {
-                                                                    let out: NameMacro =
-                                                                        mac.parse_body()?;
+                                                                    let out: NameMacro = mac.parse_body()?;
                                                                     let iterated_item =
                                                                         ReturningIteratedItem {
                                                                             name: Some(out.ident),
                                                                             used_ty: out.used_ty,
                                                                         };
-                                                                    iterated_items
-                                                                        .push(iterated_item)
+                                                                    iterated_items.push(iterated_item)
                                                                 }
                                                                 _ => {
                                                                     let iterated_item =
@@ -236,28 +217,25 @@ impl TryFrom<&syn::ReturnType> for Returning {
                                                                             name: None,
                                                                             used_ty: UsedType::new(
                                                                                 syn::Type::Macro(
-                                                                                    type_macro
-                                                                                        .clone(),
+                                                                                    type_macro.clone(),
                                                                                 ),
                                                                             )?,
                                                                         };
-                                                                    iterated_items
-                                                                        .push(iterated_item);
+                                                                    iterated_items.push(iterated_item);
                                                                 }
                                                             }
                                                         }
                                                         reference @ syn::Type::Reference(_) => {
-                                                            let iterated_item =
-                                                                ReturningIteratedItem {
-                                                                    name: None,
-                                                                    used_ty: UsedType::new(
-                                                                        (*reference).clone(),
-                                                                    )?,
-                                                                };
+                                                            let iterated_item = ReturningIteratedItem {
+                                                                name: None,
+                                                                used_ty: UsedType::new((*reference).clone())?,
+                                                            };
                                                             iterated_items.push(iterated_item);
                                                         }
                                                         ty => {
-                                                            unimplemented!("Table Iterator must have an item, got: {ty:?}")
+                                                            unimplemented!(
+                                                                "Table Iterator must have an item, got: {ty:?}"
+                                                            )
                                                         }
                                                     };
                                                 }
@@ -266,9 +244,7 @@ impl TryFrom<&syn::ReturnType> for Returning {
                                             other => {
                                                 return Err(syn::Error::new(
                                                     other.span(),
-                                                    &format!(
-                                                        "Got unexpected generic argument: {other:?}"
-                                                    ),
+                                                    &format!("Got unexpected generic argument: {other:?}"),
                                                 ))
                                             }
                                         };
@@ -280,10 +256,7 @@ impl TryFrom<&syn::ReturnType> for Returning {
                                         ))
                                     }
                                 };
-                                Ok(Returning::Iterated {
-                                    tys: iterated_items,
-                                    optional: saw_option_ident,
-                                })
+                                Ok(Returning::Iterated { tys: iterated_items, optional: saw_option_ident })
                             } else {
                                 let used_ty = UsedType::new(syn::Type::Path(typepath.clone()))?;
                                 Ok(Returning::Type(used_ty))

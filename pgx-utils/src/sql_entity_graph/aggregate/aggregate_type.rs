@@ -40,9 +40,7 @@ impl AggregateTypeList {
                 }
                 Ok(Self { found: coll, original: maybe_type_list })
             }
-            ty => {
-                Ok(Self { found: vec![AggregateType::new(ty.clone())?], original: maybe_type_list })
-            }
+            ty => Ok(Self { found: vec![AggregateType::new(ty.clone())?], original: maybe_type_list }),
         }
     }
 

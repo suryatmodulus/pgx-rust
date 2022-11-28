@@ -56,9 +56,8 @@ impl CommandExecute for Run {
         let metadata = crate::metadata::metadata(&self.features, self.manifest_path.as_ref())
             .wrap_err("couldn't get cargo metadata")?;
         crate::metadata::validate(&metadata)?;
-        let package_manifest_path =
-            crate::manifest::manifest_path(&metadata, self.package.as_ref())
-                .wrap_err("Couldn't get manifest path")?;
+        let package_manifest_path = crate::manifest::manifest_path(&metadata, self.package.as_ref())
+            .wrap_err("Couldn't get manifest path")?;
         let package_manifest =
             Manifest::from_path(&package_manifest_path).wrap_err("Couldn't parse manifest")?;
 
@@ -74,9 +73,8 @@ impl CommandExecute for Run {
                         }
                         // It's actually the dbname! We should infer from the manifest.
                         self.dbname = Some(pg_version);
-                        let default_pg_version =
-                            crate::manifest::default_pg_version(&package_manifest)
-                                .ok_or(eyre!("No provided `pg$VERSION` flag."))?;
+                        let default_pg_version = crate::manifest::default_pg_version(&package_manifest)
+                            .ok_or(eyre!("No provided `pg$VERSION` flag."))?;
                         (pgx.get(&default_pg_version)?, default_pg_version)
                     }
                 }
@@ -89,8 +87,7 @@ impl CommandExecute for Run {
             }
         };
 
-        let features =
-            crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
+        let features = crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
 
         let dbname = match self.dbname {
             Some(dbname) => dbname,

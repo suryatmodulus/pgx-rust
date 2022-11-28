@@ -18,9 +18,7 @@ use std::num::NonZeroUsize;
 ///
 /// This function is safe, but if the provided `HeapTupleHeader` is null, it will `panic!()`
 #[inline]
-pub fn composite_row_type_make_tuple(
-    row: pg_sys::Datum,
-) -> PgBox<pg_sys::HeapTupleData, AllocatedByRust> {
+pub fn composite_row_type_make_tuple(row: pg_sys::Datum) -> PgBox<pg_sys::HeapTupleData, AllocatedByRust> {
     let htup_header =
         unsafe { pg_sys::pg_detoast_datum_packed(row.cast_mut_ptr()) } as pg_sys::HeapTupleHeader;
     let mut tuple = PgBox::<pg_sys::HeapTupleData>::alloc0();
@@ -94,18 +92,14 @@ extern "C" {
 ///
 /// `attno` is 1-based
 #[inline]
-pub fn heap_getattr<
-    T: FromDatum,
-    AllocatedBy: WhoAllocated<T> + WhoAllocated<pg_sys::HeapTupleData>,
->(
+pub fn heap_getattr<T: FromDatum, AllocatedBy: WhoAllocated<T> + WhoAllocated<pg_sys::HeapTupleData>>(
     tuple: &PgBox<pg_sys::HeapTupleData, AllocatedBy>,
     attno: NonZeroUsize,
     tupdesc: &PgTupleDesc,
 ) -> Option<T> {
     let mut is_null = false;
-    let datum = unsafe {
-        pgx_heap_getattr(tuple.as_ptr(), attno.get() as u32, tupdesc.as_ptr(), &mut is_null)
-    };
+    let datum =
+        unsafe { pgx_heap_getattr(tuple.as_ptr(), attno.get() as u32, tupdesc.as_ptr(), &mut is_null) };
     let typoid = tupdesc.get(attno.get() - 1).expect("no attribute").type_oid();
 
     if is_null {
@@ -171,8 +165,7 @@ pub fn heap_getattr_datum_ex(
     tupdesc: &PgTupleDesc,
 ) -> DatumWithTypeInfo {
     let mut is_null = false;
-    let datum =
-        unsafe { pgx_heap_getattr(tuple.as_ptr(), attno as u32, tupdesc.as_ptr(), &mut is_null) };
+    let datum = unsafe { pgx_heap_getattr(tuple.as_ptr(), attno as u32, tupdesc.as_ptr(), &mut is_null) };
     let typoid = tupdesc.get(attno - 1).expect("no attribute").type_oid();
 
     let mut typlen = 0;

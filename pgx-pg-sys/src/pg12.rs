@@ -47,8 +47,7 @@ where
         let mut val = 0;
         for i in 0..(bit_width as usize) {
             if self.get_bit(i + bit_offset) {
-                let index =
-                    if cfg!(target_endian = "big") { bit_width as usize - 1 - i } else { i };
+                let index = if cfg!(target_endian = "big") { bit_width as usize - 1 - i } else { i };
                 val |= 1 << index;
             }
         }
@@ -4231,10 +4230,7 @@ pub unsafe fn fopen(
     })
 }
 #[track_caller]
-pub unsafe fn fprintf(
-    arg_arg1: *mut FILE,
-    arg_arg2: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn fprintf(arg_arg1: *mut FILE, arg_arg2: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn fprintf(
@@ -4256,16 +4252,10 @@ pub unsafe fn fputc(arg_arg1: ::std::os::raw::c_int, arg_arg2: *mut FILE) -> ::s
     })
 }
 #[track_caller]
-pub unsafe fn fputs(
-    arg_arg1: *const ::std::os::raw::c_char,
-    arg_arg2: *mut FILE,
-) -> ::std::os::raw::c_int {
+pub unsafe fn fputs(arg_arg1: *const ::std::os::raw::c_char, arg_arg2: *mut FILE) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn fputs(
-                arg1: *const ::std::os::raw::c_char,
-                arg2: *mut FILE,
-            ) -> ::std::os::raw::c_int;
+            pub fn fputs(arg1: *const ::std::os::raw::c_char, arg2: *mut FILE) -> ::std::os::raw::c_int;
         }
         fputs(arg_arg1, arg_arg2)
     })
@@ -4307,17 +4297,11 @@ pub unsafe fn freopen(
     })
 }
 #[track_caller]
-pub unsafe fn fscanf(
-    arg_arg1: *mut FILE,
-    arg_arg2: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn fscanf(arg_arg1: *mut FILE, arg_arg2: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn fscanf(
-                arg1: *mut FILE,
-                arg2: *const ::std::os::raw::c_char,
-                ...
-            ) -> ::std::os::raw::c_int;
+            pub fn fscanf(arg1: *mut FILE, arg2: *const ::std::os::raw::c_char, ...)
+                -> ::std::os::raw::c_int;
         }
         fscanf(arg_arg1, arg_arg2)
     })
@@ -4551,10 +4535,7 @@ pub unsafe fn tmpfile() -> *mut FILE {
     })
 }
 #[track_caller]
-pub unsafe fn ungetc(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: *mut FILE,
-) -> ::std::os::raw::c_int {
+pub unsafe fn ungetc(arg_arg1: ::std::os::raw::c_int, arg_arg2: *mut FILE) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn ungetc(arg1: ::std::os::raw::c_int, arg2: *mut FILE) -> ::std::os::raw::c_int;
@@ -4621,16 +4602,10 @@ pub unsafe fn ctermid(arg_arg1: *mut ::std::os::raw::c_char) -> *mut ::std::os::
     })
 }
 #[track_caller]
-pub unsafe fn fdopen(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: *const ::std::os::raw::c_char,
-) -> *mut FILE {
+pub unsafe fn fdopen(arg_arg1: ::std::os::raw::c_int, arg_arg2: *const ::std::os::raw::c_char) -> *mut FILE {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn fdopen(
-                arg1: ::std::os::raw::c_int,
-                arg2: *const ::std::os::raw::c_char,
-            ) -> *mut FILE;
+            pub fn fdopen(arg1: ::std::os::raw::c_int, arg2: *const ::std::os::raw::c_char) -> *mut FILE;
         }
         fdopen(arg_arg1, arg_arg2)
     })
@@ -4695,10 +4670,7 @@ pub unsafe fn __svfscanf(
     })
 }
 #[track_caller]
-pub unsafe fn __swbuf(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: *mut FILE,
-) -> ::std::os::raw::c_int {
+pub unsafe fn __swbuf(arg_arg1: ::std::os::raw::c_int, arg_arg2: *mut FILE) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn __swbuf(arg1: ::std::os::raw::c_int, arg2: *mut FILE) -> ::std::os::raw::c_int;
@@ -4752,16 +4724,10 @@ pub unsafe fn getchar_unlocked() -> ::std::os::raw::c_int {
     })
 }
 #[track_caller]
-pub unsafe fn putc_unlocked(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: *mut FILE,
-) -> ::std::os::raw::c_int {
+pub unsafe fn putc_unlocked(arg_arg1: ::std::os::raw::c_int, arg_arg2: *mut FILE) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn putc_unlocked(
-                arg1: ::std::os::raw::c_int,
-                arg2: *mut FILE,
-            ) -> ::std::os::raw::c_int;
+            pub fn putc_unlocked(arg1: ::std::os::raw::c_int, arg2: *mut FILE) -> ::std::os::raw::c_int;
         }
         putc_unlocked(arg_arg1, arg_arg2)
     })
@@ -4999,10 +4965,8 @@ pub unsafe fn open_memstream(
 ) -> *mut FILE {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn open_memstream(
-                __bufp: *mut *mut ::std::os::raw::c_char,
-                __sizep: *mut usize,
-            ) -> *mut FILE;
+            pub fn open_memstream(__bufp: *mut *mut ::std::os::raw::c_char, __sizep: *mut usize)
+                -> *mut FILE;
         }
         open_memstream(arg___bufp, arg___sizep)
     })
@@ -5079,11 +5043,7 @@ pub unsafe fn setbuffer(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn setbuffer(
-                arg1: *mut FILE,
-                arg2: *mut ::std::os::raw::c_char,
-                arg3: ::std::os::raw::c_int,
-            );
+            pub fn setbuffer(arg1: *mut FILE, arg2: *mut ::std::os::raw::c_char, arg3: ::std::os::raw::c_int);
         }
         setbuffer(arg_arg1, arg_arg2, arg_arg3)
     })
@@ -5168,9 +5128,7 @@ pub unsafe fn funopen(
                     ) -> fpos_t,
                 >,
                 arg5: ::std::option::Option<
-                    unsafe extern "C" fn(
-                        arg1: *mut ::std::os::raw::c_void,
-                    ) -> ::std::os::raw::c_int,
+                    unsafe extern "C" fn(arg1: *mut ::std::os::raw::c_void) -> ::std::os::raw::c_int,
                 >,
             ) -> *mut FILE;
         }
@@ -5883,10 +5841,7 @@ pub struct proc_rlimit_control_wakeupmon {
     pub wm_rate: i32,
 }
 #[track_caller]
-pub unsafe fn getpriority(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: id_t,
-) -> ::std::os::raw::c_int {
+pub unsafe fn getpriority(arg_arg1: ::std::os::raw::c_int, arg_arg2: id_t) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn getpriority(arg1: ::std::os::raw::c_int, arg2: id_t) -> ::std::os::raw::c_int;
@@ -5910,31 +5865,19 @@ pub unsafe fn getiopolicy_np(
     })
 }
 #[track_caller]
-pub unsafe fn getrlimit(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: *mut rlimit,
-) -> ::std::os::raw::c_int {
+pub unsafe fn getrlimit(arg_arg1: ::std::os::raw::c_int, arg_arg2: *mut rlimit) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getrlimit(
-                arg1: ::std::os::raw::c_int,
-                arg2: *mut rlimit,
-            ) -> ::std::os::raw::c_int;
+            pub fn getrlimit(arg1: ::std::os::raw::c_int, arg2: *mut rlimit) -> ::std::os::raw::c_int;
         }
         getrlimit(arg_arg1, arg_arg2)
     })
 }
 #[track_caller]
-pub unsafe fn getrusage(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: *mut rusage,
-) -> ::std::os::raw::c_int {
+pub unsafe fn getrusage(arg_arg1: ::std::os::raw::c_int, arg_arg2: *mut rusage) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getrusage(
-                arg1: ::std::os::raw::c_int,
-                arg2: *mut rusage,
-            ) -> ::std::os::raw::c_int;
+            pub fn getrusage(arg1: ::std::os::raw::c_int, arg2: *mut rusage) -> ::std::os::raw::c_int;
         }
         getrusage(arg_arg1, arg_arg2)
     })
@@ -5974,16 +5917,10 @@ pub unsafe fn setiopolicy_np(
     })
 }
 #[track_caller]
-pub unsafe fn setrlimit(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: *const rlimit,
-) -> ::std::os::raw::c_int {
+pub unsafe fn setrlimit(arg_arg1: ::std::os::raw::c_int, arg_arg2: *const rlimit) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn setrlimit(
-                arg1: ::std::os::raw::c_int,
-                arg2: *const rlimit,
-            ) -> ::std::os::raw::c_int;
+            pub fn setrlimit(arg1: ::std::os::raw::c_int, arg2: *const rlimit) -> ::std::os::raw::c_int;
         }
         setrlimit(arg_arg1, arg_arg2)
     })
@@ -6383,14 +6320,10 @@ pub unsafe fn abs(arg_arg1: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     })
 }
 #[track_caller]
-pub unsafe fn atexit(
-    arg_arg1: ::std::option::Option<unsafe extern "C" fn()>,
-) -> ::std::os::raw::c_int {
+pub unsafe fn atexit(arg_arg1: ::std::option::Option<unsafe extern "C" fn()>) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn atexit(
-                arg1: ::std::option::Option<unsafe extern "C" fn()>,
-            ) -> ::std::os::raw::c_int;
+            pub fn atexit(arg1: ::std::option::Option<unsafe extern "C" fn()>) -> ::std::os::raw::c_int;
         }
         atexit(arg_arg1)
     })
@@ -6517,25 +6450,16 @@ pub unsafe fn llabs(arg_arg1: ::std::os::raw::c_longlong) -> ::std::os::raw::c_l
     })
 }
 #[track_caller]
-pub unsafe fn lldiv(
-    arg_arg1: ::std::os::raw::c_longlong,
-    arg_arg2: ::std::os::raw::c_longlong,
-) -> lldiv_t {
+pub unsafe fn lldiv(arg_arg1: ::std::os::raw::c_longlong, arg_arg2: ::std::os::raw::c_longlong) -> lldiv_t {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn lldiv(
-                arg1: ::std::os::raw::c_longlong,
-                arg2: ::std::os::raw::c_longlong,
-            ) -> lldiv_t;
+            pub fn lldiv(arg1: ::std::os::raw::c_longlong, arg2: ::std::os::raw::c_longlong) -> lldiv_t;
         }
         lldiv(arg_arg1, arg_arg2)
     })
 }
 #[track_caller]
-pub unsafe fn mblen(
-    arg___s: *const ::std::os::raw::c_char,
-    arg___n: usize,
-) -> ::std::os::raw::c_int {
+pub unsafe fn mblen(arg___s: *const ::std::os::raw::c_char, arg___n: usize) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn mblen(__s: *const ::std::os::raw::c_char, __n: usize) -> ::std::os::raw::c_int;
@@ -6551,11 +6475,7 @@ pub unsafe fn mbstowcs(
 ) -> usize {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn mbstowcs(
-                arg1: *mut wchar_t,
-                arg2: *const ::std::os::raw::c_char,
-                arg3: usize,
-            ) -> usize;
+            pub fn mbstowcs(arg1: *mut wchar_t, arg2: *const ::std::os::raw::c_char, arg3: usize) -> usize;
         }
         mbstowcs(arg_arg1, arg_arg2, arg_arg3)
     })
@@ -6631,10 +6551,8 @@ pub unsafe fn strtod(
 ) -> f64 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn strtod(
-                arg1: *const ::std::os::raw::c_char,
-                arg2: *mut *mut ::std::os::raw::c_char,
-            ) -> f64;
+            pub fn strtod(arg1: *const ::std::os::raw::c_char, arg2: *mut *mut ::std::os::raw::c_char)
+                -> f64;
         }
         strtod(arg_arg1, arg_arg2)
     })
@@ -6646,10 +6564,8 @@ pub unsafe fn strtof(
 ) -> f32 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn strtof(
-                arg1: *const ::std::os::raw::c_char,
-                arg2: *mut *mut ::std::os::raw::c_char,
-            ) -> f32;
+            pub fn strtof(arg1: *const ::std::os::raw::c_char, arg2: *mut *mut ::std::os::raw::c_char)
+                -> f32;
         }
         strtof(arg_arg1, arg_arg2)
     })
@@ -6754,26 +6670,16 @@ pub unsafe fn wcstombs(
 ) -> usize {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn wcstombs(
-                arg1: *mut ::std::os::raw::c_char,
-                arg2: *const wchar_t,
-                arg3: usize,
-            ) -> usize;
+            pub fn wcstombs(arg1: *mut ::std::os::raw::c_char, arg2: *const wchar_t, arg3: usize) -> usize;
         }
         wcstombs(arg_arg1, arg_arg2, arg_arg3)
     })
 }
 #[track_caller]
-pub unsafe fn wctomb(
-    arg_arg1: *mut ::std::os::raw::c_char,
-    arg_arg2: wchar_t,
-) -> ::std::os::raw::c_int {
+pub unsafe fn wctomb(arg_arg1: *mut ::std::os::raw::c_char, arg_arg2: wchar_t) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn wctomb(
-                arg1: *mut ::std::os::raw::c_char,
-                arg2: wchar_t,
-            ) -> ::std::os::raw::c_int;
+            pub fn wctomb(arg1: *mut ::std::os::raw::c_char, arg2: wchar_t) -> ::std::os::raw::c_int;
         }
         wctomb(arg_arg1, arg_arg2)
     })
@@ -7145,16 +7051,10 @@ pub unsafe fn arc4random() -> u32 {
     })
 }
 #[track_caller]
-pub unsafe fn arc4random_addrandom(
-    arg_arg1: *mut ::std::os::raw::c_uchar,
-    arg_arg2: ::std::os::raw::c_int,
-) {
+pub unsafe fn arc4random_addrandom(arg_arg1: *mut ::std::os::raw::c_uchar, arg_arg2: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn arc4random_addrandom(
-                arg1: *mut ::std::os::raw::c_uchar,
-                arg2: ::std::os::raw::c_int,
-            );
+            pub fn arc4random_addrandom(arg1: *mut ::std::os::raw::c_uchar, arg2: ::std::os::raw::c_int);
         }
         arc4random_addrandom(arg_arg1, arg_arg2)
     })
@@ -7371,10 +7271,7 @@ pub unsafe fn daemon(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn daemon(
-                arg1: ::std::os::raw::c_int,
-                arg2: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn daemon(arg1: ::std::os::raw::c_int, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         daemon(arg_arg1, arg_arg2)
     })
@@ -7423,14 +7320,10 @@ pub unsafe fn getbsize(
     })
 }
 #[track_caller]
-pub unsafe fn getloadavg(
-    arg_arg1: *mut f64,
-    arg_arg2: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn getloadavg(arg_arg1: *mut f64, arg_arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getloadavg(arg1: *mut f64, arg2: ::std::os::raw::c_int)
-                -> ::std::os::raw::c_int;
+            pub fn getloadavg(arg1: *mut f64, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         getloadavg(arg_arg1, arg_arg2)
     })
@@ -7754,10 +7647,8 @@ pub unsafe fn reallocf(
 ) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn reallocf(
-                __ptr: *mut ::std::os::raw::c_void,
-                __size: usize,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn reallocf(__ptr: *mut ::std::os::raw::c_void, __size: usize)
+                -> *mut ::std::os::raw::c_void;
         }
         reallocf(arg___ptr, arg___size)
     })
@@ -8470,11 +8361,7 @@ pub unsafe fn swab(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn swab(
-                arg1: *const ::std::os::raw::c_void,
-                arg2: *mut ::std::os::raw::c_void,
-                arg3: isize,
-            );
+            pub fn swab(arg1: *const ::std::os::raw::c_void, arg2: *mut ::std::os::raw::c_void, arg3: isize);
         }
         swab(arg_arg1, arg_arg2, arg_arg3)
     })
@@ -8538,11 +8425,7 @@ pub unsafe fn bcopy(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn bcopy(
-                arg1: *const ::std::os::raw::c_void,
-                arg2: *mut ::std::os::raw::c_void,
-                arg3: usize,
-            );
+            pub fn bcopy(arg1: *const ::std::os::raw::c_void, arg2: *mut ::std::os::raw::c_void, arg3: usize);
         }
         bcopy(arg_arg1, arg_arg2, arg_arg3)
     })
@@ -9339,10 +9222,7 @@ pub unsafe fn listen(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn listen(
-                arg1: ::std::os::raw::c_int,
-                arg2: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn listen(arg1: ::std::os::raw::c_int, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         listen(arg_arg1, arg_arg2)
     })
@@ -10034,16 +9914,10 @@ pub unsafe fn inet6_option_find(
     })
 }
 #[track_caller]
-pub unsafe fn inet6_rthdr_space(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: ::std::os::raw::c_int,
-) -> usize {
+pub unsafe fn inet6_rthdr_space(arg_arg1: ::std::os::raw::c_int, arg_arg2: ::std::os::raw::c_int) -> usize {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn inet6_rthdr_space(
-                arg1: ::std::os::raw::c_int,
-                arg2: ::std::os::raw::c_int,
-            ) -> usize;
+            pub fn inet6_rthdr_space(arg1: ::std::os::raw::c_int, arg2: ::std::os::raw::c_int) -> usize;
         }
         inet6_rthdr_space(arg_arg1, arg_arg2)
     })
@@ -10105,16 +9979,10 @@ pub unsafe fn inet6_rthdr_segments(arg_arg1: *const cmsghdr) -> ::std::os::raw::
     })
 }
 #[track_caller]
-pub unsafe fn inet6_rthdr_getaddr(
-    arg_arg1: *mut cmsghdr,
-    arg_arg2: ::std::os::raw::c_int,
-) -> *mut in6_addr {
+pub unsafe fn inet6_rthdr_getaddr(arg_arg1: *mut cmsghdr, arg_arg2: ::std::os::raw::c_int) -> *mut in6_addr {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn inet6_rthdr_getaddr(
-                arg1: *mut cmsghdr,
-                arg2: ::std::os::raw::c_int,
-            ) -> *mut in6_addr;
+            pub fn inet6_rthdr_getaddr(arg1: *mut cmsghdr, arg2: ::std::os::raw::c_int) -> *mut in6_addr;
         }
         inet6_rthdr_getaddr(arg_arg1, arg_arg2)
     })
@@ -10276,16 +10144,10 @@ pub unsafe fn inet6_opt_get_val(
     })
 }
 #[track_caller]
-pub unsafe fn inet6_rth_space(
-    arg_arg1: ::std::os::raw::c_int,
-    arg_arg2: ::std::os::raw::c_int,
-) -> socklen_t {
+pub unsafe fn inet6_rth_space(arg_arg1: ::std::os::raw::c_int, arg_arg2: ::std::os::raw::c_int) -> socklen_t {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn inet6_rth_space(
-                arg1: ::std::os::raw::c_int,
-                arg2: ::std::os::raw::c_int,
-            ) -> socklen_t;
+            pub fn inet6_rth_space(arg1: ::std::os::raw::c_int, arg2: ::std::os::raw::c_int) -> socklen_t;
         }
         inet6_rth_space(arg_arg1, arg_arg2)
     })
@@ -10343,8 +10205,7 @@ pub unsafe fn inet6_rth_reverse(
 pub unsafe fn inet6_rth_segments(arg_arg1: *const ::std::os::raw::c_void) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn inet6_rth_segments(arg1: *const ::std::os::raw::c_void)
-                -> ::std::os::raw::c_int;
+            pub fn inet6_rth_segments(arg1: *const ::std::os::raw::c_void) -> ::std::os::raw::c_int;
         }
         inet6_rth_segments(arg_arg1)
     })
@@ -10371,10 +10232,8 @@ pub unsafe fn bindresvport(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn bindresvport(
-                arg1: ::std::os::raw::c_int,
-                arg2: *mut sockaddr_in,
-            ) -> ::std::os::raw::c_int;
+            pub fn bindresvport(arg1: ::std::os::raw::c_int, arg2: *mut sockaddr_in)
+                -> ::std::os::raw::c_int;
         }
         bindresvport(arg_arg1, arg_arg2)
     })
@@ -10386,10 +10245,8 @@ pub unsafe fn bindresvport_sa(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn bindresvport_sa(
-                arg1: ::std::os::raw::c_int,
-                arg2: *mut sockaddr,
-            ) -> ::std::os::raw::c_int;
+            pub fn bindresvport_sa(arg1: ::std::os::raw::c_int, arg2: *mut sockaddr)
+                -> ::std::os::raw::c_int;
         }
         bindresvport_sa(arg_arg1, arg_arg2)
     })
@@ -11083,10 +10940,7 @@ pub unsafe fn uuid_compare(
     })
 }
 #[track_caller]
-pub unsafe fn uuid_copy(
-    arg_dst: *mut ::std::os::raw::c_uchar,
-    arg_src: *mut ::std::os::raw::c_uchar,
-) {
+pub unsafe fn uuid_copy(arg_dst: *mut ::std::os::raw::c_uchar, arg_src: *mut ::std::os::raw::c_uchar) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn uuid_copy(dst: *mut ::std::os::raw::c_uchar, src: *mut ::std::os::raw::c_uchar);
@@ -11146,10 +11000,7 @@ pub unsafe fn uuid_parse(
     })
 }
 #[track_caller]
-pub unsafe fn uuid_unparse(
-    arg_uu: *mut ::std::os::raw::c_uchar,
-    arg_out: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn uuid_unparse(arg_uu: *mut ::std::os::raw::c_uchar, arg_out: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn uuid_unparse(uu: *mut ::std::os::raw::c_uchar, out: *mut ::std::os::raw::c_char);
@@ -11158,31 +11009,19 @@ pub unsafe fn uuid_unparse(
     })
 }
 #[track_caller]
-pub unsafe fn uuid_unparse_lower(
-    arg_uu: *mut ::std::os::raw::c_uchar,
-    arg_out: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn uuid_unparse_lower(arg_uu: *mut ::std::os::raw::c_uchar, arg_out: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn uuid_unparse_lower(
-                uu: *mut ::std::os::raw::c_uchar,
-                out: *mut ::std::os::raw::c_char,
-            );
+            pub fn uuid_unparse_lower(uu: *mut ::std::os::raw::c_uchar, out: *mut ::std::os::raw::c_char);
         }
         uuid_unparse_lower(arg_uu, arg_out)
     })
 }
 #[track_caller]
-pub unsafe fn uuid_unparse_upper(
-    arg_uu: *mut ::std::os::raw::c_uchar,
-    arg_out: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn uuid_unparse_upper(arg_uu: *mut ::std::os::raw::c_uchar, arg_out: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn uuid_unparse_upper(
-                uu: *mut ::std::os::raw::c_uchar,
-                out: *mut ::std::os::raw::c_char,
-            );
+            pub fn uuid_unparse_upper(uu: *mut ::std::os::raw::c_uchar, out: *mut ::std::os::raw::c_char);
         }
         uuid_unparse_upper(arg_uu, arg_out)
     })
@@ -11197,16 +11036,10 @@ pub unsafe fn setpassent(arg_arg1: ::std::os::raw::c_int) -> ::std::os::raw::c_i
     })
 }
 #[track_caller]
-pub unsafe fn user_from_uid(
-    arg_arg1: uid_t,
-    arg_arg2: ::std::os::raw::c_int,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn user_from_uid(arg_arg1: uid_t, arg_arg2: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn user_from_uid(
-                arg1: uid_t,
-                arg2: ::std::os::raw::c_int,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn user_from_uid(arg1: uid_t, arg2: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_char;
         }
         user_from_uid(arg_arg1, arg_arg2)
     })
@@ -11283,14 +11116,11 @@ pub unsafe fn first_dir_separator(
     })
 }
 #[track_caller]
-pub unsafe fn last_dir_separator(
-    arg_filename: *const ::std::os::raw::c_char,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn last_dir_separator(arg_filename: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn last_dir_separator(
-                filename: *const ::std::os::raw::c_char,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn last_dir_separator(filename: *const ::std::os::raw::c_char)
+                -> *mut ::std::os::raw::c_char;
         }
         last_dir_separator(arg_filename)
     })
@@ -11386,27 +11216,19 @@ pub unsafe fn path_is_prefix_of_path(
     })
 }
 #[track_caller]
-pub unsafe fn make_absolute_path(
-    arg_path: *const ::std::os::raw::c_char,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn make_absolute_path(arg_path: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn make_absolute_path(
-                path: *const ::std::os::raw::c_char,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn make_absolute_path(path: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char;
         }
         make_absolute_path(arg_path)
     })
 }
 #[track_caller]
-pub unsafe fn get_progname(
-    arg_argv0: *const ::std::os::raw::c_char,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn get_progname(arg_argv0: *const ::std::os::raw::c_char) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_progname(
-                argv0: *const ::std::os::raw::c_char,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn get_progname(argv0: *const ::std::os::raw::c_char) -> *const ::std::os::raw::c_char;
         }
         get_progname(arg_argv0)
     })
@@ -11595,14 +11417,10 @@ pub unsafe fn get_parent_directory(arg_path: *mut ::std::os::raw::c_char) {
     })
 }
 #[track_caller]
-pub unsafe fn pgfnames(
-    arg_path: *const ::std::os::raw::c_char,
-) -> *mut *mut ::std::os::raw::c_char {
+pub unsafe fn pgfnames(arg_path: *const ::std::os::raw::c_char) -> *mut *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pgfnames(
-                path: *const ::std::os::raw::c_char,
-            ) -> *mut *mut ::std::os::raw::c_char;
+            pub fn pgfnames(path: *const ::std::os::raw::c_char) -> *mut *mut ::std::os::raw::c_char;
         }
         pgfnames(arg_path)
     })
@@ -13865,14 +13683,10 @@ pub unsafe fn escape_single_quotes_ascii(
     })
 }
 #[track_caller]
-pub unsafe fn wait_result_to_str(
-    arg_exit_status: ::std::os::raw::c_int,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn wait_result_to_str(arg_exit_status: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn wait_result_to_str(
-                exit_status: ::std::os::raw::c_int,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn wait_result_to_str(exit_status: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_char;
         }
         wait_result_to_str(arg_exit_status)
     })
@@ -13988,10 +13802,7 @@ pub unsafe fn errmsg(arg_fmt: *const ::std::os::raw::c_char) -> ::std::os::raw::
 pub unsafe fn errmsg_internal(arg_fmt: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn errmsg_internal(
-                fmt: *const ::std::os::raw::c_char,
-                ...
-            ) -> ::std::os::raw::c_int;
+            pub fn errmsg_internal(fmt: *const ::std::os::raw::c_char, ...) -> ::std::os::raw::c_int;
         }
         errmsg_internal(arg_fmt)
     })
@@ -14027,10 +13838,7 @@ pub unsafe fn errdetail(arg_fmt: *const ::std::os::raw::c_char) -> ::std::os::ra
 pub unsafe fn errdetail_internal(arg_fmt: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn errdetail_internal(
-                fmt: *const ::std::os::raw::c_char,
-                ...
-            ) -> ::std::os::raw::c_int;
+            pub fn errdetail_internal(fmt: *const ::std::os::raw::c_char, ...) -> ::std::os::raw::c_int;
         }
         errdetail_internal(arg_fmt)
     })
@@ -14090,14 +13898,10 @@ pub unsafe fn errhint(arg_fmt: *const ::std::os::raw::c_char) -> ::std::os::raw:
     })
 }
 #[track_caller]
-pub unsafe fn set_errcontext_domain(
-    arg_domain: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn set_errcontext_domain(arg_domain: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn set_errcontext_domain(
-                domain: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn set_errcontext_domain(domain: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         set_errcontext_domain(arg_domain)
     })
@@ -14106,8 +13910,7 @@ pub unsafe fn set_errcontext_domain(
 pub unsafe fn errcontext_msg(arg_fmt: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn errcontext_msg(fmt: *const ::std::os::raw::c_char, ...)
-                -> ::std::os::raw::c_int;
+            pub fn errcontext_msg(fmt: *const ::std::os::raw::c_char, ...) -> ::std::os::raw::c_int;
         }
         errcontext_msg(arg_fmt)
     })
@@ -14226,17 +14029,10 @@ pub unsafe fn elog_start(
     })
 }
 #[track_caller]
-pub unsafe fn elog_finish(
-    arg_elevel: ::std::os::raw::c_int,
-    arg_fmt: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn elog_finish(arg_elevel: ::std::os::raw::c_int, arg_fmt: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn elog_finish(
-                elevel: ::std::os::raw::c_int,
-                fmt: *const ::std::os::raw::c_char,
-                ...
-            );
+            pub fn elog_finish(elevel: ::std::os::raw::c_int, fmt: *const ::std::os::raw::c_char, ...);
         }
         elog_finish(arg_elevel, arg_fmt)
     })
@@ -14257,15 +14053,11 @@ pub unsafe fn pre_format_elog_string(
     })
 }
 #[track_caller]
-pub unsafe fn format_elog_string(
-    arg_fmt: *const ::std::os::raw::c_char,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn format_elog_string(arg_fmt: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn format_elog_string(
-                fmt: *const ::std::os::raw::c_char,
-                ...
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn format_elog_string(fmt: *const ::std::os::raw::c_char, ...)
+                -> *mut ::std::os::raw::c_char;
         }
         format_elog_string(arg_fmt)
     })
@@ -14432,14 +14224,10 @@ pub unsafe fn DebugFileOpen() {
     })
 }
 #[track_caller]
-pub unsafe fn unpack_sql_state(
-    arg_sql_state: ::std::os::raw::c_int,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn unpack_sql_state(arg_sql_state: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn unpack_sql_state(
-                sql_state: ::std::os::raw::c_int,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn unpack_sql_state(sql_state: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_char;
         }
         unpack_sql_state(arg_sql_state)
     })
@@ -14500,16 +14288,10 @@ extern "C" {
     pub static mut CurrentMemoryContext: MemoryContext;
 }
 #[track_caller]
-pub unsafe fn MemoryContextAlloc(
-    arg_context: MemoryContext,
-    arg_size: Size,
-) -> *mut ::std::os::raw::c_void {
+pub unsafe fn MemoryContextAlloc(arg_context: MemoryContext, arg_size: Size) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn MemoryContextAlloc(
-                context: MemoryContext,
-                size: Size,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn MemoryContextAlloc(context: MemoryContext, size: Size) -> *mut ::std::os::raw::c_void;
         }
         MemoryContextAlloc(arg_context, arg_size)
     })
@@ -14521,10 +14303,7 @@ pub unsafe fn MemoryContextAllocZero(
 ) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn MemoryContextAllocZero(
-                context: MemoryContext,
-                size: Size,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn MemoryContextAllocZero(context: MemoryContext, size: Size) -> *mut ::std::os::raw::c_void;
         }
         MemoryContextAllocZero(arg_context, arg_size)
     })
@@ -14586,10 +14365,7 @@ pub unsafe fn palloc_extended(
 ) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn palloc_extended(
-                size: Size,
-                flags: ::std::os::raw::c_int,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn palloc_extended(size: Size, flags: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_void;
         }
         palloc_extended(arg_size, arg_flags)
     })
@@ -14601,10 +14377,7 @@ pub unsafe fn repalloc(
 ) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn repalloc(
-                pointer: *mut ::std::os::raw::c_void,
-                size: Size,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn repalloc(pointer: *mut ::std::os::raw::c_void, size: Size) -> *mut ::std::os::raw::c_void;
         }
         repalloc(arg_pointer, arg_size)
     })
@@ -14625,10 +14398,7 @@ pub unsafe fn MemoryContextAllocHuge(
 ) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn MemoryContextAllocHuge(
-                context: MemoryContext,
-                size: Size,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn MemoryContextAllocHuge(context: MemoryContext, size: Size) -> *mut ::std::os::raw::c_void;
         }
         MemoryContextAllocHuge(arg_context, arg_size)
     })
@@ -14655,10 +14425,7 @@ pub unsafe fn MemoryContextRegisterResetCallback(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn MemoryContextRegisterResetCallback(
-                context: MemoryContext,
-                cb: *mut MemoryContextCallback,
-            );
+            pub fn MemoryContextRegisterResetCallback(context: MemoryContext, cb: *mut MemoryContextCallback);
         }
         MemoryContextRegisterResetCallback(arg_context, arg_cb)
     })
@@ -14688,16 +14455,10 @@ pub unsafe fn pstrdup(arg_in_: *const ::std::os::raw::c_char) -> *mut ::std::os:
     })
 }
 #[track_caller]
-pub unsafe fn pnstrdup(
-    arg_in_: *const ::std::os::raw::c_char,
-    arg_len: Size,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn pnstrdup(arg_in_: *const ::std::os::raw::c_char, arg_len: Size) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pnstrdup(
-                in_: *const ::std::os::raw::c_char,
-                len: Size,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn pnstrdup(in_: *const ::std::os::raw::c_char, len: Size) -> *mut ::std::os::raw::c_char;
         }
         pnstrdup(arg_in_, arg_len)
     })
@@ -14715,8 +14476,7 @@ pub unsafe fn pchomp(arg_in_: *const ::std::os::raw::c_char) -> *mut ::std::os::
 pub unsafe fn psprintf(arg_fmt: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn psprintf(fmt: *const ::std::os::raw::c_char, ...)
-                -> *mut ::std::os::raw::c_char;
+            pub fn psprintf(fmt: *const ::std::os::raw::c_char, ...) -> *mut ::std::os::raw::c_char;
         }
         psprintf(arg_fmt)
     })
@@ -14808,8 +14568,7 @@ pub type fmAggrefPtr = *mut Aggref;
 pub type fmExprContextCallbackFunction = ::std::option::Option<unsafe extern "C" fn(arg: Datum)>;
 pub type fmStringInfo = *mut StringInfoData;
 pub type FunctionCallInfo = *mut FunctionCallInfoBaseData;
-pub type PGFunction =
-    ::std::option::Option<unsafe extern "C" fn(fcinfo: FunctionCallInfo) -> Datum>;
+pub type PGFunction = ::std::option::Option<unsafe extern "C" fn(fcinfo: FunctionCallInfo) -> Datum>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct FmgrInfo {
@@ -14862,11 +14621,7 @@ pub unsafe fn fmgr_info(arg_functionId: Oid, arg_finfo: *mut FmgrInfo) {
     })
 }
 #[track_caller]
-pub unsafe fn fmgr_info_cxt(
-    arg_functionId: Oid,
-    arg_finfo: *mut FmgrInfo,
-    arg_mcxt: MemoryContext,
-) {
+pub unsafe fn fmgr_info_cxt(arg_functionId: Oid, arg_finfo: *mut FmgrInfo, arg_mcxt: MemoryContext) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn fmgr_info_cxt(functionId: Oid, finfo: *mut FmgrInfo, mcxt: MemoryContext);
@@ -14882,11 +14637,7 @@ pub unsafe fn fmgr_info_copy(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn fmgr_info_copy(
-                dstinfo: *mut FmgrInfo,
-                srcinfo: *mut FmgrInfo,
-                destcxt: MemoryContext,
-            );
+            pub fn fmgr_info_copy(dstinfo: *mut FmgrInfo, srcinfo: *mut FmgrInfo, destcxt: MemoryContext);
         }
         fmgr_info_copy(arg_dstinfo, arg_srcinfo, arg_destcxt)
     })
@@ -14934,11 +14685,7 @@ pub unsafe fn pg_detoast_datum_slice(
 ) -> *mut varlena {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_detoast_datum_slice(
-                datum: *mut varlena,
-                first: int32,
-                count: int32,
-            ) -> *mut varlena;
+            pub fn pg_detoast_datum_slice(datum: *mut varlena, first: int32, count: int32) -> *mut varlena;
         }
         pg_detoast_datum_slice(arg_datum, arg_first, arg_count)
     })
@@ -14969,14 +14716,9 @@ pub struct Pg_magic_struct {
     pub float4byval: ::std::os::raw::c_int,
     pub float8byval: ::std::os::raw::c_int,
 }
-pub type PGModuleMagicFunction =
-    ::std::option::Option<unsafe extern "C" fn() -> *const Pg_magic_struct>;
+pub type PGModuleMagicFunction = ::std::option::Option<unsafe extern "C" fn() -> *const Pg_magic_struct>;
 #[track_caller]
-pub unsafe fn DirectFunctionCall1Coll(
-    arg_func: PGFunction,
-    arg_collation: Oid,
-    arg_arg1: Datum,
-) -> Datum {
+pub unsafe fn DirectFunctionCall1Coll(arg_func: PGFunction, arg_collation: Oid, arg_arg1: Datum) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn DirectFunctionCall1Coll(func: PGFunction, collation: Oid, arg1: Datum) -> Datum;
@@ -15069,15 +14811,7 @@ pub unsafe fn DirectFunctionCall5Coll(
                 arg5: Datum,
             ) -> Datum;
         }
-        DirectFunctionCall5Coll(
-            arg_func,
-            arg_collation,
-            arg_arg1,
-            arg_arg2,
-            arg_arg3,
-            arg_arg4,
-            arg_arg5,
-        )
+        DirectFunctionCall5Coll(arg_func, arg_collation, arg_arg1, arg_arg2, arg_arg3, arg_arg4, arg_arg5)
     })
 }
 #[track_caller]
@@ -15292,11 +15026,7 @@ pub unsafe fn FunctionCall0Coll(arg_flinfo: *mut FmgrInfo, arg_collation: Oid) -
     })
 }
 #[track_caller]
-pub unsafe fn FunctionCall1Coll(
-    arg_flinfo: *mut FmgrInfo,
-    arg_collation: Oid,
-    arg_arg1: Datum,
-) -> Datum {
+pub unsafe fn FunctionCall1Coll(arg_flinfo: *mut FmgrInfo, arg_collation: Oid, arg_arg1: Datum) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn FunctionCall1Coll(flinfo: *mut FmgrInfo, collation: Oid, arg1: Datum) -> Datum;
@@ -15389,15 +15119,7 @@ pub unsafe fn FunctionCall5Coll(
                 arg5: Datum,
             ) -> Datum;
         }
-        FunctionCall5Coll(
-            arg_flinfo,
-            arg_collation,
-            arg_arg1,
-            arg_arg2,
-            arg_arg3,
-            arg_arg4,
-            arg_arg5,
-        )
+        FunctionCall5Coll(arg_flinfo, arg_collation, arg_arg1, arg_arg2, arg_arg3, arg_arg4, arg_arg5)
     })
 }
 #[track_caller]
@@ -15572,11 +15294,7 @@ pub unsafe fn OidFunctionCall0Coll(arg_functionId: Oid, arg_collation: Oid) -> D
     })
 }
 #[track_caller]
-pub unsafe fn OidFunctionCall1Coll(
-    arg_functionId: Oid,
-    arg_collation: Oid,
-    arg_arg1: Datum,
-) -> Datum {
+pub unsafe fn OidFunctionCall1Coll(arg_functionId: Oid, arg_collation: Oid, arg_arg1: Datum) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn OidFunctionCall1Coll(functionId: Oid, collation: Oid, arg1: Datum) -> Datum;
@@ -15593,12 +15311,7 @@ pub unsafe fn OidFunctionCall2Coll(
 ) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn OidFunctionCall2Coll(
-                functionId: Oid,
-                collation: Oid,
-                arg1: Datum,
-                arg2: Datum,
-            ) -> Datum;
+            pub fn OidFunctionCall2Coll(functionId: Oid, collation: Oid, arg1: Datum, arg2: Datum) -> Datum;
         }
         OidFunctionCall2Coll(arg_functionId, arg_collation, arg_arg1, arg_arg2)
     })
@@ -15669,15 +15382,7 @@ pub unsafe fn OidFunctionCall5Coll(
                 arg5: Datum,
             ) -> Datum;
         }
-        OidFunctionCall5Coll(
-            arg_functionId,
-            arg_collation,
-            arg_arg1,
-            arg_arg2,
-            arg_arg3,
-            arg_arg4,
-            arg_arg5,
-        )
+        OidFunctionCall5Coll(arg_functionId, arg_collation, arg_arg1, arg_arg2, arg_arg3, arg_arg4, arg_arg5)
     })
 }
 #[track_caller]
@@ -15881,31 +15586,19 @@ pub unsafe fn OidInputFunctionCall(
     })
 }
 #[track_caller]
-pub unsafe fn OutputFunctionCall(
-    arg_flinfo: *mut FmgrInfo,
-    arg_val: Datum,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn OutputFunctionCall(arg_flinfo: *mut FmgrInfo, arg_val: Datum) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn OutputFunctionCall(
-                flinfo: *mut FmgrInfo,
-                val: Datum,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn OutputFunctionCall(flinfo: *mut FmgrInfo, val: Datum) -> *mut ::std::os::raw::c_char;
         }
         OutputFunctionCall(arg_flinfo, arg_val)
     })
 }
 #[track_caller]
-pub unsafe fn OidOutputFunctionCall(
-    arg_functionId: Oid,
-    arg_val: Datum,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn OidOutputFunctionCall(arg_functionId: Oid, arg_val: Datum) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn OidOutputFunctionCall(
-                functionId: Oid,
-                val: Datum,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn OidOutputFunctionCall(functionId: Oid, val: Datum) -> *mut ::std::os::raw::c_char;
         }
         OidOutputFunctionCall(arg_functionId, arg_val)
     })
@@ -16009,14 +15702,10 @@ pub unsafe fn get_fn_expr_rettype(arg_flinfo: *mut FmgrInfo) -> Oid {
     })
 }
 #[track_caller]
-pub unsafe fn get_fn_expr_argtype(
-    arg_flinfo: *mut FmgrInfo,
-    arg_argnum: ::std::os::raw::c_int,
-) -> Oid {
+pub unsafe fn get_fn_expr_argtype(arg_flinfo: *mut FmgrInfo, arg_argnum: ::std::os::raw::c_int) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_fn_expr_argtype(flinfo: *mut FmgrInfo, argnum: ::std::os::raw::c_int)
-                -> Oid;
+            pub fn get_fn_expr_argtype(flinfo: *mut FmgrInfo, argnum: ::std::os::raw::c_int) -> Oid;
         }
         get_fn_expr_argtype(arg_flinfo, arg_argnum)
     })
@@ -16031,29 +15720,19 @@ pub unsafe fn get_call_expr_argtype(arg_expr: fmNodePtr, arg_argnum: ::std::os::
     })
 }
 #[track_caller]
-pub unsafe fn get_fn_expr_arg_stable(
-    arg_flinfo: *mut FmgrInfo,
-    arg_argnum: ::std::os::raw::c_int,
-) -> bool {
+pub unsafe fn get_fn_expr_arg_stable(arg_flinfo: *mut FmgrInfo, arg_argnum: ::std::os::raw::c_int) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_fn_expr_arg_stable(
-                flinfo: *mut FmgrInfo,
-                argnum: ::std::os::raw::c_int,
-            ) -> bool;
+            pub fn get_fn_expr_arg_stable(flinfo: *mut FmgrInfo, argnum: ::std::os::raw::c_int) -> bool;
         }
         get_fn_expr_arg_stable(arg_flinfo, arg_argnum)
     })
 }
 #[track_caller]
-pub unsafe fn get_call_expr_arg_stable(
-    arg_expr: fmNodePtr,
-    arg_argnum: ::std::os::raw::c_int,
-) -> bool {
+pub unsafe fn get_call_expr_arg_stable(arg_expr: fmNodePtr, arg_argnum: ::std::os::raw::c_int) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_call_expr_arg_stable(expr: fmNodePtr, argnum: ::std::os::raw::c_int)
-                -> bool;
+            pub fn get_call_expr_arg_stable(expr: fmNodePtr, argnum: ::std::os::raw::c_int) -> bool;
         }
         get_call_expr_arg_stable(arg_expr, arg_argnum)
     })
@@ -16145,10 +15824,7 @@ pub unsafe fn EstimateLibraryStateSpace() -> Size {
     })
 }
 #[track_caller]
-pub unsafe fn SerializeLibraryState(
-    arg_maxsize: Size,
-    arg_start_address: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn SerializeLibraryState(arg_maxsize: Size, arg_start_address: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn SerializeLibraryState(maxsize: Size, start_address: *mut ::std::os::raw::c_char);
@@ -16774,8 +16450,7 @@ pub unsafe fn bmsToString(arg_bms: *const Bitmapset) -> *mut ::std::os::raw::c_c
 pub unsafe fn stringToNode(arg_str_: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn stringToNode(str_: *const ::std::os::raw::c_char)
-                -> *mut ::std::os::raw::c_void;
+            pub fn stringToNode(str_: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_void;
         }
         stringToNode(arg_str_)
     })
@@ -16835,29 +16510,19 @@ pub unsafe fn readAttrNumberCols(arg_numCols: ::std::os::raw::c_int) -> *mut int
     })
 }
 #[track_caller]
-pub unsafe fn copyObjectImpl(
-    arg_obj: *const ::std::os::raw::c_void,
-) -> *mut ::std::os::raw::c_void {
+pub unsafe fn copyObjectImpl(arg_obj: *const ::std::os::raw::c_void) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn copyObjectImpl(
-                obj: *const ::std::os::raw::c_void,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn copyObjectImpl(obj: *const ::std::os::raw::c_void) -> *mut ::std::os::raw::c_void;
         }
         copyObjectImpl(arg_obj)
     })
 }
 #[track_caller]
-pub unsafe fn equal(
-    arg_a: *const ::std::os::raw::c_void,
-    arg_b: *const ::std::os::raw::c_void,
-) -> bool {
+pub unsafe fn equal(arg_a: *const ::std::os::raw::c_void, arg_b: *const ::std::os::raw::c_void) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn equal(
-                a: *const ::std::os::raw::c_void,
-                b: *const ::std::os::raw::c_void,
-            ) -> bool;
+            pub fn equal(a: *const ::std::os::raw::c_void, b: *const ::std::os::raw::c_void) -> bool;
         }
         equal(arg_a, arg_b)
     })
@@ -17019,11 +16684,7 @@ pub unsafe fn lappend_cell_oid(
 ) -> *mut ListCell {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn lappend_cell_oid(
-                list: *mut List,
-                prev: *mut ListCell,
-                datum: Oid,
-            ) -> *mut ListCell;
+            pub fn lappend_cell_oid(list: *mut List, prev: *mut ListCell, datum: Oid) -> *mut ListCell;
         }
         lappend_cell_oid(arg_list, arg_prev, arg_datum)
     })
@@ -17083,31 +16744,19 @@ pub unsafe fn list_nth_cell(arg_list: *const List, arg_n: ::std::os::raw::c_int)
     })
 }
 #[track_caller]
-pub unsafe fn list_nth(
-    arg_list: *const List,
-    arg_n: ::std::os::raw::c_int,
-) -> *mut ::std::os::raw::c_void {
+pub unsafe fn list_nth(arg_list: *const List, arg_n: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_nth(
-                list: *const List,
-                n: ::std::os::raw::c_int,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn list_nth(list: *const List, n: ::std::os::raw::c_int) -> *mut ::std::os::raw::c_void;
         }
         list_nth(arg_list, arg_n)
     })
 }
 #[track_caller]
-pub unsafe fn list_nth_int(
-    arg_list: *const List,
-    arg_n: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn list_nth_int(arg_list: *const List, arg_n: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_nth_int(
-                list: *const List,
-                n: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn list_nth_int(list: *const List, n: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         list_nth_int(arg_list, arg_n)
     })
@@ -17131,14 +16780,10 @@ pub unsafe fn list_member(arg_list: *const List, arg_datum: *const ::std::os::ra
     })
 }
 #[track_caller]
-pub unsafe fn list_member_ptr(
-    arg_list: *const List,
-    arg_datum: *const ::std::os::raw::c_void,
-) -> bool {
+pub unsafe fn list_member_ptr(arg_list: *const List, arg_datum: *const ::std::os::raw::c_void) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_member_ptr(list: *const List, datum: *const ::std::os::raw::c_void)
-                -> bool;
+            pub fn list_member_ptr(list: *const List, datum: *const ::std::os::raw::c_void) -> bool;
         }
         list_member_ptr(arg_list, arg_datum)
     })
@@ -17162,10 +16807,7 @@ pub unsafe fn list_member_oid(arg_list: *const List, arg_datum: Oid) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn list_delete(
-    arg_list: *mut List,
-    arg_datum: *mut ::std::os::raw::c_void,
-) -> *mut List {
+pub unsafe fn list_delete(arg_list: *mut List, arg_datum: *mut ::std::os::raw::c_void) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn list_delete(list: *mut List, datum: *mut ::std::os::raw::c_void) -> *mut List;
@@ -17174,16 +16816,10 @@ pub unsafe fn list_delete(
     })
 }
 #[track_caller]
-pub unsafe fn list_delete_ptr(
-    arg_list: *mut List,
-    arg_datum: *mut ::std::os::raw::c_void,
-) -> *mut List {
+pub unsafe fn list_delete_ptr(arg_list: *mut List, arg_datum: *mut ::std::os::raw::c_void) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_delete_ptr(
-                list: *mut List,
-                datum: *mut ::std::os::raw::c_void,
-            ) -> *mut List;
+            pub fn list_delete_ptr(list: *mut List, datum: *mut ::std::os::raw::c_void) -> *mut List;
         }
         list_delete_ptr(arg_list, arg_datum)
     })
@@ -17223,11 +16859,7 @@ pub unsafe fn list_delete_cell(
 ) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_delete_cell(
-                list: *mut List,
-                cell: *mut ListCell,
-                prev: *mut ListCell,
-            ) -> *mut List;
+            pub fn list_delete_cell(list: *mut List, cell: *mut ListCell, prev: *mut ListCell) -> *mut List;
         }
         list_delete_cell(arg_list, arg_cell, arg_prev)
     })
@@ -17323,16 +16955,10 @@ pub unsafe fn list_difference_oid(arg_list1: *const List, arg_list2: *const List
     })
 }
 #[track_caller]
-pub unsafe fn list_append_unique(
-    arg_list: *mut List,
-    arg_datum: *mut ::std::os::raw::c_void,
-) -> *mut List {
+pub unsafe fn list_append_unique(arg_list: *mut List, arg_datum: *mut ::std::os::raw::c_void) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_append_unique(
-                list: *mut List,
-                datum: *mut ::std::os::raw::c_void,
-            ) -> *mut List;
+            pub fn list_append_unique(list: *mut List, datum: *mut ::std::os::raw::c_void) -> *mut List;
         }
         list_append_unique(arg_list, arg_datum)
     })
@@ -17344,25 +16970,16 @@ pub unsafe fn list_append_unique_ptr(
 ) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_append_unique_ptr(
-                list: *mut List,
-                datum: *mut ::std::os::raw::c_void,
-            ) -> *mut List;
+            pub fn list_append_unique_ptr(list: *mut List, datum: *mut ::std::os::raw::c_void) -> *mut List;
         }
         list_append_unique_ptr(arg_list, arg_datum)
     })
 }
 #[track_caller]
-pub unsafe fn list_append_unique_int(
-    arg_list: *mut List,
-    arg_datum: ::std::os::raw::c_int,
-) -> *mut List {
+pub unsafe fn list_append_unique_int(arg_list: *mut List, arg_datum: ::std::os::raw::c_int) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn list_append_unique_int(
-                list: *mut List,
-                datum: ::std::os::raw::c_int,
-            ) -> *mut List;
+            pub fn list_append_unique_int(list: *mut List, datum: ::std::os::raw::c_int) -> *mut List;
         }
         list_append_unique_int(arg_list, arg_datum)
     })
@@ -17551,10 +17168,7 @@ pub unsafe fn CreateTupleDesc(
 ) -> TupleDesc {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CreateTupleDesc(
-                natts: ::std::os::raw::c_int,
-                attrs: *mut Form_pg_attribute,
-            ) -> TupleDesc;
+            pub fn CreateTupleDesc(natts: ::std::os::raw::c_int, attrs: *mut Form_pg_attribute) -> TupleDesc;
         }
         CreateTupleDesc(arg_natts, arg_attrs)
     })
@@ -17901,11 +17515,7 @@ pub unsafe fn HeapTupleHeaderAdjustCmax(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn HeapTupleHeaderAdjustCmax(
-                tup: HeapTupleHeader,
-                cmax: *mut CommandId,
-                iscombo: *mut bool,
-            );
+            pub fn HeapTupleHeaderAdjustCmax(tup: HeapTupleHeader, cmax: *mut CommandId, iscombo: *mut bool);
         }
         HeapTupleHeaderAdjustCmax(arg_tup, arg_cmax, arg_iscombo)
     })
@@ -18092,16 +17702,10 @@ pub unsafe fn openat(
     })
 }
 #[track_caller]
-pub unsafe fn creat(
-    arg_arg1: *const ::std::os::raw::c_char,
-    arg_arg2: mode_t,
-) -> ::std::os::raw::c_int {
+pub unsafe fn creat(arg_arg1: *const ::std::os::raw::c_char, arg_arg2: mode_t) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn creat(
-                arg1: *const ::std::os::raw::c_char,
-                arg2: mode_t,
-            ) -> ::std::os::raw::c_int;
+            pub fn creat(arg1: *const ::std::os::raw::c_char, arg2: mode_t) -> ::std::os::raw::c_int;
         }
         creat(arg_arg1, arg_arg2)
     })
@@ -18207,10 +17811,7 @@ pub unsafe fn flock(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn flock(
-                arg1: ::std::os::raw::c_int,
-                arg2: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn flock(arg1: ::std::os::raw::c_int, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         flock(arg_arg1, arg_arg2)
     })
@@ -18300,10 +17901,8 @@ pub unsafe fn filesec_unset_property(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn filesec_unset_property(
-                arg1: filesec_t,
-                arg2: filesec_property_t,
-            ) -> ::std::os::raw::c_int;
+            pub fn filesec_unset_property(arg1: filesec_t, arg2: filesec_property_t)
+                -> ::std::os::raw::c_int;
         }
         filesec_unset_property(arg_arg1, arg_arg2)
     })
@@ -18446,10 +18045,7 @@ pub unsafe fn TransactionIdPrecedes(arg_id1: TransactionId, arg_id2: Transaction
     })
 }
 #[track_caller]
-pub unsafe fn TransactionIdPrecedesOrEquals(
-    arg_id1: TransactionId,
-    arg_id2: TransactionId,
-) -> bool {
+pub unsafe fn TransactionIdPrecedesOrEquals(arg_id1: TransactionId, arg_id2: TransactionId) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn TransactionIdPrecedesOrEquals(id1: TransactionId, id2: TransactionId) -> bool;
@@ -18529,10 +18125,7 @@ pub unsafe fn ReadNextFullTransactionId() -> FullTransactionId {
     })
 }
 #[track_caller]
-pub unsafe fn SetTransactionIdLimit(
-    arg_oldest_datfrozenxid: TransactionId,
-    arg_oldest_datoid: Oid,
-) {
+pub unsafe fn SetTransactionIdLimit(arg_oldest_datfrozenxid: TransactionId, arg_oldest_datoid: Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn SetTransactionIdLimit(oldest_datfrozenxid: TransactionId, oldest_datoid: Oid);
@@ -18701,16 +18294,10 @@ pub unsafe fn PageGetFreeSpace(arg_page: Page) -> Size {
     })
 }
 #[track_caller]
-pub unsafe fn PageGetFreeSpaceForMultipleTuples(
-    arg_page: Page,
-    arg_ntups: ::std::os::raw::c_int,
-) -> Size {
+pub unsafe fn PageGetFreeSpaceForMultipleTuples(arg_page: Page, arg_ntups: ::std::os::raw::c_int) -> Size {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn PageGetFreeSpaceForMultipleTuples(
-                page: Page,
-                ntups: ::std::os::raw::c_int,
-            ) -> Size;
+            pub fn PageGetFreeSpaceForMultipleTuples(page: Page, ntups: ::std::os::raw::c_int) -> Size;
         }
         PageGetFreeSpaceForMultipleTuples(arg_page, arg_ntups)
     })
@@ -18788,16 +18375,10 @@ pub unsafe fn PageIndexTupleOverwrite(
     })
 }
 #[track_caller]
-pub unsafe fn PageSetChecksumCopy(
-    arg_page: Page,
-    arg_blkno: BlockNumber,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn PageSetChecksumCopy(arg_page: Page, arg_blkno: BlockNumber) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn PageSetChecksumCopy(
-                page: Page,
-                blkno: BlockNumber,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn PageSetChecksumCopy(page: Page, blkno: BlockNumber) -> *mut ::std::os::raw::c_char;
         }
         PageSetChecksumCopy(arg_page, arg_blkno)
     })
@@ -18931,15 +18512,7 @@ pub unsafe fn heap_fill_tuple(
                 bit: *mut bits8,
             );
         }
-        heap_fill_tuple(
-            arg_tupleDesc,
-            arg_values,
-            arg_isnull,
-            arg_data,
-            arg_data_size,
-            arg_infomask,
-            arg_bit,
-        )
+        heap_fill_tuple(arg_tupleDesc, arg_values, arg_isnull, arg_data, arg_data_size, arg_infomask, arg_bit)
     })
 }
 #[track_caller]
@@ -18967,11 +18540,7 @@ pub unsafe fn nocachegetattr(
 ) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn nocachegetattr(
-                tup: HeapTuple,
-                attnum: ::std::os::raw::c_int,
-                att: TupleDesc,
-            ) -> Datum;
+            pub fn nocachegetattr(tup: HeapTuple, attnum: ::std::os::raw::c_int, att: TupleDesc) -> Datum;
         }
         nocachegetattr(arg_tup, arg_attnum, arg_att)
     })
@@ -19198,16 +18767,10 @@ pub unsafe fn heap_expand_tuple(arg_sourceTuple: HeapTuple, arg_tupleDesc: Tuple
     })
 }
 #[track_caller]
-pub unsafe fn minimal_expand_tuple(
-    arg_sourceTuple: HeapTuple,
-    arg_tupleDesc: TupleDesc,
-) -> MinimalTuple {
+pub unsafe fn minimal_expand_tuple(arg_sourceTuple: HeapTuple, arg_tupleDesc: TupleDesc) -> MinimalTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn minimal_expand_tuple(
-                sourceTuple: HeapTuple,
-                tupleDesc: TupleDesc,
-            ) -> MinimalTuple;
+            pub fn minimal_expand_tuple(sourceTuple: HeapTuple, tupleDesc: TupleDesc) -> MinimalTuple;
         }
         minimal_expand_tuple(arg_sourceTuple, arg_tupleDesc)
     })
@@ -19249,9 +18812,8 @@ pub struct TupleTableSlotOps {
     pub init: ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot)>,
     pub release: ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot)>,
     pub clear: ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot)>,
-    pub getsomeattrs: ::std::option::Option<
-        unsafe extern "C" fn(slot: *mut TupleTableSlot, natts: ::std::os::raw::c_int),
-    >,
+    pub getsomeattrs:
+        ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot, natts: ::std::os::raw::c_int)>,
     pub getsysattr: ::std::option::Option<
         unsafe extern "C" fn(
             slot: *mut TupleTableSlot,
@@ -19263,12 +18825,10 @@ pub struct TupleTableSlotOps {
     pub copyslot: ::std::option::Option<
         unsafe extern "C" fn(dstslot: *mut TupleTableSlot, srcslot: *mut TupleTableSlot),
     >,
-    pub get_heap_tuple:
-        ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot) -> HeapTuple>,
+    pub get_heap_tuple: ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot) -> HeapTuple>,
     pub get_minimal_tuple:
         ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot) -> MinimalTuple>,
-    pub copy_heap_tuple:
-        ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot) -> HeapTuple>,
+    pub copy_heap_tuple: ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot) -> HeapTuple>,
     pub copy_minimal_tuple:
         ::std::option::Option<unsafe extern "C" fn(slot: *mut TupleTableSlot) -> MinimalTuple>,
 }
@@ -19448,11 +19008,7 @@ pub unsafe fn ExecForceStoreHeapTuple(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecForceStoreHeapTuple(
-                tuple: HeapTuple,
-                slot: *mut TupleTableSlot,
-                shouldFree: bool,
-            );
+            pub fn ExecForceStoreHeapTuple(tuple: HeapTuple, slot: *mut TupleTableSlot, shouldFree: bool);
         }
         ExecForceStoreHeapTuple(arg_tuple, arg_slot, arg_shouldFree)
     })
@@ -19611,10 +19167,7 @@ pub unsafe fn slot_getmissingattrs(
     })
 }
 #[track_caller]
-pub unsafe fn slot_getsomeattrs_int(
-    arg_slot: *mut TupleTableSlot,
-    arg_attnum: ::std::os::raw::c_int,
-) {
+pub unsafe fn slot_getsomeattrs_int(arg_slot: *mut TupleTableSlot, arg_attnum: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn slot_getsomeattrs_int(slot: *mut TupleTableSlot, attnum: ::std::os::raw::c_int);
@@ -19658,10 +19211,7 @@ pub unsafe fn bms_equal(arg_a: *const Bitmapset, arg_b: *const Bitmapset) -> boo
     })
 }
 #[track_caller]
-pub unsafe fn bms_compare(
-    arg_a: *const Bitmapset,
-    arg_b: *const Bitmapset,
-) -> ::std::os::raw::c_int {
+pub unsafe fn bms_compare(arg_a: *const Bitmapset, arg_b: *const Bitmapset) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn bms_compare(a: *const Bitmapset, b: *const Bitmapset) -> ::std::os::raw::c_int;
@@ -19724,10 +19274,7 @@ pub unsafe fn bms_is_subset(arg_a: *const Bitmapset, arg_b: *const Bitmapset) ->
     })
 }
 #[track_caller]
-pub unsafe fn bms_subset_compare(
-    arg_a: *const Bitmapset,
-    arg_b: *const Bitmapset,
-) -> BMS_Comparison {
+pub unsafe fn bms_subset_compare(arg_a: *const Bitmapset, arg_b: *const Bitmapset) -> BMS_Comparison {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn bms_subset_compare(a: *const Bitmapset, b: *const Bitmapset) -> BMS_Comparison;
@@ -19745,16 +19292,10 @@ pub unsafe fn bms_is_member(arg_x: ::std::os::raw::c_int, arg_a: *const Bitmapse
     })
 }
 #[track_caller]
-pub unsafe fn bms_member_index(
-    arg_a: *mut Bitmapset,
-    arg_x: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn bms_member_index(arg_a: *mut Bitmapset, arg_x: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn bms_member_index(
-                a: *mut Bitmapset,
-                x: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn bms_member_index(a: *mut Bitmapset, x: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         bms_member_index(arg_a, arg_x)
     })
@@ -19802,10 +19343,7 @@ pub unsafe fn bms_get_singleton_member(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn bms_get_singleton_member(
-                a: *const Bitmapset,
-                member: *mut ::std::os::raw::c_int,
-            ) -> bool;
+            pub fn bms_get_singleton_member(a: *const Bitmapset, member: *mut ::std::os::raw::c_int) -> bool;
         }
         bms_get_singleton_member(arg_a, arg_member)
     })
@@ -19838,10 +19376,7 @@ pub unsafe fn bms_is_empty(arg_a: *const Bitmapset) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn bms_add_member(
-    arg_a: *mut Bitmapset,
-    arg_x: ::std::os::raw::c_int,
-) -> *mut Bitmapset {
+pub unsafe fn bms_add_member(arg_a: *mut Bitmapset, arg_x: ::std::os::raw::c_int) -> *mut Bitmapset {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn bms_add_member(a: *mut Bitmapset, x: ::std::os::raw::c_int) -> *mut Bitmapset;
@@ -19850,10 +19385,7 @@ pub unsafe fn bms_add_member(
     })
 }
 #[track_caller]
-pub unsafe fn bms_del_member(
-    arg_a: *mut Bitmapset,
-    arg_x: ::std::os::raw::c_int,
-) -> *mut Bitmapset {
+pub unsafe fn bms_del_member(arg_a: *mut Bitmapset, arg_x: ::std::os::raw::c_int) -> *mut Bitmapset {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn bms_del_member(a: *mut Bitmapset, x: ::std::os::raw::c_int) -> *mut Bitmapset;
@@ -20051,16 +19583,10 @@ pub unsafe fn convert_tuples_by_name_map_if_req(
     })
 }
 #[track_caller]
-pub unsafe fn execute_attr_map_tuple(
-    arg_tuple: HeapTuple,
-    arg_map: *mut TupleConversionMap,
-) -> HeapTuple {
+pub unsafe fn execute_attr_map_tuple(arg_tuple: HeapTuple, arg_map: *mut TupleConversionMap) -> HeapTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn execute_attr_map_tuple(
-                tuple: HeapTuple,
-                map: *mut TupleConversionMap,
-            ) -> HeapTuple;
+            pub fn execute_attr_map_tuple(tuple: HeapTuple, map: *mut TupleConversionMap) -> HeapTuple;
         }
         execute_attr_map_tuple(arg_tuple, arg_map)
     })
@@ -20362,16 +19888,10 @@ pub unsafe fn timegm(arg_arg1: *mut tm) -> time_t {
     })
 }
 #[track_caller]
-pub unsafe fn nanosleep(
-    arg___rqtp: *const timespec,
-    arg___rmtp: *mut timespec,
-) -> ::std::os::raw::c_int {
+pub unsafe fn nanosleep(arg___rqtp: *const timespec, arg___rmtp: *mut timespec) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn nanosleep(
-                __rqtp: *const timespec,
-                __rmtp: *mut timespec,
-            ) -> ::std::os::raw::c_int;
+            pub fn nanosleep(__rqtp: *const timespec, __rmtp: *mut timespec) -> ::std::os::raw::c_int;
         }
         nanosleep(arg___rqtp, arg___rmtp)
     })
@@ -20386,31 +19906,19 @@ pub const clockid_t__CLOCK_PROCESS_CPUTIME_ID: clockid_t = 12;
 pub const clockid_t__CLOCK_THREAD_CPUTIME_ID: clockid_t = 16;
 pub type clockid_t = ::std::os::raw::c_uint;
 #[track_caller]
-pub unsafe fn clock_getres(
-    arg___clock_id: clockid_t,
-    arg___res: *mut timespec,
-) -> ::std::os::raw::c_int {
+pub unsafe fn clock_getres(arg___clock_id: clockid_t, arg___res: *mut timespec) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn clock_getres(
-                __clock_id: clockid_t,
-                __res: *mut timespec,
-            ) -> ::std::os::raw::c_int;
+            pub fn clock_getres(__clock_id: clockid_t, __res: *mut timespec) -> ::std::os::raw::c_int;
         }
         clock_getres(arg___clock_id, arg___res)
     })
 }
 #[track_caller]
-pub unsafe fn clock_gettime(
-    arg___clock_id: clockid_t,
-    arg___tp: *mut timespec,
-) -> ::std::os::raw::c_int {
+pub unsafe fn clock_gettime(arg___clock_id: clockid_t, arg___tp: *mut timespec) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn clock_gettime(
-                __clock_id: clockid_t,
-                __tp: *mut timespec,
-            ) -> ::std::os::raw::c_int;
+            pub fn clock_gettime(__clock_id: clockid_t, __tp: *mut timespec) -> ::std::os::raw::c_int;
         }
         clock_gettime(arg___clock_id, arg___tp)
     })
@@ -20425,31 +19933,19 @@ pub unsafe fn clock_gettime_nsec_np(arg___clock_id: clockid_t) -> __uint64_t {
     })
 }
 #[track_caller]
-pub unsafe fn clock_settime(
-    arg___clock_id: clockid_t,
-    arg___tp: *const timespec,
-) -> ::std::os::raw::c_int {
+pub unsafe fn clock_settime(arg___clock_id: clockid_t, arg___tp: *const timespec) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn clock_settime(
-                __clock_id: clockid_t,
-                __tp: *const timespec,
-            ) -> ::std::os::raw::c_int;
+            pub fn clock_settime(__clock_id: clockid_t, __tp: *const timespec) -> ::std::os::raw::c_int;
         }
         clock_settime(arg___clock_id, arg___tp)
     })
 }
 #[track_caller]
-pub unsafe fn timespec_get(
-    arg_ts: *mut timespec,
-    arg_base: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn timespec_get(arg_ts: *mut timespec, arg_base: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn timespec_get(
-                ts: *mut timespec,
-                base: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn timespec_get(ts: *mut timespec, base: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         timespec_get(arg_ts, arg_base)
     })
@@ -20521,16 +20017,10 @@ pub unsafe fn InstrAlloc(
     })
 }
 #[track_caller]
-pub unsafe fn InstrInit(
-    arg_instr: *mut Instrumentation,
-    arg_instrument_options: ::std::os::raw::c_int,
-) {
+pub unsafe fn InstrInit(arg_instr: *mut Instrumentation, arg_instrument_options: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn InstrInit(
-                instr: *mut Instrumentation,
-                instrument_options: ::std::os::raw::c_int,
-            );
+            pub fn InstrInit(instr: *mut Instrumentation, instrument_options: ::std::os::raw::c_int);
         }
         InstrInit(arg_instr, arg_instrument_options)
     })
@@ -20856,9 +20346,8 @@ pub type ParamCompileHook = ::std::option::Option<
         resnull: *mut bool,
     ),
 >;
-pub type ParserSetupHook = ::std::option::Option<
-    unsafe extern "C" fn(pstate: *mut ParseState, arg: *mut ::std::os::raw::c_void),
->;
+pub type ParserSetupHook =
+    ::std::option::Option<unsafe extern "C" fn(pstate: *mut ParseState, arg: *mut ::std::os::raw::c_void)>;
 #[repr(C)]
 #[derive(Debug)]
 pub struct ParamListInfoData {
@@ -20939,14 +20428,10 @@ pub unsafe fn SerializeParamList(
     })
 }
 #[track_caller]
-pub unsafe fn RestoreParamList(
-    arg_start_address: *mut *mut ::std::os::raw::c_char,
-) -> ParamListInfo {
+pub unsafe fn RestoreParamList(arg_start_address: *mut *mut ::std::os::raw::c_char) -> ParamListInfo {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RestoreParamList(
-                start_address: *mut *mut ::std::os::raw::c_char,
-            ) -> ParamListInfo;
+            pub fn RestoreParamList(start_address: *mut *mut ::std::os::raw::c_char) -> ParamListInfo;
         }
         RestoreParamList(arg_start_address)
     })
@@ -23011,9 +22496,8 @@ pub struct PartitionDirectoryData {
     _unused: [u8; 0],
 }
 pub type PartitionDirectory = *mut PartitionDirectoryData;
-pub type HashValueFunc = ::std::option::Option<
-    unsafe extern "C" fn(key: *const ::std::os::raw::c_void, keysize: Size) -> uint32,
->;
+pub type HashValueFunc =
+    ::std::option::Option<unsafe extern "C" fn(key: *const ::std::os::raw::c_void, keysize: Size) -> uint32>;
 pub type HashCompareFunc = ::std::option::Option<
     unsafe extern "C" fn(
         key1: *const ::std::os::raw::c_void,
@@ -23159,16 +22643,10 @@ pub unsafe fn hash_search(
     })
 }
 #[track_caller]
-pub unsafe fn get_hash_value(
-    arg_hashp: *mut HTAB,
-    arg_keyPtr: *const ::std::os::raw::c_void,
-) -> uint32 {
+pub unsafe fn get_hash_value(arg_hashp: *mut HTAB, arg_keyPtr: *const ::std::os::raw::c_void) -> uint32 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_hash_value(
-                hashp: *mut HTAB,
-                keyPtr: *const ::std::os::raw::c_void,
-            ) -> uint32;
+            pub fn get_hash_value(hashp: *mut HTAB, keyPtr: *const ::std::os::raw::c_void) -> uint32;
         }
         get_hash_value(arg_hashp, arg_keyPtr)
     })
@@ -23257,36 +22735,25 @@ pub unsafe fn hash_freeze(arg_hashp: *mut HTAB) {
     })
 }
 #[track_caller]
-pub unsafe fn hash_estimate_size(
-    arg_num_entries: ::std::os::raw::c_long,
-    arg_entrysize: Size,
-) -> Size {
+pub unsafe fn hash_estimate_size(arg_num_entries: ::std::os::raw::c_long, arg_entrysize: Size) -> Size {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn hash_estimate_size(num_entries: ::std::os::raw::c_long, entrysize: Size)
-                -> Size;
+            pub fn hash_estimate_size(num_entries: ::std::os::raw::c_long, entrysize: Size) -> Size;
         }
         hash_estimate_size(arg_num_entries, arg_entrysize)
     })
 }
 #[track_caller]
-pub unsafe fn hash_select_dirsize(
-    arg_num_entries: ::std::os::raw::c_long,
-) -> ::std::os::raw::c_long {
+pub unsafe fn hash_select_dirsize(arg_num_entries: ::std::os::raw::c_long) -> ::std::os::raw::c_long {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn hash_select_dirsize(
-                num_entries: ::std::os::raw::c_long,
-            ) -> ::std::os::raw::c_long;
+            pub fn hash_select_dirsize(num_entries: ::std::os::raw::c_long) -> ::std::os::raw::c_long;
         }
         hash_select_dirsize(arg_num_entries)
     })
 }
 #[track_caller]
-pub unsafe fn hash_get_shared_size(
-    arg_info: *mut HASHCTL,
-    arg_flags: ::std::os::raw::c_int,
-) -> Size {
+pub unsafe fn hash_get_shared_size(arg_info: *mut HASHCTL, arg_flags: ::std::os::raw::c_int) -> Size {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn hash_get_shared_size(info: *mut HASHCTL, flags: ::std::os::raw::c_int) -> Size;
@@ -23441,16 +22908,10 @@ pub unsafe fn register_ENR(arg_queryEnv: *mut QueryEnvironment, arg_enr: Ephemer
     })
 }
 #[track_caller]
-pub unsafe fn unregister_ENR(
-    arg_queryEnv: *mut QueryEnvironment,
-    arg_name: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn unregister_ENR(arg_queryEnv: *mut QueryEnvironment, arg_name: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn unregister_ENR(
-                queryEnv: *mut QueryEnvironment,
-                name: *const ::std::os::raw::c_char,
-            );
+            pub fn unregister_ENR(queryEnv: *mut QueryEnvironment, name: *const ::std::os::raw::c_char);
         }
         unregister_ENR(arg_queryEnv, arg_name)
     })
@@ -23674,16 +23135,10 @@ pub unsafe fn fdopendir(arg_arg1: ::std::os::raw::c_int) -> *mut DIR {
     })
 }
 #[track_caller]
-pub unsafe fn alphasort(
-    arg_arg1: *mut *const dirent,
-    arg_arg2: *mut *const dirent,
-) -> ::std::os::raw::c_int {
+pub unsafe fn alphasort(arg_arg1: *mut *const dirent, arg_arg2: *mut *const dirent) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn alphasort(
-                arg1: *mut *const dirent,
-                arg2: *mut *const dirent,
-            ) -> ::std::os::raw::c_int;
+            pub fn alphasort(arg1: *mut *const dirent, arg2: *mut *const dirent) -> ::std::os::raw::c_int;
         }
         alphasort(arg_arg1, arg_arg2)
     })
@@ -23701,14 +23156,9 @@ pub unsafe fn dirfd(arg_dirp: *mut DIR) -> ::std::os::raw::c_int {
 pub unsafe fn scandir(
     arg_arg1: *const ::std::os::raw::c_char,
     arg_arg2: *mut *mut *mut dirent,
-    arg_arg3: ::std::option::Option<
-        unsafe extern "C" fn(arg1: *const dirent) -> ::std::os::raw::c_int,
-    >,
+    arg_arg3: ::std::option::Option<unsafe extern "C" fn(arg1: *const dirent) -> ::std::os::raw::c_int>,
     arg_arg4: ::std::option::Option<
-        unsafe extern "C" fn(
-            arg1: *mut *const dirent,
-            arg2: *mut *const dirent,
-        ) -> ::std::os::raw::c_int,
+        unsafe extern "C" fn(arg1: *mut *const dirent, arg2: *mut *const dirent) -> ::std::os::raw::c_int,
     >,
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
@@ -23776,10 +23226,7 @@ pub unsafe fn __opendir2(
 ) -> *mut DIR {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn __opendir2(
-                arg1: *const ::std::os::raw::c_char,
-                arg2: ::std::os::raw::c_int,
-            ) -> *mut DIR;
+            pub fn __opendir2(arg1: *const ::std::os::raw::c_char, arg2: ::std::os::raw::c_int) -> *mut DIR;
         }
         __opendir2(arg_arg1, arg_arg2)
     })
@@ -23931,11 +23378,7 @@ pub unsafe fn FileTruncate(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn FileTruncate(
-                file: File,
-                offset: off_t,
-                wait_event_info: uint32,
-            ) -> ::std::os::raw::c_int;
+            pub fn FileTruncate(file: File, offset: off_t, wait_event_info: uint32) -> ::std::os::raw::c_int;
         }
         FileTruncate(arg_file, arg_offset, arg_wait_event_info)
     })
@@ -24120,10 +23563,7 @@ pub unsafe fn AllocateDir(arg_dirname: *const ::std::os::raw::c_char) -> *mut DI
     })
 }
 #[track_caller]
-pub unsafe fn ReadDir(
-    arg_dir: *mut DIR,
-    arg_dirname: *const ::std::os::raw::c_char,
-) -> *mut dirent {
+pub unsafe fn ReadDir(arg_dir: *mut DIR, arg_dirname: *const ::std::os::raw::c_char) -> *mut dirent {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn ReadDir(dir: *mut DIR, dirname: *const ::std::os::raw::c_char) -> *mut dirent;
@@ -24231,14 +23671,10 @@ pub unsafe fn BasicOpenFilePerm(
     })
 }
 #[track_caller]
-pub unsafe fn MakePGDirectory(
-    arg_directoryName: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn MakePGDirectory(arg_directoryName: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn MakePGDirectory(
-                directoryName: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn MakePGDirectory(directoryName: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         MakePGDirectory(arg_directoryName)
     })
@@ -24543,10 +23979,7 @@ pub unsafe fn dsm_impl_unpin_segment(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn dsm_impl_unpin_segment(
-                handle: dsm_handle,
-                impl_private: *mut *mut ::std::os::raw::c_void,
-            );
+            pub fn dsm_impl_unpin_segment(handle: dsm_handle, impl_private: *mut *mut ::std::os::raw::c_void);
         }
         dsm_impl_unpin_segment(arg_handle, arg_impl_private)
     })
@@ -24699,18 +24132,10 @@ pub unsafe fn dsm_segment_handle(arg_seg: *mut dsm_segment) -> dsm_handle {
 pub type on_dsm_detach_callback =
     ::std::option::Option<unsafe extern "C" fn(arg1: *mut dsm_segment, arg: Datum)>;
 #[track_caller]
-pub unsafe fn on_dsm_detach(
-    arg_seg: *mut dsm_segment,
-    arg_function: on_dsm_detach_callback,
-    arg_arg: Datum,
-) {
+pub unsafe fn on_dsm_detach(arg_seg: *mut dsm_segment, arg_function: on_dsm_detach_callback, arg_arg: Datum) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn on_dsm_detach(
-                seg: *mut dsm_segment,
-                function: on_dsm_detach_callback,
-                arg: Datum,
-            );
+            pub fn on_dsm_detach(seg: *mut dsm_segment, function: on_dsm_detach_callback, arg: Datum);
         }
         on_dsm_detach(arg_seg, arg_function, arg_arg)
     })
@@ -24723,11 +24148,7 @@ pub unsafe fn cancel_on_dsm_detach(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn cancel_on_dsm_detach(
-                seg: *mut dsm_segment,
-                function: on_dsm_detach_callback,
-                arg: Datum,
-            );
+            pub fn cancel_on_dsm_detach(seg: *mut dsm_segment, function: on_dsm_detach_callback, arg: Datum);
         }
         cancel_on_dsm_detach(arg_seg, arg_function, arg_arg)
     })
@@ -25280,16 +24701,10 @@ pub unsafe fn errtable(arg_rel: Relation) -> ::std::os::raw::c_int {
     })
 }
 #[track_caller]
-pub unsafe fn errtablecol(
-    arg_rel: Relation,
-    arg_attnum: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn errtablecol(arg_rel: Relation, arg_attnum: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn errtablecol(
-                rel: Relation,
-                attnum: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn errtablecol(rel: Relation, attnum: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         errtablecol(arg_rel, arg_attnum)
     })
@@ -25397,16 +24812,10 @@ pub unsafe fn RelationBuildLocalRelation(
     })
 }
 #[track_caller]
-pub unsafe fn RelationSetNewRelfilenode(
-    arg_relation: Relation,
-    arg_persistence: ::std::os::raw::c_char,
-) {
+pub unsafe fn RelationSetNewRelfilenode(arg_relation: Relation, arg_persistence: ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RelationSetNewRelfilenode(
-                relation: Relation,
-                persistence: ::std::os::raw::c_char,
-            );
+            pub fn RelationSetNewRelfilenode(relation: Relation, persistence: ::std::os::raw::c_char);
         }
         RelationSetNewRelfilenode(arg_relation, arg_persistence)
     })
@@ -25573,11 +24982,7 @@ pub unsafe fn PrepareSortSupportFromIndexRel(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn PrepareSortSupportFromIndexRel(
-                indexRel: Relation,
-                strategy: int16,
-                ssup: SortSupport,
-            );
+            pub fn PrepareSortSupportFromIndexRel(indexRel: Relation, strategy: int16, ssup: SortSupport);
         }
         PrepareSortSupportFromIndexRel(arg_indexRel, arg_strategy, arg_ssup)
     })
@@ -25605,25 +25010,16 @@ pub unsafe fn tuplestore_begin_heap(
     })
 }
 #[track_caller]
-pub unsafe fn tuplestore_set_eflags(
-    arg_state: *mut Tuplestorestate,
-    arg_eflags: ::std::os::raw::c_int,
-) {
+pub unsafe fn tuplestore_set_eflags(arg_state: *mut Tuplestorestate, arg_eflags: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplestore_set_eflags(
-                state: *mut Tuplestorestate,
-                eflags: ::std::os::raw::c_int,
-            );
+            pub fn tuplestore_set_eflags(state: *mut Tuplestorestate, eflags: ::std::os::raw::c_int);
         }
         tuplestore_set_eflags(arg_state, arg_eflags)
     })
 }
 #[track_caller]
-pub unsafe fn tuplestore_puttupleslot(
-    arg_state: *mut Tuplestorestate,
-    arg_slot: *mut TupleTableSlot,
-) {
+pub unsafe fn tuplestore_puttupleslot(arg_state: *mut Tuplestorestate, arg_slot: *mut TupleTableSlot) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn tuplestore_puttupleslot(state: *mut Tuplestorestate, slot: *mut TupleTableSlot);
@@ -25681,10 +25077,7 @@ pub unsafe fn tuplestore_select_read_pointer(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplestore_select_read_pointer(
-                state: *mut Tuplestorestate,
-                ptr: ::std::os::raw::c_int,
-            );
+            pub fn tuplestore_select_read_pointer(state: *mut Tuplestorestate, ptr: ::std::os::raw::c_int);
         }
         tuplestore_select_read_pointer(arg_state, arg_ptr)
     })
@@ -25760,11 +25153,7 @@ pub unsafe fn tuplestore_skiptuples(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplestore_skiptuples(
-                state: *mut Tuplestorestate,
-                ntuples: int64,
-                forward: bool,
-            ) -> bool;
+            pub fn tuplestore_skiptuples(state: *mut Tuplestorestate, ntuples: int64, forward: bool) -> bool;
         }
         tuplestore_skiptuples(arg_state, arg_ntuples, arg_forward)
     })
@@ -26015,13 +25404,7 @@ pub unsafe fn tuplesort_begin_cluster(
                 randomAccess: bool,
             ) -> *mut Tuplesortstate;
         }
-        tuplesort_begin_cluster(
-            arg_tupDesc,
-            arg_indexRel,
-            arg_workMem,
-            arg_coordinate,
-            arg_randomAccess,
-        )
+        tuplesort_begin_cluster(arg_tupDesc, arg_indexRel, arg_workMem, arg_coordinate, arg_randomAccess)
     })
 }
 #[track_caller]
@@ -26133,10 +25516,7 @@ pub unsafe fn tuplesort_set_bound(arg_state: *mut Tuplesortstate, arg_bound: int
     })
 }
 #[track_caller]
-pub unsafe fn tuplesort_puttupleslot(
-    arg_state: *mut Tuplesortstate,
-    arg_slot: *mut TupleTableSlot,
-) {
+pub unsafe fn tuplesort_puttupleslot(arg_state: *mut Tuplesortstate, arg_slot: *mut TupleTableSlot) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn tuplesort_puttupleslot(state: *mut Tuplesortstate, slot: *mut TupleTableSlot);
@@ -26214,10 +25594,7 @@ pub unsafe fn tuplesort_gettupleslot(
     })
 }
 #[track_caller]
-pub unsafe fn tuplesort_getheaptuple(
-    arg_state: *mut Tuplesortstate,
-    arg_forward: bool,
-) -> HeapTuple {
+pub unsafe fn tuplesort_getheaptuple(arg_state: *mut Tuplesortstate, arg_forward: bool) -> HeapTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn tuplesort_getheaptuple(state: *mut Tuplesortstate, forward: bool) -> HeapTuple;
@@ -26226,14 +25603,10 @@ pub unsafe fn tuplesort_getheaptuple(
     })
 }
 #[track_caller]
-pub unsafe fn tuplesort_getindextuple(
-    arg_state: *mut Tuplesortstate,
-    arg_forward: bool,
-) -> IndexTuple {
+pub unsafe fn tuplesort_getindextuple(arg_state: *mut Tuplesortstate, arg_forward: bool) -> IndexTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplesort_getindextuple(state: *mut Tuplesortstate, forward: bool)
-                -> IndexTuple;
+            pub fn tuplesort_getindextuple(state: *mut Tuplesortstate, forward: bool) -> IndexTuple;
         }
         tuplesort_getindextuple(arg_state, arg_forward)
     })
@@ -26267,11 +25640,7 @@ pub unsafe fn tuplesort_skiptuples(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplesort_skiptuples(
-                state: *mut Tuplesortstate,
-                ntuples: int64,
-                forward: bool,
-            ) -> bool;
+            pub fn tuplesort_skiptuples(state: *mut Tuplesortstate, ntuples: int64, forward: bool) -> bool;
         }
         tuplesort_skiptuples(arg_state, arg_ntuples, arg_forward)
     })
@@ -26286,16 +25655,10 @@ pub unsafe fn tuplesort_end(arg_state: *mut Tuplesortstate) {
     })
 }
 #[track_caller]
-pub unsafe fn tuplesort_get_stats(
-    arg_state: *mut Tuplesortstate,
-    arg_stats: *mut TuplesortInstrumentation,
-) {
+pub unsafe fn tuplesort_get_stats(arg_state: *mut Tuplesortstate, arg_stats: *mut TuplesortInstrumentation) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplesort_get_stats(
-                state: *mut Tuplesortstate,
-                stats: *mut TuplesortInstrumentation,
-            );
+            pub fn tuplesort_get_stats(state: *mut Tuplesortstate, stats: *mut TuplesortInstrumentation);
         }
         tuplesort_get_stats(arg_state, arg_stats)
     })
@@ -26310,14 +25673,10 @@ pub unsafe fn tuplesort_method_name(arg_m: TuplesortMethod) -> *const ::std::os:
     })
 }
 #[track_caller]
-pub unsafe fn tuplesort_space_type_name(
-    arg_t: TuplesortSpaceType,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn tuplesort_space_type_name(arg_t: TuplesortSpaceType) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplesort_space_type_name(
-                t: TuplesortSpaceType,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn tuplesort_space_type_name(t: TuplesortSpaceType) -> *const ::std::os::raw::c_char;
         }
         tuplesort_space_type_name(arg_t)
     })
@@ -26594,16 +25953,10 @@ pub unsafe fn dsa_free(arg_area: *mut dsa_area, arg_dp: dsa_pointer) {
     })
 }
 #[track_caller]
-pub unsafe fn dsa_get_address(
-    arg_area: *mut dsa_area,
-    arg_dp: dsa_pointer,
-) -> *mut ::std::os::raw::c_void {
+pub unsafe fn dsa_get_address(arg_area: *mut dsa_area, arg_dp: dsa_pointer) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn dsa_get_address(
-                area: *mut dsa_area,
-                dp: dsa_pointer,
-            ) -> *mut ::std::os::raw::c_void;
+            pub fn dsa_get_address(area: *mut dsa_area, dp: dsa_pointer) -> *mut ::std::os::raw::c_void;
         }
         dsa_get_address(arg_area, arg_dp)
     })
@@ -26650,16 +26003,10 @@ pub struct TBMIterateResult {
     pub offsets: __IncompleteArrayField<OffsetNumber>,
 }
 #[track_caller]
-pub unsafe fn tbm_create(
-    arg_maxbytes: ::std::os::raw::c_long,
-    arg_dsa: *mut dsa_area,
-) -> *mut TIDBitmap {
+pub unsafe fn tbm_create(arg_maxbytes: ::std::os::raw::c_long, arg_dsa: *mut dsa_area) -> *mut TIDBitmap {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tbm_create(
-                maxbytes: ::std::os::raw::c_long,
-                dsa: *mut dsa_area,
-            ) -> *mut TIDBitmap;
+            pub fn tbm_create(maxbytes: ::std::os::raw::c_long, dsa: *mut dsa_area) -> *mut TIDBitmap;
         }
         tbm_create(arg_maxbytes, arg_dsa)
     })
@@ -26798,10 +26145,7 @@ pub unsafe fn tbm_attach_shared_iterate(
 ) -> *mut TBMSharedIterator {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tbm_attach_shared_iterate(
-                dsa: *mut dsa_area,
-                dp: dsa_pointer,
-            ) -> *mut TBMSharedIterator;
+            pub fn tbm_attach_shared_iterate(dsa: *mut dsa_area, dp: dsa_pointer) -> *mut TBMSharedIterator;
         }
         tbm_attach_shared_iterate(arg_dsa, arg_dp)
     })
@@ -26914,11 +26258,7 @@ pub struct CopyMultiInsertBuffer {
     _unused: [u8; 0],
 }
 pub type ExprStateEvalFunc = ::std::option::Option<
-    unsafe extern "C" fn(
-        expression: *mut ExprState,
-        econtext: *mut ExprContext,
-        isNull: *mut bool,
-    ) -> Datum,
+    unsafe extern "C" fn(expression: *mut ExprState, econtext: *mut ExprContext, isNull: *mut bool) -> Datum,
 >;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -27368,10 +26708,7 @@ pub unsafe fn tuplehash_lookup(
 ) -> *mut TupleHashEntryData {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tuplehash_lookup(
-                tb: *mut tuplehash_hash,
-                key: MinimalTuple,
-            ) -> *mut TupleHashEntryData;
+            pub fn tuplehash_lookup(tb: *mut tuplehash_hash, key: MinimalTuple) -> *mut TupleHashEntryData;
         }
         tuplehash_lookup(arg_tb, arg_key)
     })
@@ -27386,10 +26723,7 @@ pub unsafe fn tuplehash_delete(arg_tb: *mut tuplehash_hash, arg_key: MinimalTupl
     })
 }
 #[track_caller]
-pub unsafe fn tuplehash_start_iterate(
-    arg_tb: *mut tuplehash_hash,
-    arg_iter: *mut tuplehash_iterator,
-) {
+pub unsafe fn tuplehash_start_iterate(arg_tb: *mut tuplehash_hash, arg_iter: *mut tuplehash_iterator) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn tuplehash_start_iterate(tb: *mut tuplehash_hash, iter: *mut tuplehash_iterator);
@@ -27765,8 +27099,7 @@ pub struct AppendState {
     pub pstate_len: Size,
     pub as_prune_state: *mut PartitionPruneState,
     pub as_valid_subplans: *mut Bitmapset,
-    pub choose_next_subplan:
-        ::std::option::Option<unsafe extern "C" fn(arg1: *mut AppendState) -> bool>,
+    pub choose_next_subplan: ::std::option::Option<unsafe extern "C" fn(arg1: *mut AppendState) -> bool>,
 }
 impl Default for AppendState {
     fn default() -> Self {
@@ -28833,11 +28166,7 @@ pub struct _DestReceiver {
         unsafe extern "C" fn(slot: *mut TupleTableSlot, self_: *mut DestReceiver) -> bool,
     >,
     pub rStartup: ::std::option::Option<
-        unsafe extern "C" fn(
-            self_: *mut DestReceiver,
-            operation: ::std::os::raw::c_int,
-            typeinfo: TupleDesc,
-        ),
+        unsafe extern "C" fn(self_: *mut DestReceiver, operation: ::std::os::raw::c_int, typeinfo: TupleDesc),
     >,
     pub rShutdown: ::std::option::Option<unsafe extern "C" fn(self_: *mut DestReceiver)>,
     pub rDestroy: ::std::option::Option<unsafe extern "C" fn(self_: *mut DestReceiver)>,
@@ -32649,16 +31978,10 @@ pub unsafe fn MemoryContextDeleteChildren(arg_context: MemoryContext) {
     })
 }
 #[track_caller]
-pub unsafe fn MemoryContextSetIdentifier(
-    arg_context: MemoryContext,
-    arg_id: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn MemoryContextSetIdentifier(arg_context: MemoryContext, arg_id: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn MemoryContextSetIdentifier(
-                context: MemoryContext,
-                id: *const ::std::os::raw::c_char,
-            );
+            pub fn MemoryContextSetIdentifier(context: MemoryContext, id: *const ::std::os::raw::c_char);
         }
         MemoryContextSetIdentifier(arg_context, arg_id)
     })
@@ -32709,16 +32032,10 @@ pub unsafe fn MemoryContextStats(arg_context: MemoryContext) {
     })
 }
 #[track_caller]
-pub unsafe fn MemoryContextStatsDetail(
-    arg_context: MemoryContext,
-    arg_max_children: ::std::os::raw::c_int,
-) {
+pub unsafe fn MemoryContextStatsDetail(arg_context: MemoryContext, arg_max_children: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn MemoryContextStatsDetail(
-                context: MemoryContext,
-                max_children: ::std::os::raw::c_int,
-            );
+            pub fn MemoryContextStatsDetail(context: MemoryContext, max_children: ::std::os::raw::c_int);
         }
         MemoryContextStatsDetail(arg_context, arg_max_children)
     })
@@ -32840,9 +32157,8 @@ pub unsafe fn GenerationContextCreate(
         GenerationContextCreate(arg_parent, arg_name, arg_blockSize)
     })
 }
-pub type ExecutorStart_hook_type = ::std::option::Option<
-    unsafe extern "C" fn(queryDesc: *mut QueryDesc, eflags: ::std::os::raw::c_int),
->;
+pub type ExecutorStart_hook_type =
+    ::std::option::Option<unsafe extern "C" fn(queryDesc: *mut QueryDesc, eflags: ::std::os::raw::c_int)>;
 extern "C" {
     pub static mut ExecutorStart_hook: ExecutorStart_hook_type;
 }
@@ -32857,13 +32173,11 @@ pub type ExecutorRun_hook_type = ::std::option::Option<
 extern "C" {
     pub static mut ExecutorRun_hook: ExecutorRun_hook_type;
 }
-pub type ExecutorFinish_hook_type =
-    ::std::option::Option<unsafe extern "C" fn(queryDesc: *mut QueryDesc)>;
+pub type ExecutorFinish_hook_type = ::std::option::Option<unsafe extern "C" fn(queryDesc: *mut QueryDesc)>;
 extern "C" {
     pub static mut ExecutorFinish_hook: ExecutorFinish_hook_type;
 }
-pub type ExecutorEnd_hook_type =
-    ::std::option::Option<unsafe extern "C" fn(queryDesc: *mut QueryDesc)>;
+pub type ExecutorEnd_hook_type = ::std::option::Option<unsafe extern "C" fn(queryDesc: *mut QueryDesc)>;
 extern "C" {
     pub static mut ExecutorEnd_hook: ExecutorEnd_hook_type;
 }
@@ -33145,10 +32459,7 @@ pub unsafe fn ExecInitJunkFilter(
 ) -> *mut JunkFilter {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecInitJunkFilter(
-                targetList: *mut List,
-                slot: *mut TupleTableSlot,
-            ) -> *mut JunkFilter;
+            pub fn ExecInitJunkFilter(targetList: *mut List, slot: *mut TupleTableSlot) -> *mut JunkFilter;
         }
         ExecInitJunkFilter(arg_targetList, arg_slot)
     })
@@ -33259,10 +32570,7 @@ pub unsafe fn ExecutorStart(arg_queryDesc: *mut QueryDesc, arg_eflags: ::std::os
     })
 }
 #[track_caller]
-pub unsafe fn standard_ExecutorStart(
-    arg_queryDesc: *mut QueryDesc,
-    arg_eflags: ::std::os::raw::c_int,
-) {
+pub unsafe fn standard_ExecutorStart(arg_queryDesc: *mut QueryDesc, arg_eflags: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn standard_ExecutorStart(queryDesc: *mut QueryDesc, eflags: ::std::os::raw::c_int);
@@ -33399,10 +32707,7 @@ pub unsafe fn InitResultRelInfo(
     })
 }
 #[track_caller]
-pub unsafe fn ExecGetTriggerResultRel(
-    arg_estate: *mut EState,
-    arg_relid: Oid,
-) -> *mut ResultRelInfo {
+pub unsafe fn ExecGetTriggerResultRel(arg_estate: *mut EState, arg_relid: Oid) -> *mut ResultRelInfo {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn ExecGetTriggerResultRel(estate: *mut EState, relid: Oid) -> *mut ResultRelInfo;
@@ -33492,16 +32797,10 @@ pub unsafe fn ExecWithCheckOptions(
     })
 }
 #[track_caller]
-pub unsafe fn ExecUpdateLockMode(
-    arg_estate: *mut EState,
-    arg_relinfo: *mut ResultRelInfo,
-) -> LockTupleMode {
+pub unsafe fn ExecUpdateLockMode(arg_estate: *mut EState, arg_relinfo: *mut ResultRelInfo) -> LockTupleMode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecUpdateLockMode(
-                estate: *mut EState,
-                relinfo: *mut ResultRelInfo,
-            ) -> LockTupleMode;
+            pub fn ExecUpdateLockMode(estate: *mut EState, relinfo: *mut ResultRelInfo) -> LockTupleMode;
         }
         ExecUpdateLockMode(arg_estate, arg_relinfo)
     })
@@ -33514,11 +32813,7 @@ pub unsafe fn ExecFindRowMark(
 ) -> *mut ExecRowMark {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecFindRowMark(
-                estate: *mut EState,
-                rti: Index,
-                missing_ok: bool,
-            ) -> *mut ExecRowMark;
+            pub fn ExecFindRowMark(estate: *mut EState, rti: Index, missing_ok: bool) -> *mut ExecRowMark;
         }
         ExecFindRowMark(arg_estate, arg_rti, arg_missing_ok)
     })
@@ -33530,10 +32825,7 @@ pub unsafe fn ExecBuildAuxRowMark(
 ) -> *mut ExecAuxRowMark {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecBuildAuxRowMark(
-                erm: *mut ExecRowMark,
-                targetlist: *mut List,
-            ) -> *mut ExecAuxRowMark;
+            pub fn ExecBuildAuxRowMark(erm: *mut ExecRowMark, targetlist: *mut List) -> *mut ExecAuxRowMark;
         }
         ExecBuildAuxRowMark(arg_erm, arg_targetlist)
     })
@@ -33586,11 +32878,7 @@ pub unsafe fn EvalPlanQualSetPlan(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn EvalPlanQualSetPlan(
-                epqstate: *mut EPQState,
-                subplan: *mut Plan,
-                auxrowmarks: *mut List,
-            );
+            pub fn EvalPlanQualSetPlan(epqstate: *mut EPQState, subplan: *mut Plan, auxrowmarks: *mut List);
         }
         EvalPlanQualSetPlan(arg_epqstate, arg_subplan, arg_auxrowmarks)
     })
@@ -33728,16 +33016,10 @@ pub unsafe fn ExecInitExpr(arg_node: *mut Expr, arg_parent: *mut PlanState) -> *
     })
 }
 #[track_caller]
-pub unsafe fn ExecInitExprWithParams(
-    arg_node: *mut Expr,
-    arg_ext_params: ParamListInfo,
-) -> *mut ExprState {
+pub unsafe fn ExecInitExprWithParams(arg_node: *mut Expr, arg_ext_params: ParamListInfo) -> *mut ExprState {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecInitExprWithParams(
-                node: *mut Expr,
-                ext_params: ParamListInfo,
-            ) -> *mut ExprState;
+            pub fn ExecInitExprWithParams(node: *mut Expr, ext_params: ParamListInfo) -> *mut ExprState;
         }
         ExecInitExprWithParams(arg_node, arg_ext_params)
     })
@@ -34007,9 +33289,8 @@ pub unsafe fn ExecMakeFunctionResultSet(
 }
 pub type ExecScanAccessMtd =
     ::std::option::Option<unsafe extern "C" fn(node: *mut ScanState) -> *mut TupleTableSlot>;
-pub type ExecScanRecheckMtd = ::std::option::Option<
-    unsafe extern "C" fn(node: *mut ScanState, slot: *mut TupleTableSlot) -> bool,
->;
+pub type ExecScanRecheckMtd =
+    ::std::option::Option<unsafe extern "C" fn(node: *mut ScanState, slot: *mut TupleTableSlot) -> bool>;
 #[track_caller]
 pub unsafe fn ExecScan(
     arg_node: *mut ScanState,
@@ -34064,10 +33345,7 @@ pub unsafe fn ExecInitResultTypeTL(arg_planstate: *mut PlanState) {
     })
 }
 #[track_caller]
-pub unsafe fn ExecInitResultSlot(
-    arg_planstate: *mut PlanState,
-    arg_tts_ops: *const TupleTableSlotOps,
-) {
+pub unsafe fn ExecInitResultSlot(arg_planstate: *mut PlanState, arg_tts_ops: *const TupleTableSlotOps) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn ExecInitResultSlot(planstate: *mut PlanState, tts_ops: *const TupleTableSlotOps);
@@ -34082,10 +33360,7 @@ pub unsafe fn ExecInitResultTupleSlotTL(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecInitResultTupleSlotTL(
-                planstate: *mut PlanState,
-                tts_ops: *const TupleTableSlotOps,
-            );
+            pub fn ExecInitResultTupleSlotTL(planstate: *mut PlanState, tts_ops: *const TupleTableSlotOps);
         }
         ExecInitResultTupleSlotTL(arg_planstate, arg_tts_ops)
     })
@@ -34221,18 +33496,10 @@ pub unsafe fn begin_tup_output_tupdesc(
     })
 }
 #[track_caller]
-pub unsafe fn do_tup_output(
-    arg_tstate: *mut TupOutputState,
-    arg_values: *mut Datum,
-    arg_isnull: *mut bool,
-) {
+pub unsafe fn do_tup_output(arg_tstate: *mut TupOutputState, arg_values: *mut Datum, arg_isnull: *mut bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn do_tup_output(
-                tstate: *mut TupOutputState,
-                values: *mut Datum,
-                isnull: *mut bool,
-            );
+            pub fn do_tup_output(tstate: *mut TupOutputState, values: *mut Datum, isnull: *mut bool);
         }
         do_tup_output(arg_tstate, arg_values, arg_isnull)
     })
@@ -34244,10 +33511,7 @@ pub unsafe fn do_text_output_multiline(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn do_text_output_multiline(
-                tstate: *mut TupOutputState,
-                txt: *const ::std::os::raw::c_char,
-            );
+            pub fn do_text_output_multiline(tstate: *mut TupOutputState, txt: *const ::std::os::raw::c_char);
         }
         do_text_output_multiline(arg_tstate, arg_txt)
     })
@@ -34536,11 +33800,7 @@ pub unsafe fn GetAttributeByNum(
 ) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetAttributeByNum(
-                tuple: HeapTupleHeader,
-                attrno: AttrNumber,
-                isNull: *mut bool,
-            ) -> Datum;
+            pub fn GetAttributeByNum(tuple: HeapTupleHeader, attrno: AttrNumber, isNull: *mut bool) -> Datum;
         }
         GetAttributeByNum(arg_tuple, arg_attrno, arg_isNull)
     })
@@ -34615,25 +33875,16 @@ pub unsafe fn ExecGetInsertedCols(
 ) -> *mut Bitmapset {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecGetInsertedCols(
-                relinfo: *mut ResultRelInfo,
-                estate: *mut EState,
-            ) -> *mut Bitmapset;
+            pub fn ExecGetInsertedCols(relinfo: *mut ResultRelInfo, estate: *mut EState) -> *mut Bitmapset;
         }
         ExecGetInsertedCols(arg_relinfo, arg_estate)
     })
 }
 #[track_caller]
-pub unsafe fn ExecGetUpdatedCols(
-    arg_relinfo: *mut ResultRelInfo,
-    arg_estate: *mut EState,
-) -> *mut Bitmapset {
+pub unsafe fn ExecGetUpdatedCols(arg_relinfo: *mut ResultRelInfo, arg_estate: *mut EState) -> *mut Bitmapset {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecGetUpdatedCols(
-                relinfo: *mut ResultRelInfo,
-                estate: *mut EState,
-            ) -> *mut Bitmapset;
+            pub fn ExecGetUpdatedCols(relinfo: *mut ResultRelInfo, estate: *mut EState) -> *mut Bitmapset;
         }
         ExecGetUpdatedCols(arg_relinfo, arg_estate)
     })
@@ -34660,10 +33911,7 @@ pub unsafe fn ExecGetAllUpdatedCols(
 ) -> *mut Bitmapset {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExecGetAllUpdatedCols(
-                relinfo: *mut ResultRelInfo,
-                estate: *mut EState,
-            ) -> *mut Bitmapset;
+            pub fn ExecGetAllUpdatedCols(relinfo: *mut ResultRelInfo, estate: *mut EState) -> *mut Bitmapset;
         }
         ExecGetAllUpdatedCols(arg_relinfo, arg_estate)
     })
@@ -34704,13 +33952,7 @@ pub unsafe fn ExecInsertIndexTuples(
                 arbiterIndexes: *mut List,
             ) -> *mut List;
         }
-        ExecInsertIndexTuples(
-            arg_slot,
-            arg_estate,
-            arg_noDupErr,
-            arg_specConflict,
-            arg_arbiterIndexes,
-        )
+        ExecInsertIndexTuples(arg_slot, arg_estate, arg_noDupErr, arg_specConflict, arg_arbiterIndexes)
     })
 }
 #[track_caller]
@@ -35043,10 +34285,7 @@ pub unsafe fn get_func_trftypes(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_func_trftypes(
-                procTup: HeapTuple,
-                p_trftypes: *mut *mut Oid,
-            ) -> ::std::os::raw::c_int;
+            pub fn get_func_trftypes(procTup: HeapTuple, p_trftypes: *mut *mut Oid) -> ::std::os::raw::c_int;
         }
         get_func_trftypes(arg_procTup, arg_p_trftypes)
     })
@@ -35076,12 +34315,7 @@ pub unsafe fn build_function_result_tupdesc_d(
                 proargnames: Datum,
             ) -> TupleDesc;
         }
-        build_function_result_tupdesc_d(
-            arg_prokind,
-            arg_proallargtypes,
-            arg_proargmodes,
-            arg_proargnames,
-        )
+        build_function_result_tupdesc_d(arg_prokind, arg_proallargtypes, arg_proargmodes, arg_proargnames)
     })
 }
 #[track_caller]
@@ -35269,16 +34503,10 @@ pub unsafe fn killpg(arg_arg1: pid_t, arg_arg2: ::std::os::raw::c_int) -> ::std:
     })
 }
 #[track_caller]
-pub unsafe fn pthread_kill(
-    arg_arg1: pthread_t,
-    arg_arg2: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn pthread_kill(arg_arg1: pthread_t, arg_arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pthread_kill(
-                arg1: pthread_t,
-                arg2: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn pthread_kill(arg1: pthread_t, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         pthread_kill(arg_arg1, arg_arg2)
     })
@@ -35318,25 +34546,16 @@ pub unsafe fn sigaction(
     })
 }
 #[track_caller]
-pub unsafe fn sigaddset(
-    arg_arg1: *mut sigset_t,
-    arg_arg2: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn sigaddset(arg_arg1: *mut sigset_t, arg_arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn sigaddset(
-                arg1: *mut sigset_t,
-                arg2: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn sigaddset(arg1: *mut sigset_t, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         sigaddset(arg_arg1, arg_arg2)
     })
 }
 #[track_caller]
-pub unsafe fn sigaltstack(
-    arg_arg1: *const stack_t,
-    arg_arg2: *mut stack_t,
-) -> ::std::os::raw::c_int {
+pub unsafe fn sigaltstack(arg_arg1: *const stack_t, arg_arg2: *mut stack_t) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn sigaltstack(arg1: *const stack_t, arg2: *mut stack_t) -> ::std::os::raw::c_int;
@@ -35345,16 +34564,10 @@ pub unsafe fn sigaltstack(
     })
 }
 #[track_caller]
-pub unsafe fn sigdelset(
-    arg_arg1: *mut sigset_t,
-    arg_arg2: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn sigdelset(arg_arg1: *mut sigset_t, arg_arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn sigdelset(
-                arg1: *mut sigset_t,
-                arg2: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn sigdelset(arg1: *mut sigset_t, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         sigdelset(arg_arg1, arg_arg2)
     })
@@ -35417,10 +34630,7 @@ pub unsafe fn sigismember(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn sigismember(
-                arg1: *const sigset_t,
-                arg2: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn sigismember(arg1: *const sigset_t, arg2: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         sigismember(arg_arg1, arg_arg2)
     })
@@ -35510,10 +34720,7 @@ pub unsafe fn sigwait(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn sigwait(
-                arg1: *const sigset_t,
-                arg2: *mut ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn sigwait(arg1: *const sigset_t, arg2: *mut ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         sigwait(arg_arg1, arg_arg2)
     })
@@ -35670,16 +34877,10 @@ pub unsafe fn pg_interpret_timezone_abbrev(
     })
 }
 #[track_caller]
-pub unsafe fn pg_get_timezone_offset(
-    arg_tz: *const pg_tz,
-    arg_gmtoff: *mut ::std::os::raw::c_long,
-) -> bool {
+pub unsafe fn pg_get_timezone_offset(arg_tz: *const pg_tz, arg_gmtoff: *mut ::std::os::raw::c_long) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_get_timezone_offset(
-                tz: *const pg_tz,
-                gmtoff: *mut ::std::os::raw::c_long,
-            ) -> bool;
+            pub fn pg_get_timezone_offset(tz: *const pg_tz, gmtoff: *mut ::std::os::raw::c_long) -> bool;
         }
         pg_get_timezone_offset(arg_tz, arg_gmtoff)
     })
@@ -36166,16 +35367,10 @@ pub unsafe fn GetAuthenticatedUserId() -> Oid {
     })
 }
 #[track_caller]
-pub unsafe fn GetUserIdAndSecContext(
-    arg_userid: *mut Oid,
-    arg_sec_context: *mut ::std::os::raw::c_int,
-) {
+pub unsafe fn GetUserIdAndSecContext(arg_userid: *mut Oid, arg_sec_context: *mut ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetUserIdAndSecContext(
-                userid: *mut Oid,
-                sec_context: *mut ::std::os::raw::c_int,
-            );
+            pub fn GetUserIdAndSecContext(userid: *mut Oid, sec_context: *mut ::std::os::raw::c_int);
         }
         GetUserIdAndSecContext(arg_userid, arg_sec_context)
     })
@@ -36235,10 +35430,7 @@ pub unsafe fn SetUserIdAndContext(arg_userid: Oid, arg_sec_def_context: bool) {
     })
 }
 #[track_caller]
-pub unsafe fn InitializeSessionUserId(
-    arg_rolename: *const ::std::os::raw::c_char,
-    arg_useroid: Oid,
-) {
+pub unsafe fn InitializeSessionUserId(arg_rolename: *const ::std::os::raw::c_char, arg_useroid: Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn InitializeSessionUserId(rolename: *const ::std::os::raw::c_char, useroid: Oid);
@@ -37063,10 +36255,7 @@ pub unsafe fn TransactionIdSetTreeStatus(
     })
 }
 #[track_caller]
-pub unsafe fn TransactionIdGetStatus(
-    arg_xid: TransactionId,
-    arg_lsn: *mut XLogRecPtr,
-) -> XidStatus {
+pub unsafe fn TransactionIdGetStatus(arg_xid: TransactionId, arg_lsn: *mut XLogRecPtr) -> XidStatus {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn TransactionIdGetStatus(xid: TransactionId, lsn: *mut XLogRecPtr) -> XidStatus;
@@ -37492,13 +36681,7 @@ pub unsafe fn WaitEventSetWait(
                 wait_event_info: uint32,
             ) -> ::std::os::raw::c_int;
         }
-        WaitEventSetWait(
-            arg_set,
-            arg_timeout,
-            arg_occurred_events,
-            arg_nevents,
-            arg_wait_event_info,
-        )
+        WaitEventSetWait(arg_set, arg_timeout, arg_occurred_events, arg_nevents, arg_wait_event_info)
     })
 }
 #[track_caller]
@@ -37664,11 +36847,7 @@ pub unsafe fn LWLockRelease(arg_lock: *mut LWLock) {
     })
 }
 #[track_caller]
-pub unsafe fn LWLockReleaseClearVar(
-    arg_lock: *mut LWLock,
-    arg_valptr: *mut uint64,
-    arg_val: uint64,
-) {
+pub unsafe fn LWLockReleaseClearVar(arg_lock: *mut LWLock, arg_valptr: *mut uint64, arg_val: uint64) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn LWLockReleaseClearVar(lock: *mut LWLock, valptr: *mut uint64, val: uint64);
@@ -37702,11 +36881,8 @@ pub unsafe fn LWLockAnyHeldByMe(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn LWLockAnyHeldByMe(
-                lock: *mut LWLock,
-                nlocks: ::std::os::raw::c_int,
-                stride: usize,
-            ) -> bool;
+            pub fn LWLockAnyHeldByMe(lock: *mut LWLock, nlocks: ::std::os::raw::c_int, stride: usize)
+                -> bool;
         }
         LWLockAnyHeldByMe(arg_lock, arg_nlocks, arg_stride)
     })
@@ -37776,16 +36952,10 @@ pub unsafe fn InitLWLockAccess() {
     })
 }
 #[track_caller]
-pub unsafe fn GetLWLockIdentifier(
-    arg_classId: uint32,
-    arg_eventId: uint16,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn GetLWLockIdentifier(arg_classId: uint32, arg_eventId: uint16) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetLWLockIdentifier(
-                classId: uint32,
-                eventId: uint16,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn GetLWLockIdentifier(classId: uint32, eventId: uint16) -> *const ::std::os::raw::c_char;
         }
         GetLWLockIdentifier(arg_classId, arg_eventId)
     })
@@ -37806,14 +36976,10 @@ pub unsafe fn RequestNamedLWLockTranche(
     })
 }
 #[track_caller]
-pub unsafe fn GetNamedLWLockTranche(
-    arg_tranche_name: *const ::std::os::raw::c_char,
-) -> *mut LWLockPadded {
+pub unsafe fn GetNamedLWLockTranche(arg_tranche_name: *const ::std::os::raw::c_char) -> *mut LWLockPadded {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetNamedLWLockTranche(
-                tranche_name: *const ::std::os::raw::c_char,
-            ) -> *mut LWLockPadded;
+            pub fn GetNamedLWLockTranche(tranche_name: *const ::std::os::raw::c_char) -> *mut LWLockPadded;
         }
         GetNamedLWLockTranche(arg_tranche_name)
     })
@@ -38492,11 +37658,7 @@ pub unsafe fn LockRelease(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn LockRelease(
-                locktag: *const LOCKTAG,
-                lockmode: LOCKMODE,
-                sessionLock: bool,
-            ) -> bool;
+            pub fn LockRelease(locktag: *const LOCKTAG, lockmode: LOCKMODE, sessionLock: bool) -> bool;
         }
         LockRelease(arg_locktag, arg_lockmode, arg_sessionLock)
     })
@@ -38526,10 +37688,7 @@ pub unsafe fn LockReleaseCurrentOwner(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn LockReleaseCurrentOwner(
-                locallocks: *mut *mut LOCALLOCK,
-                nlocks: ::std::os::raw::c_int,
-            );
+            pub fn LockReleaseCurrentOwner(locallocks: *mut *mut LOCALLOCK, nlocks: ::std::os::raw::c_int);
         }
         LockReleaseCurrentOwner(arg_locallocks, arg_nlocks)
     })
@@ -38541,10 +37700,7 @@ pub unsafe fn LockReassignCurrentOwner(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn LockReassignCurrentOwner(
-                locallocks: *mut *mut LOCALLOCK,
-                nlocks: ::std::os::raw::c_int,
-            );
+            pub fn LockReassignCurrentOwner(locallocks: *mut *mut LOCALLOCK, nlocks: ::std::os::raw::c_int);
         }
         LockReassignCurrentOwner(arg_locallocks, arg_nlocks)
     })
@@ -38566,11 +37722,7 @@ pub unsafe fn LockHasWaiters(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn LockHasWaiters(
-                locktag: *const LOCKTAG,
-                lockmode: LOCKMODE,
-                sessionLock: bool,
-            ) -> bool;
+            pub fn LockHasWaiters(locktag: *const LOCKTAG, lockmode: LOCKMODE, sessionLock: bool) -> bool;
         }
         LockHasWaiters(arg_locktag, arg_lockmode, arg_sessionLock)
     })
@@ -38675,27 +37827,19 @@ pub unsafe fn GetLockStatusData() -> *mut LockData {
     })
 }
 #[track_caller]
-pub unsafe fn GetBlockerStatusData(
-    arg_blocked_pid: ::std::os::raw::c_int,
-) -> *mut BlockedProcsData {
+pub unsafe fn GetBlockerStatusData(arg_blocked_pid: ::std::os::raw::c_int) -> *mut BlockedProcsData {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetBlockerStatusData(
-                blocked_pid: ::std::os::raw::c_int,
-            ) -> *mut BlockedProcsData;
+            pub fn GetBlockerStatusData(blocked_pid: ::std::os::raw::c_int) -> *mut BlockedProcsData;
         }
         GetBlockerStatusData(arg_blocked_pid)
     })
 }
 #[track_caller]
-pub unsafe fn GetRunningTransactionLocks(
-    arg_nlocks: *mut ::std::os::raw::c_int,
-) -> *mut xl_standby_lock {
+pub unsafe fn GetRunningTransactionLocks(arg_nlocks: *mut ::std::os::raw::c_int) -> *mut xl_standby_lock {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetRunningTransactionLocks(
-                nlocks: *mut ::std::os::raw::c_int,
-            ) -> *mut xl_standby_lock;
+            pub fn GetRunningTransactionLocks(nlocks: *mut ::std::os::raw::c_int) -> *mut xl_standby_lock;
         }
         GetRunningTransactionLocks(arg_nlocks)
     })
@@ -38898,16 +38042,10 @@ pub unsafe fn PGSemaphoreShmemSize(arg_maxSemas: ::std::os::raw::c_int) -> Size 
     })
 }
 #[track_caller]
-pub unsafe fn PGReserveSemaphores(
-    arg_maxSemas: ::std::os::raw::c_int,
-    arg_port: ::std::os::raw::c_int,
-) {
+pub unsafe fn PGReserveSemaphores(arg_maxSemas: ::std::os::raw::c_int, arg_port: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn PGReserveSemaphores(
-                maxSemas: ::std::os::raw::c_int,
-                port: ::std::os::raw::c_int,
-            );
+            pub fn PGReserveSemaphores(maxSemas: ::std::os::raw::c_int, port: ::std::os::raw::c_int);
         }
         PGReserveSemaphores(arg_maxSemas, arg_port)
     })
@@ -39210,23 +38348,17 @@ pub unsafe fn ProcSleep(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ProcSleep(
-                locallock: *mut LOCALLOCK,
-                lockMethodTable: LockMethod,
-            ) -> ::std::os::raw::c_int;
+            pub fn ProcSleep(locallock: *mut LOCALLOCK, lockMethodTable: LockMethod)
+                -> ::std::os::raw::c_int;
         }
         ProcSleep(arg_locallock, arg_lockMethodTable)
     })
 }
 #[track_caller]
-pub unsafe fn ProcWakeup(
-    arg_proc_: *mut PGPROC,
-    arg_waitStatus: ::std::os::raw::c_int,
-) -> *mut PGPROC {
+pub unsafe fn ProcWakeup(arg_proc_: *mut PGPROC, arg_waitStatus: ::std::os::raw::c_int) -> *mut PGPROC {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ProcWakeup(proc_: *mut PGPROC, waitStatus: ::std::os::raw::c_int)
-                -> *mut PGPROC;
+            pub fn ProcWakeup(proc_: *mut PGPROC, waitStatus: ::std::os::raw::c_int) -> *mut PGPROC;
         }
         ProcWakeup(arg_proc_, arg_waitStatus)
     })
@@ -39304,10 +38436,7 @@ pub unsafe fn BecomeLockGroupLeader() {
     })
 }
 #[track_caller]
-pub unsafe fn BecomeLockGroupMember(
-    arg_leader: *mut PGPROC,
-    arg_pid: ::std::os::raw::c_int,
-) -> bool {
+pub unsafe fn BecomeLockGroupMember(arg_leader: *mut PGPROC, arg_pid: ::std::os::raw::c_int) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn BecomeLockGroupMember(leader: *mut PGPROC, pid: ::std::os::raw::c_int) -> bool;
@@ -40401,16 +39530,10 @@ pub unsafe fn pgstat_report_deadlock() {
     })
 }
 #[track_caller]
-pub unsafe fn pgstat_report_checksum_failures_in_db(
-    arg_dboid: Oid,
-    arg_failurecount: ::std::os::raw::c_int,
-) {
+pub unsafe fn pgstat_report_checksum_failures_in_db(arg_dboid: Oid, arg_failurecount: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pgstat_report_checksum_failures_in_db(
-                dboid: Oid,
-                failurecount: ::std::os::raw::c_int,
-            );
+            pub fn pgstat_report_checksum_failures_in_db(dboid: Oid, failurecount: ::std::os::raw::c_int);
         }
         pgstat_report_checksum_failures_in_db(arg_dboid, arg_failurecount)
     })
@@ -40443,16 +39566,10 @@ pub unsafe fn pgstat_bestart() {
     })
 }
 #[track_caller]
-pub unsafe fn pgstat_report_activity(
-    arg_state: BackendState,
-    arg_cmd_str: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn pgstat_report_activity(arg_state: BackendState, arg_cmd_str: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pgstat_report_activity(
-                state: BackendState,
-                cmd_str: *const ::std::os::raw::c_char,
-            );
+            pub fn pgstat_report_activity(state: BackendState, cmd_str: *const ::std::os::raw::c_char);
         }
         pgstat_report_activity(arg_state, arg_cmd_str)
     })
@@ -40494,14 +39611,10 @@ pub unsafe fn pgstat_get_wait_event(arg_wait_event_info: uint32) -> *const ::std
     })
 }
 #[track_caller]
-pub unsafe fn pgstat_get_wait_event_type(
-    arg_wait_event_info: uint32,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn pgstat_get_wait_event_type(arg_wait_event_info: uint32) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pgstat_get_wait_event_type(
-                wait_event_info: uint32,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn pgstat_get_wait_event_type(wait_event_info: uint32) -> *const ::std::os::raw::c_char;
         }
         pgstat_get_wait_event_type(arg_wait_event_info)
     })
@@ -40539,14 +39652,10 @@ pub unsafe fn pgstat_get_crashed_backend_activity(
     })
 }
 #[track_caller]
-pub unsafe fn pgstat_get_backend_desc(
-    arg_backendType: BackendType,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn pgstat_get_backend_desc(arg_backendType: BackendType) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pgstat_get_backend_desc(
-                backendType: BackendType,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn pgstat_get_backend_desc(backendType: BackendType) -> *const ::std::os::raw::c_char;
         }
         pgstat_get_backend_desc(arg_backendType)
     })
@@ -40687,19 +39796,13 @@ pub unsafe fn pgstat_init_function_usage(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pgstat_init_function_usage(
-                fcinfo: FunctionCallInfo,
-                fcu: *mut PgStat_FunctionCallUsage,
-            );
+            pub fn pgstat_init_function_usage(fcinfo: FunctionCallInfo, fcu: *mut PgStat_FunctionCallUsage);
         }
         pgstat_init_function_usage(arg_fcinfo, arg_fcu)
     })
 }
 #[track_caller]
-pub unsafe fn pgstat_end_function_usage(
-    arg_fcu: *mut PgStat_FunctionCallUsage,
-    arg_finalize: bool,
-) {
+pub unsafe fn pgstat_end_function_usage(arg_fcu: *mut PgStat_FunctionCallUsage, arg_finalize: bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn pgstat_end_function_usage(fcu: *mut PgStat_FunctionCallUsage, finalize: bool);
@@ -40827,14 +39930,10 @@ pub unsafe fn pgstat_fetch_stat_beentry(arg_beid: ::std::os::raw::c_int) -> *mut
     })
 }
 #[track_caller]
-pub unsafe fn pgstat_fetch_stat_local_beentry(
-    arg_beid: ::std::os::raw::c_int,
-) -> *mut LocalPgBackendStatus {
+pub unsafe fn pgstat_fetch_stat_local_beentry(arg_beid: ::std::os::raw::c_int) -> *mut LocalPgBackendStatus {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pgstat_fetch_stat_local_beentry(
-                beid: ::std::os::raw::c_int,
-            ) -> *mut LocalPgBackendStatus;
+            pub fn pgstat_fetch_stat_local_beentry(beid: ::std::os::raw::c_int) -> *mut LocalPgBackendStatus;
         }
         pgstat_fetch_stat_local_beentry(arg_beid)
     })
@@ -41239,10 +40338,7 @@ pub unsafe fn index_beginscan_parallel(
     })
 }
 #[track_caller]
-pub unsafe fn index_getnext_tid(
-    arg_scan: IndexScanDesc,
-    arg_direction: ScanDirection,
-) -> ItemPointer {
+pub unsafe fn index_getnext_tid(arg_scan: IndexScanDesc, arg_direction: ScanDirection) -> ItemPointer {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn index_getnext_tid(scan: IndexScanDesc, direction: ScanDirection) -> ItemPointer;
@@ -41320,10 +40416,7 @@ pub unsafe fn index_vacuum_cleanup(
     })
 }
 #[track_caller]
-pub unsafe fn index_can_return(
-    arg_indexRelation: Relation,
-    arg_attno: ::std::os::raw::c_int,
-) -> bool {
+pub unsafe fn index_can_return(arg_indexRelation: Relation, arg_attno: ::std::os::raw::c_int) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn index_can_return(indexRelation: Relation, attno: ::std::os::raw::c_int) -> bool;
@@ -41339,11 +40432,7 @@ pub unsafe fn index_getprocid(
 ) -> RegProcedure {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn index_getprocid(
-                irel: Relation,
-                attnum: AttrNumber,
-                procnum: uint16,
-            ) -> RegProcedure;
+            pub fn index_getprocid(irel: Relation, attnum: AttrNumber, procnum: uint16) -> RegProcedure;
         }
         index_getprocid(arg_irel, arg_attnum, arg_procnum)
     })
@@ -41356,11 +40445,7 @@ pub unsafe fn index_getprocinfo(
 ) -> *mut FmgrInfo {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn index_getprocinfo(
-                irel: Relation,
-                attnum: AttrNumber,
-                procnum: uint16,
-            ) -> *mut FmgrInfo;
+            pub fn index_getprocinfo(irel: Relation, attnum: AttrNumber, procnum: uint16) -> *mut FmgrInfo;
         }
         index_getprocinfo(arg_irel, arg_attnum, arg_procnum)
     })
@@ -41381,12 +40466,7 @@ pub unsafe fn index_store_float8_orderby_distances(
                 recheckOrderBy: bool,
             );
         }
-        index_store_float8_orderby_distances(
-            arg_scan,
-            arg_orderByTypes,
-            arg_distances,
-            arg_recheckOrderBy,
-        )
+        index_store_float8_orderby_distances(arg_scan, arg_orderByTypes, arg_distances, arg_recheckOrderBy)
     })
 }
 #[track_caller]
@@ -41473,14 +40553,7 @@ pub unsafe fn systable_beginscan(
                 key: ScanKey,
             ) -> SysScanDesc;
         }
-        systable_beginscan(
-            arg_heapRelation,
-            arg_indexId,
-            arg_indexOK,
-            arg_snapshot,
-            arg_nkeys,
-            arg_key,
-        )
+        systable_beginscan(arg_heapRelation, arg_indexId, arg_indexOK, arg_snapshot, arg_nkeys, arg_key)
     })
 }
 #[track_caller]
@@ -41528,26 +40601,14 @@ pub unsafe fn systable_beginscan_ordered(
                 key: ScanKey,
             ) -> SysScanDesc;
         }
-        systable_beginscan_ordered(
-            arg_heapRelation,
-            arg_indexRelation,
-            arg_snapshot,
-            arg_nkeys,
-            arg_key,
-        )
+        systable_beginscan_ordered(arg_heapRelation, arg_indexRelation, arg_snapshot, arg_nkeys, arg_key)
     })
 }
 #[track_caller]
-pub unsafe fn systable_getnext_ordered(
-    arg_sysscan: SysScanDesc,
-    arg_direction: ScanDirection,
-) -> HeapTuple {
+pub unsafe fn systable_getnext_ordered(arg_sysscan: SysScanDesc, arg_direction: ScanDirection) -> HeapTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn systable_getnext_ordered(
-                sysscan: SysScanDesc,
-                direction: ScanDirection,
-            ) -> HeapTuple;
+            pub fn systable_getnext_ordered(sysscan: SysScanDesc, direction: ScanDirection) -> HeapTuple;
         }
         systable_getnext_ordered(arg_sysscan, arg_direction)
     })
@@ -41588,8 +40649,7 @@ pub type ambuild_function = ::std::option::Option<
         indexInfo: *mut IndexInfo,
     ) -> *mut IndexBuildResult,
 >;
-pub type ambuildempty_function =
-    ::std::option::Option<unsafe extern "C" fn(indexRelation: Relation)>;
+pub type ambuildempty_function = ::std::option::Option<unsafe extern "C" fn(indexRelation: Relation)>;
 pub type aminsert_function = ::std::option::Option<
     unsafe extern "C" fn(
         indexRelation: Relation,
@@ -41661,9 +40721,8 @@ pub type amrescan_function = ::std::option::Option<
         norderbys: ::std::os::raw::c_int,
     ),
 >;
-pub type amgettuple_function = ::std::option::Option<
-    unsafe extern "C" fn(scan: IndexScanDesc, direction: ScanDirection) -> bool,
->;
+pub type amgettuple_function =
+    ::std::option::Option<unsafe extern "C" fn(scan: IndexScanDesc, direction: ScanDirection) -> bool>;
 pub type amgetbitmap_function =
     ::std::option::Option<unsafe extern "C" fn(scan: IndexScanDesc, tbm: *mut TIDBitmap) -> int64>;
 pub type amendscan_function = ::std::option::Option<unsafe extern "C" fn(scan: IndexScanDesc)>;
@@ -41672,8 +40731,7 @@ pub type amrestrpos_function = ::std::option::Option<unsafe extern "C" fn(scan: 
 pub type amestimateparallelscan_function = ::std::option::Option<unsafe extern "C" fn() -> Size>;
 pub type aminitparallelscan_function =
     ::std::option::Option<unsafe extern "C" fn(target: *mut ::std::os::raw::c_void)>;
-pub type amparallelrescan_function =
-    ::std::option::Option<unsafe extern "C" fn(scan: IndexScanDesc)>;
+pub type amparallelrescan_function = ::std::option::Option<unsafe extern "C" fn(scan: IndexScanDesc)>;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
 pub struct IndexAmRoutine {
@@ -41770,11 +40828,7 @@ pub unsafe fn ginGetStats(arg_index: Relation, arg_stats: *mut GinStatsData) {
     })
 }
 #[track_caller]
-pub unsafe fn ginUpdateStats(
-    arg_index: Relation,
-    arg_stats: *const GinStatsData,
-    arg_is_build: bool,
-) {
+pub unsafe fn ginUpdateStats(arg_index: Relation, arg_stats: *const GinStatsData, arg_is_build: bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn ginUpdateStats(index: Relation, stats: *const GinStatsData, is_build: bool);
@@ -41810,25 +40864,16 @@ pub unsafe fn XLogInsert(arg_rmid: RmgrId, arg_info: uint8) -> XLogRecPtr {
     })
 }
 #[track_caller]
-pub unsafe fn XLogEnsureRecordSpace(
-    arg_nbuffers: ::std::os::raw::c_int,
-    arg_ndatas: ::std::os::raw::c_int,
-) {
+pub unsafe fn XLogEnsureRecordSpace(arg_nbuffers: ::std::os::raw::c_int, arg_ndatas: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn XLogEnsureRecordSpace(
-                nbuffers: ::std::os::raw::c_int,
-                ndatas: ::std::os::raw::c_int,
-            );
+            pub fn XLogEnsureRecordSpace(nbuffers: ::std::os::raw::c_int, ndatas: ::std::os::raw::c_int);
         }
         XLogEnsureRecordSpace(arg_nbuffers, arg_ndatas)
     })
 }
 #[track_caller]
-pub unsafe fn XLogRegisterData(
-    arg_data: *mut ::std::os::raw::c_char,
-    arg_len: ::std::os::raw::c_int,
-) {
+pub unsafe fn XLogRegisterData(arg_data: *mut ::std::os::raw::c_char, arg_len: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn XLogRegisterData(data: *mut ::std::os::raw::c_char, len: ::std::os::raw::c_int);
@@ -41996,12 +41041,9 @@ pub const RecoveryTargetType_RECOVERY_TARGET_NAME: RecoveryTargetType = 3;
 pub const RecoveryTargetType_RECOVERY_TARGET_LSN: RecoveryTargetType = 4;
 pub const RecoveryTargetType_RECOVERY_TARGET_IMMEDIATE: RecoveryTargetType = 5;
 pub type RecoveryTargetType = ::std::os::raw::c_uint;
-pub const RecoveryTargetTimeLineGoal_RECOVERY_TARGET_TIMELINE_CONTROLFILE:
-    RecoveryTargetTimeLineGoal = 0;
-pub const RecoveryTargetTimeLineGoal_RECOVERY_TARGET_TIMELINE_LATEST: RecoveryTargetTimeLineGoal =
-    1;
-pub const RecoveryTargetTimeLineGoal_RECOVERY_TARGET_TIMELINE_NUMERIC: RecoveryTargetTimeLineGoal =
-    2;
+pub const RecoveryTargetTimeLineGoal_RECOVERY_TARGET_TIMELINE_CONTROLFILE: RecoveryTargetTimeLineGoal = 0;
+pub const RecoveryTargetTimeLineGoal_RECOVERY_TARGET_TIMELINE_LATEST: RecoveryTargetTimeLineGoal = 1;
+pub const RecoveryTargetTimeLineGoal_RECOVERY_TARGET_TIMELINE_NUMERIC: RecoveryTargetTimeLineGoal = 2;
 pub type RecoveryTargetTimeLineGoal = ::std::os::raw::c_uint;
 extern "C" {
     pub static mut ProcLastRecPtr: XLogRecPtr;
@@ -42176,11 +41218,8 @@ pub unsafe fn XLogInsertRecord(
 ) -> XLogRecPtr {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn XLogInsertRecord(
-                rdata: *mut XLogRecData,
-                fpw_lsn: XLogRecPtr,
-                flags: uint8,
-            ) -> XLogRecPtr;
+            pub fn XLogInsertRecord(rdata: *mut XLogRecData, fpw_lsn: XLogRecPtr, flags: uint8)
+                -> XLogRecPtr;
         }
         XLogInsertRecord(arg_rdata, arg_fpw_lsn, arg_flags)
     })
@@ -42428,10 +41467,7 @@ pub unsafe fn GetCurrentChunkReplayStartTime() -> TimestampTz {
     })
 }
 #[track_caller]
-pub unsafe fn XLogFileNameP(
-    arg_tli: TimeLineID,
-    arg_segno: XLogSegNo,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn XLogFileNameP(arg_tli: TimeLineID, arg_segno: XLogSegNo) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn XLogFileNameP(tli: TimeLineID, segno: XLogSegNo) -> *mut ::std::os::raw::c_char;
@@ -42593,10 +41629,7 @@ pub unsafe fn UpdateFullPageWrites() {
     })
 }
 #[track_caller]
-pub unsafe fn GetFullPageWriteInfo(
-    arg_RedoRecPtr_p: *mut XLogRecPtr,
-    arg_doPageWrites_p: *mut bool,
-) {
+pub unsafe fn GetFullPageWriteInfo(arg_RedoRecPtr_p: *mut XLogRecPtr, arg_doPageWrites_p: *mut bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn GetFullPageWriteInfo(RedoRecPtr_p: *mut XLogRecPtr, doPageWrites_p: *mut bool);
@@ -42686,31 +41719,19 @@ pub unsafe fn XLogRequestWalReceiverReply() {
     })
 }
 #[track_caller]
-pub unsafe fn assign_max_wal_size(
-    arg_newval: ::std::os::raw::c_int,
-    arg_extra: *mut ::std::os::raw::c_void,
-) {
+pub unsafe fn assign_max_wal_size(arg_newval: ::std::os::raw::c_int, arg_extra: *mut ::std::os::raw::c_void) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn assign_max_wal_size(
-                newval: ::std::os::raw::c_int,
-                extra: *mut ::std::os::raw::c_void,
-            );
+            pub fn assign_max_wal_size(newval: ::std::os::raw::c_int, extra: *mut ::std::os::raw::c_void);
         }
         assign_max_wal_size(arg_newval, arg_extra)
     })
 }
 #[track_caller]
-pub unsafe fn assign_checkpoint_completion_target(
-    arg_newval: f64,
-    arg_extra: *mut ::std::os::raw::c_void,
-) {
+pub unsafe fn assign_checkpoint_completion_target(arg_newval: f64, arg_extra: *mut ::std::os::raw::c_void) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn assign_checkpoint_completion_target(
-                newval: f64,
-                extra: *mut ::std::os::raw::c_void,
-            );
+            pub fn assign_checkpoint_completion_target(newval: f64, extra: *mut ::std::os::raw::c_void);
         }
         assign_checkpoint_completion_target(arg_newval, arg_extra)
     })
@@ -43848,10 +42869,7 @@ pub unsafe fn accumArrayResult(
     })
 }
 #[track_caller]
-pub unsafe fn makeArrayResult(
-    arg_astate: *mut ArrayBuildState,
-    arg_rcontext: MemoryContext,
-) -> Datum {
+pub unsafe fn makeArrayResult(arg_astate: *mut ArrayBuildState, arg_rcontext: MemoryContext) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn makeArrayResult(astate: *mut ArrayBuildState, rcontext: MemoryContext) -> Datum;
@@ -44019,11 +43037,7 @@ pub unsafe fn array_iterate(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn array_iterate(
-                iterator: ArrayIterator,
-                value: *mut Datum,
-                isnull: *mut bool,
-            ) -> bool;
+            pub fn array_iterate(iterator: ArrayIterator, value: *mut Datum, isnull: *mut bool) -> bool;
         }
         array_iterate(arg_iterator, arg_value, arg_isnull)
     })
@@ -44184,10 +43198,7 @@ pub unsafe fn ArrayGetIntegerTypmods(
 ) -> *mut int32 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ArrayGetIntegerTypmods(
-                arr: *mut ArrayType,
-                n: *mut ::std::os::raw::c_int,
-            ) -> *mut int32;
+            pub fn ArrayGetIntegerTypmods(arr: *mut ArrayType, n: *mut ::std::os::raw::c_int) -> *mut int32;
         }
         ArrayGetIntegerTypmods(arg_arr, arg_n)
     })
@@ -44460,8 +43471,7 @@ pub type GucStringAssignHook = ::std::option::Option<
 pub type GucEnumAssignHook = ::std::option::Option<
     unsafe extern "C" fn(newval: ::std::os::raw::c_int, extra: *mut ::std::os::raw::c_void),
 >;
-pub type GucShowHook =
-    ::std::option::Option<unsafe extern "C" fn() -> *const ::std::os::raw::c_char>;
+pub type GucShowHook = ::std::option::Option<unsafe extern "C" fn() -> *const ::std::os::raw::c_char>;
 pub const GucAction_GUC_ACTION_SET: GucAction = 0;
 pub const GucAction_GUC_ACTION_LOCAL: GucAction = 1;
 pub const GucAction_GUC_ACTION_SAVE: GucAction = 2;
@@ -45086,11 +44096,7 @@ pub unsafe fn SetPGVariable(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SetPGVariable(
-                name: *const ::std::os::raw::c_char,
-                args: *mut List,
-                is_local: bool,
-            );
+            pub fn SetPGVariable(name: *const ::std::os::raw::c_char, args: *mut List, is_local: bool);
         }
         SetPGVariable(arg_name, arg_args, arg_is_local)
     })
@@ -45123,14 +44129,10 @@ pub unsafe fn ExecSetVariableStmt(arg_stmt: *mut VariableSetStmt, arg_isTopLevel
     })
 }
 #[track_caller]
-pub unsafe fn ExtractSetVariableArgs(
-    arg_stmt: *mut VariableSetStmt,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn ExtractSetVariableArgs(arg_stmt: *mut VariableSetStmt) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ExtractSetVariableArgs(
-                stmt: *mut VariableSetStmt,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn ExtractSetVariableArgs(stmt: *mut VariableSetStmt) -> *mut ::std::os::raw::c_char;
         }
         ExtractSetVariableArgs(arg_stmt)
     })
@@ -45459,19 +44461,13 @@ pub const ParseExprKind_EXPR_KIND_CALL_ARGUMENT: ParseExprKind = 38;
 pub const ParseExprKind_EXPR_KIND_COPY_WHERE: ParseExprKind = 39;
 pub const ParseExprKind_EXPR_KIND_GENERATED_COLUMN: ParseExprKind = 40;
 pub type ParseExprKind = ::std::os::raw::c_uint;
-pub type PreParseColumnRefHook = ::std::option::Option<
-    unsafe extern "C" fn(pstate: *mut ParseState, cref: *mut ColumnRef) -> *mut Node,
->;
+pub type PreParseColumnRefHook =
+    ::std::option::Option<unsafe extern "C" fn(pstate: *mut ParseState, cref: *mut ColumnRef) -> *mut Node>;
 pub type PostParseColumnRefHook = ::std::option::Option<
-    unsafe extern "C" fn(
-        pstate: *mut ParseState,
-        cref: *mut ColumnRef,
-        var: *mut Node,
-    ) -> *mut Node,
+    unsafe extern "C" fn(pstate: *mut ParseState, cref: *mut ColumnRef, var: *mut Node) -> *mut Node,
 >;
-pub type ParseParamRefHook = ::std::option::Option<
-    unsafe extern "C" fn(pstate: *mut ParseState, pref: *mut ParamRef) -> *mut Node,
->;
+pub type ParseParamRefHook =
+    ::std::option::Option<unsafe extern "C" fn(pstate: *mut ParseState, pref: *mut ParamRef) -> *mut Node>;
 pub type CoerceParamHook = ::std::option::Option<
     unsafe extern "C" fn(
         pstate: *mut ParseState,
@@ -45639,16 +44635,10 @@ pub unsafe fn make_var(
     })
 }
 #[track_caller]
-pub unsafe fn transformContainerType(
-    arg_containerType: *mut Oid,
-    arg_containerTypmod: *mut int32,
-) -> Oid {
+pub unsafe fn transformContainerType(arg_containerType: *mut Oid, arg_containerTypmod: *mut int32) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn transformContainerType(
-                containerType: *mut Oid,
-                containerTypmod: *mut int32,
-            ) -> Oid;
+            pub fn transformContainerType(containerType: *mut Oid, containerTypmod: *mut int32) -> Oid;
         }
         transformContainerType(arg_containerType, arg_containerTypmod)
     })
@@ -45728,18 +44718,10 @@ pub unsafe fn acldefault(arg_objtype: ObjectType, arg_ownerId: Oid) -> *mut Acl 
     })
 }
 #[track_caller]
-pub unsafe fn get_user_default_acl(
-    arg_objtype: ObjectType,
-    arg_ownerId: Oid,
-    arg_nsp_oid: Oid,
-) -> *mut Acl {
+pub unsafe fn get_user_default_acl(arg_objtype: ObjectType, arg_ownerId: Oid, arg_nsp_oid: Oid) -> *mut Acl {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_user_default_acl(
-                objtype: ObjectType,
-                ownerId: Oid,
-                nsp_oid: Oid,
-            ) -> *mut Acl;
+            pub fn get_user_default_acl(objtype: ObjectType, ownerId: Oid, nsp_oid: Oid) -> *mut Acl;
         }
         get_user_default_acl(arg_objtype, arg_ownerId, arg_nsp_oid)
     })
@@ -45787,11 +44769,7 @@ pub unsafe fn aclupdate(
     })
 }
 #[track_caller]
-pub unsafe fn aclnewowner(
-    arg_old_acl: *const Acl,
-    arg_oldOwnerId: Oid,
-    arg_newOwnerId: Oid,
-) -> *mut Acl {
+pub unsafe fn aclnewowner(arg_old_acl: *const Acl, arg_oldOwnerId: Oid, arg_newOwnerId: Oid) -> *mut Acl {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn aclnewowner(old_acl: *const Acl, oldOwnerId: Oid, newOwnerId: Oid) -> *mut Acl;
@@ -45827,11 +44805,7 @@ pub unsafe fn aclconcat(arg_left_acl: *const Acl, arg_right_acl: *const Acl) -> 
     })
 }
 #[track_caller]
-pub unsafe fn aclmerge(
-    arg_left_acl: *const Acl,
-    arg_right_acl: *const Acl,
-    arg_ownerId: Oid,
-) -> *mut Acl {
+pub unsafe fn aclmerge(arg_left_acl: *const Acl, arg_right_acl: *const Acl, arg_ownerId: Oid) -> *mut Acl {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn aclmerge(left_acl: *const Acl, right_acl: *const Acl, ownerId: Oid) -> *mut Acl;
@@ -45933,10 +44907,7 @@ pub unsafe fn check_is_member_of_role(arg_member: Oid, arg_role: Oid) {
     })
 }
 #[track_caller]
-pub unsafe fn get_role_oid(
-    arg_rolename: *const ::std::os::raw::c_char,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_role_oid(arg_rolename: *const ::std::os::raw::c_char, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_role_oid(rolename: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
@@ -45963,16 +44934,10 @@ pub unsafe fn get_rolespec_oid(arg_role: *const RoleSpec, arg_missing_ok: bool) 
     })
 }
 #[track_caller]
-pub unsafe fn check_rolespec_name(
-    arg_role: *const RoleSpec,
-    arg_detail_msg: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn check_rolespec_name(arg_role: *const RoleSpec, arg_detail_msg: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn check_rolespec_name(
-                role: *const RoleSpec,
-                detail_msg: *const ::std::os::raw::c_char,
-            );
+            pub fn check_rolespec_name(role: *const RoleSpec, detail_msg: *const ::std::os::raw::c_char);
         }
         check_rolespec_name(arg_role, arg_detail_msg)
     })
@@ -46015,14 +44980,7 @@ pub unsafe fn select_best_grantor(
                 grantOptions: *mut AclMode,
             );
         }
-        select_best_grantor(
-            arg_roleId,
-            arg_privileges,
-            arg_acl,
-            arg_ownerId,
-            arg_grantorId,
-            arg_grantOptions,
-        )
+        select_best_grantor(arg_roleId, arg_privileges, arg_acl, arg_ownerId, arg_grantorId, arg_grantOptions)
     })
 }
 #[track_caller]
@@ -46106,12 +45064,7 @@ pub unsafe fn pg_class_aclmask(
 ) -> AclMode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_class_aclmask(
-                table_oid: Oid,
-                roleid: Oid,
-                mask: AclMode,
-                how: AclMaskHow,
-            ) -> AclMode;
+            pub fn pg_class_aclmask(table_oid: Oid, roleid: Oid, mask: AclMode, how: AclMaskHow) -> AclMode;
         }
         pg_class_aclmask(arg_table_oid, arg_roleid, arg_mask, arg_how)
     })
@@ -46125,12 +45078,7 @@ pub unsafe fn pg_database_aclmask(
 ) -> AclMode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_database_aclmask(
-                db_oid: Oid,
-                roleid: Oid,
-                mask: AclMode,
-                how: AclMaskHow,
-            ) -> AclMode;
+            pub fn pg_database_aclmask(db_oid: Oid, roleid: Oid, mask: AclMode, how: AclMaskHow) -> AclMode;
         }
         pg_database_aclmask(arg_db_oid, arg_roleid, arg_mask, arg_how)
     })
@@ -46144,12 +45092,7 @@ pub unsafe fn pg_proc_aclmask(
 ) -> AclMode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_proc_aclmask(
-                proc_oid: Oid,
-                roleid: Oid,
-                mask: AclMode,
-                how: AclMaskHow,
-            ) -> AclMode;
+            pub fn pg_proc_aclmask(proc_oid: Oid, roleid: Oid, mask: AclMode, how: AclMaskHow) -> AclMode;
         }
         pg_proc_aclmask(arg_proc_oid, arg_roleid, arg_mask, arg_how)
     })
@@ -46163,12 +45106,8 @@ pub unsafe fn pg_language_aclmask(
 ) -> AclMode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_language_aclmask(
-                lang_oid: Oid,
-                roleid: Oid,
-                mask: AclMode,
-                how: AclMaskHow,
-            ) -> AclMode;
+            pub fn pg_language_aclmask(lang_oid: Oid, roleid: Oid, mask: AclMode, how: AclMaskHow)
+                -> AclMode;
         }
         pg_language_aclmask(arg_lang_oid, arg_roleid, arg_mask, arg_how)
     })
@@ -46203,12 +45142,8 @@ pub unsafe fn pg_namespace_aclmask(
 ) -> AclMode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_namespace_aclmask(
-                nsp_oid: Oid,
-                roleid: Oid,
-                mask: AclMode,
-                how: AclMaskHow,
-            ) -> AclMode;
+            pub fn pg_namespace_aclmask(nsp_oid: Oid, roleid: Oid, mask: AclMode, how: AclMaskHow)
+                -> AclMode;
         }
         pg_namespace_aclmask(arg_nsp_oid, arg_roleid, arg_mask, arg_how)
     })
@@ -46279,12 +45214,7 @@ pub unsafe fn pg_type_aclmask(
 ) -> AclMode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_type_aclmask(
-                type_oid: Oid,
-                roleid: Oid,
-                mask: AclMode,
-                how: AclMaskHow,
-            ) -> AclMode;
+            pub fn pg_type_aclmask(type_oid: Oid, roleid: Oid, mask: AclMode, how: AclMaskHow) -> AclMode;
         }
         pg_type_aclmask(arg_type_oid, arg_roleid, arg_mask, arg_how)
     })
@@ -46328,11 +45258,7 @@ pub unsafe fn pg_attribute_aclcheck_all(
     })
 }
 #[track_caller]
-pub unsafe fn pg_class_aclcheck(
-    arg_table_oid: Oid,
-    arg_roleid: Oid,
-    arg_mode: AclMode,
-) -> AclResult {
+pub unsafe fn pg_class_aclcheck(arg_table_oid: Oid, arg_roleid: Oid, arg_mode: AclMode) -> AclResult {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn pg_class_aclcheck(table_oid: Oid, roleid: Oid, mode: AclMode) -> AclResult;
@@ -46341,11 +45267,7 @@ pub unsafe fn pg_class_aclcheck(
     })
 }
 #[track_caller]
-pub unsafe fn pg_database_aclcheck(
-    arg_db_oid: Oid,
-    arg_roleid: Oid,
-    arg_mode: AclMode,
-) -> AclResult {
+pub unsafe fn pg_database_aclcheck(arg_db_oid: Oid, arg_roleid: Oid, arg_mode: AclMode) -> AclResult {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn pg_database_aclcheck(db_oid: Oid, roleid: Oid, mode: AclMode) -> AclResult;
@@ -46363,11 +45285,7 @@ pub unsafe fn pg_proc_aclcheck(arg_proc_oid: Oid, arg_roleid: Oid, arg_mode: Acl
     })
 }
 #[track_caller]
-pub unsafe fn pg_language_aclcheck(
-    arg_lang_oid: Oid,
-    arg_roleid: Oid,
-    arg_mode: AclMode,
-) -> AclResult {
+pub unsafe fn pg_language_aclcheck(arg_lang_oid: Oid, arg_roleid: Oid, arg_mode: AclMode) -> AclResult {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn pg_language_aclcheck(lang_oid: Oid, roleid: Oid, mode: AclMode) -> AclResult;
@@ -46395,11 +45313,7 @@ pub unsafe fn pg_largeobject_aclcheck_snapshot(
     })
 }
 #[track_caller]
-pub unsafe fn pg_namespace_aclcheck(
-    arg_nsp_oid: Oid,
-    arg_roleid: Oid,
-    arg_mode: AclMode,
-) -> AclResult {
+pub unsafe fn pg_namespace_aclcheck(arg_nsp_oid: Oid, arg_roleid: Oid, arg_mode: AclMode) -> AclResult {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn pg_namespace_aclcheck(nsp_oid: Oid, roleid: Oid, mode: AclMode) -> AclResult;
@@ -46408,11 +45322,7 @@ pub unsafe fn pg_namespace_aclcheck(
     })
 }
 #[track_caller]
-pub unsafe fn pg_tablespace_aclcheck(
-    arg_spc_oid: Oid,
-    arg_roleid: Oid,
-    arg_mode: AclMode,
-) -> AclResult {
+pub unsafe fn pg_tablespace_aclcheck(arg_spc_oid: Oid, arg_roleid: Oid, arg_mode: AclMode) -> AclResult {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn pg_tablespace_aclcheck(spc_oid: Oid, roleid: Oid, mode: AclMode) -> AclResult;
@@ -46428,28 +45338,16 @@ pub unsafe fn pg_foreign_data_wrapper_aclcheck(
 ) -> AclResult {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_foreign_data_wrapper_aclcheck(
-                fdw_oid: Oid,
-                roleid: Oid,
-                mode: AclMode,
-            ) -> AclResult;
+            pub fn pg_foreign_data_wrapper_aclcheck(fdw_oid: Oid, roleid: Oid, mode: AclMode) -> AclResult;
         }
         pg_foreign_data_wrapper_aclcheck(arg_fdw_oid, arg_roleid, arg_mode)
     })
 }
 #[track_caller]
-pub unsafe fn pg_foreign_server_aclcheck(
-    arg_srv_oid: Oid,
-    arg_roleid: Oid,
-    arg_mode: AclMode,
-) -> AclResult {
+pub unsafe fn pg_foreign_server_aclcheck(arg_srv_oid: Oid, arg_roleid: Oid, arg_mode: AclMode) -> AclResult {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_foreign_server_aclcheck(
-                srv_oid: Oid,
-                roleid: Oid,
-                mode: AclMode,
-            ) -> AclResult;
+            pub fn pg_foreign_server_aclcheck(srv_oid: Oid, roleid: Oid, mode: AclMode) -> AclResult;
         }
         pg_foreign_server_aclcheck(arg_srv_oid, arg_roleid, arg_mode)
     })
@@ -46793,14 +45691,7 @@ pub unsafe fn get_object_address_rv(
                 missing_ok: bool,
             ) -> ObjectAddress;
         }
-        get_object_address_rv(
-            arg_objtype,
-            arg_rel,
-            arg_object,
-            arg_relp,
-            arg_lockmode,
-            arg_missing_ok,
-        )
+        get_object_address_rv(arg_objtype, arg_rel, arg_object, arg_relp, arg_lockmode, arg_missing_ok)
     })
 }
 #[track_caller]
@@ -46950,55 +45841,37 @@ pub unsafe fn get_catalog_object_by_oid(
     })
 }
 #[track_caller]
-pub unsafe fn getObjectDescription(
-    arg_object: *const ObjectAddress,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn getObjectDescription(arg_object: *const ObjectAddress) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getObjectDescription(
-                object: *const ObjectAddress,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn getObjectDescription(object: *const ObjectAddress) -> *mut ::std::os::raw::c_char;
         }
         getObjectDescription(arg_object)
     })
 }
 #[track_caller]
-pub unsafe fn getObjectDescriptionOids(
-    arg_classid: Oid,
-    arg_objid: Oid,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn getObjectDescriptionOids(arg_classid: Oid, arg_objid: Oid) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getObjectDescriptionOids(
-                classid: Oid,
-                objid: Oid,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn getObjectDescriptionOids(classid: Oid, objid: Oid) -> *mut ::std::os::raw::c_char;
         }
         getObjectDescriptionOids(arg_classid, arg_objid)
     })
 }
 #[track_caller]
-pub unsafe fn read_objtype_from_string(
-    arg_objtype: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn read_objtype_from_string(arg_objtype: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn read_objtype_from_string(
-                objtype: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn read_objtype_from_string(objtype: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         read_objtype_from_string(arg_objtype)
     })
 }
 #[track_caller]
-pub unsafe fn getObjectTypeDescription(
-    arg_object: *const ObjectAddress,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn getObjectTypeDescription(arg_object: *const ObjectAddress) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getObjectTypeDescription(
-                object: *const ObjectAddress,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn getObjectTypeDescription(object: *const ObjectAddress) -> *mut ::std::os::raw::c_char;
         }
         getObjectTypeDescription(arg_object)
     })
@@ -47181,31 +46054,19 @@ pub unsafe fn publication_add_relation(
     })
 }
 #[track_caller]
-pub unsafe fn get_publication_oid(
-    arg_pubname: *const ::std::os::raw::c_char,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_publication_oid(arg_pubname: *const ::std::os::raw::c_char, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_publication_oid(
-                pubname: *const ::std::os::raw::c_char,
-                missing_ok: bool,
-            ) -> Oid;
+            pub fn get_publication_oid(pubname: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         get_publication_oid(arg_pubname, arg_missing_ok)
     })
 }
 #[track_caller]
-pub unsafe fn get_publication_name(
-    arg_pubid: Oid,
-    arg_missing_ok: bool,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn get_publication_name(arg_pubid: Oid, arg_missing_ok: bool) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_publication_name(
-                pubid: Oid,
-                missing_ok: bool,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn get_publication_name(pubid: Oid, missing_ok: bool) -> *mut ::std::os::raw::c_char;
         }
         get_publication_name(arg_pubid, arg_missing_ok)
     })
@@ -47505,17 +46366,14 @@ pub struct TableAmRoutine {
         ) -> bool,
     >,
     pub parallelscan_estimate: ::std::option::Option<unsafe extern "C" fn(rel: Relation) -> Size>,
-    pub parallelscan_initialize: ::std::option::Option<
-        unsafe extern "C" fn(rel: Relation, pscan: ParallelTableScanDesc) -> Size,
-    >,
+    pub parallelscan_initialize:
+        ::std::option::Option<unsafe extern "C" fn(rel: Relation, pscan: ParallelTableScanDesc) -> Size>,
     pub parallelscan_reinitialize:
         ::std::option::Option<unsafe extern "C" fn(rel: Relation, pscan: ParallelTableScanDesc)>,
     pub index_fetch_begin:
         ::std::option::Option<unsafe extern "C" fn(rel: Relation) -> *mut IndexFetchTableData>,
-    pub index_fetch_reset:
-        ::std::option::Option<unsafe extern "C" fn(data: *mut IndexFetchTableData)>,
-    pub index_fetch_end:
-        ::std::option::Option<unsafe extern "C" fn(data: *mut IndexFetchTableData)>,
+    pub index_fetch_reset: ::std::option::Option<unsafe extern "C" fn(data: *mut IndexFetchTableData)>,
+    pub index_fetch_end: ::std::option::Option<unsafe extern "C" fn(data: *mut IndexFetchTableData)>,
     pub index_fetch_tuple: ::std::option::Option<
         unsafe extern "C" fn(
             scan: *mut IndexFetchTableData,
@@ -47568,12 +46426,7 @@ pub struct TableAmRoutine {
         ),
     >,
     pub tuple_complete_speculative: ::std::option::Option<
-        unsafe extern "C" fn(
-            rel: Relation,
-            slot: *mut TupleTableSlot,
-            specToken: uint32,
-            succeeded: bool,
-        ),
+        unsafe extern "C" fn(rel: Relation, slot: *mut TupleTableSlot, specToken: uint32, succeeded: bool),
     >,
     pub multi_insert: ::std::option::Option<
         unsafe extern "C" fn(
@@ -47635,8 +46488,7 @@ pub struct TableAmRoutine {
             minmulti: *mut MultiXactId,
         ),
     >,
-    pub relation_nontransactional_truncate:
-        ::std::option::Option<unsafe extern "C" fn(rel: Relation)>,
+    pub relation_nontransactional_truncate: ::std::option::Option<unsafe extern "C" fn(rel: Relation)>,
     pub relation_copy_data:
         ::std::option::Option<unsafe extern "C" fn(rel: Relation, newrnode: *const RelFileNode)>,
     pub relation_copy_for_cluster: ::std::option::Option<
@@ -47654,11 +46506,7 @@ pub struct TableAmRoutine {
         ),
     >,
     pub relation_vacuum: ::std::option::Option<
-        unsafe extern "C" fn(
-            onerel: Relation,
-            params: *mut VacuumParams,
-            bstrategy: BufferAccessStrategy,
-        ),
+        unsafe extern "C" fn(onerel: Relation, params: *mut VacuumParams, bstrategy: BufferAccessStrategy),
     >,
     pub scan_analyze_next_block: ::std::option::Option<
         unsafe extern "C" fn(
@@ -47700,11 +46548,9 @@ pub struct TableAmRoutine {
             state: *mut ValidateIndexState,
         ),
     >,
-    pub relation_size: ::std::option::Option<
-        unsafe extern "C" fn(rel: Relation, forkNumber: ForkNumber) -> uint64,
-    >,
-    pub relation_needs_toast_table:
-        ::std::option::Option<unsafe extern "C" fn(rel: Relation) -> bool>,
+    pub relation_size:
+        ::std::option::Option<unsafe extern "C" fn(rel: Relation, forkNumber: ForkNumber) -> uint64>,
+    pub relation_needs_toast_table: ::std::option::Option<unsafe extern "C" fn(rel: Relation) -> bool>,
     pub relation_estimate_size: ::std::option::Option<
         unsafe extern "C" fn(
             rel: Relation,
@@ -47754,14 +46600,10 @@ pub unsafe fn table_slot_callbacks(arg_rel: Relation) -> *const TupleTableSlotOp
     })
 }
 #[track_caller]
-pub unsafe fn table_slot_create(
-    arg_rel: Relation,
-    arg_reglist: *mut *mut List,
-) -> *mut TupleTableSlot {
+pub unsafe fn table_slot_create(arg_rel: Relation, arg_reglist: *mut *mut List) -> *mut TupleTableSlot {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn table_slot_create(rel: Relation, reglist: *mut *mut List)
-                -> *mut TupleTableSlot;
+            pub fn table_slot_create(rel: Relation, reglist: *mut *mut List) -> *mut TupleTableSlot;
         }
         table_slot_create(arg_rel, arg_reglist)
     })
@@ -47819,16 +46661,10 @@ pub unsafe fn table_parallelscan_initialize(
     })
 }
 #[track_caller]
-pub unsafe fn table_beginscan_parallel(
-    arg_rel: Relation,
-    arg_pscan: ParallelTableScanDesc,
-) -> TableScanDesc {
+pub unsafe fn table_beginscan_parallel(arg_rel: Relation, arg_pscan: ParallelTableScanDesc) -> TableScanDesc {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn table_beginscan_parallel(
-                rel: Relation,
-                pscan: ParallelTableScanDesc,
-            ) -> TableScanDesc;
+            pub fn table_beginscan_parallel(rel: Relation, pscan: ParallelTableScanDesc) -> TableScanDesc;
         }
         table_beginscan_parallel(arg_rel, arg_pscan)
     })
@@ -47871,11 +46707,7 @@ pub unsafe fn simple_table_tuple_insert(arg_rel: Relation, arg_slot: *mut TupleT
     })
 }
 #[track_caller]
-pub unsafe fn simple_table_tuple_delete(
-    arg_rel: Relation,
-    arg_tid: ItemPointer,
-    arg_snapshot: Snapshot,
-) {
+pub unsafe fn simple_table_tuple_delete(arg_rel: Relation, arg_tid: ItemPointer, arg_snapshot: Snapshot) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn simple_table_tuple_delete(rel: Relation, tid: ItemPointer, snapshot: Snapshot);
@@ -47920,25 +46752,16 @@ pub unsafe fn table_block_parallelscan_initialize(
 ) -> Size {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn table_block_parallelscan_initialize(
-                rel: Relation,
-                pscan: ParallelTableScanDesc,
-            ) -> Size;
+            pub fn table_block_parallelscan_initialize(rel: Relation, pscan: ParallelTableScanDesc) -> Size;
         }
         table_block_parallelscan_initialize(arg_rel, arg_pscan)
     })
 }
 #[track_caller]
-pub unsafe fn table_block_parallelscan_reinitialize(
-    arg_rel: Relation,
-    arg_pscan: ParallelTableScanDesc,
-) {
+pub unsafe fn table_block_parallelscan_reinitialize(arg_rel: Relation, arg_pscan: ParallelTableScanDesc) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn table_block_parallelscan_reinitialize(
-                rel: Relation,
-                pscan: ParallelTableScanDesc,
-            );
+            pub fn table_block_parallelscan_reinitialize(rel: Relation, pscan: ParallelTableScanDesc);
         }
         table_block_parallelscan_reinitialize(arg_rel, arg_pscan)
     })
@@ -48087,11 +46910,7 @@ pub unsafe fn heap_setscanlimits(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn heap_setscanlimits(
-                scan: TableScanDesc,
-                startBlk: BlockNumber,
-                endBlk: BlockNumber,
-            );
+            pub fn heap_setscanlimits(scan: TableScanDesc, startBlk: BlockNumber, endBlk: BlockNumber);
         }
         heap_setscanlimits(arg_scan, arg_startBlk, arg_endBlk)
     })
@@ -48125,14 +46944,7 @@ pub unsafe fn heap_rescan(
                 allow_pagemode: bool,
             );
         }
-        heap_rescan(
-            arg_scan,
-            arg_key,
-            arg_set_params,
-            arg_allow_strat,
-            arg_allow_sync,
-            arg_allow_pagemode,
-        )
+        heap_rescan(arg_scan, arg_key, arg_set_params, arg_allow_strat, arg_allow_sync, arg_allow_pagemode)
     })
 }
 #[track_caller]
@@ -48354,15 +47166,7 @@ pub unsafe fn heap_delete(
                 changingPart: bool,
             ) -> TM_Result;
         }
-        heap_delete(
-            arg_relation,
-            arg_tid,
-            arg_cid,
-            arg_crosscheck,
-            arg_wait,
-            arg_tmfd,
-            arg_changingPart,
-        )
+        heap_delete(arg_relation, arg_tid, arg_cid, arg_crosscheck, arg_wait, arg_tmfd, arg_changingPart)
     })
 }
 #[track_caller]
@@ -48482,13 +47286,7 @@ pub unsafe fn heap_freeze_tuple(
                 cutoff_multi: TransactionId,
             ) -> bool;
         }
-        heap_freeze_tuple(
-            arg_tuple,
-            arg_relfrozenxid,
-            arg_relminmxid,
-            arg_cutoff_xid,
-            arg_cutoff_multi,
-        )
+        heap_freeze_tuple(arg_tuple, arg_relfrozenxid, arg_relminmxid, arg_cutoff_xid, arg_cutoff_multi)
     })
 }
 #[track_caller]
@@ -48538,11 +47336,7 @@ pub unsafe fn simple_heap_delete(arg_relation: Relation, arg_tid: ItemPointer) {
     })
 }
 #[track_caller]
-pub unsafe fn simple_heap_update(
-    arg_relation: Relation,
-    arg_otid: ItemPointer,
-    arg_tup: HeapTuple,
-) {
+pub unsafe fn simple_heap_update(arg_relation: Relation, arg_otid: ItemPointer, arg_tup: HeapTuple) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn simple_heap_update(relation: Relation, otid: ItemPointer, tup: HeapTuple);
@@ -48603,13 +47397,7 @@ pub unsafe fn heap_page_prune(
                 latestRemovedXid: *mut TransactionId,
             ) -> ::std::os::raw::c_int;
         }
-        heap_page_prune(
-            arg_relation,
-            arg_buffer,
-            arg_OldestXmin,
-            arg_report_stats,
-            arg_latestRemovedXid,
-        )
+        heap_page_prune(arg_relation, arg_buffer, arg_OldestXmin, arg_report_stats, arg_latestRemovedXid)
     })
 }
 #[track_caller]
@@ -48715,11 +47503,7 @@ pub unsafe fn HeapTupleSatisfiesVisibility(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn HeapTupleSatisfiesVisibility(
-                stup: HeapTuple,
-                snapshot: Snapshot,
-                buffer: Buffer,
-            ) -> bool;
+            pub fn HeapTupleSatisfiesVisibility(stup: HeapTuple, snapshot: Snapshot, buffer: Buffer) -> bool;
         }
         HeapTupleSatisfiesVisibility(arg_stup, arg_snapshot, arg_buffer)
     })
@@ -48732,11 +47516,7 @@ pub unsafe fn HeapTupleSatisfiesUpdate(
 ) -> TM_Result {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn HeapTupleSatisfiesUpdate(
-                stup: HeapTuple,
-                curcid: CommandId,
-                buffer: Buffer,
-            ) -> TM_Result;
+            pub fn HeapTupleSatisfiesUpdate(stup: HeapTuple, curcid: CommandId, buffer: Buffer) -> TM_Result;
         }
         HeapTupleSatisfiesUpdate(arg_stup, arg_curcid, arg_buffer)
     })
@@ -49219,11 +47999,7 @@ pub unsafe fn default_reloptions(
 ) -> *mut bytea {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn default_reloptions(
-                reloptions: Datum,
-                validate: bool,
-                kind: relopt_kind,
-            ) -> *mut bytea;
+            pub fn default_reloptions(reloptions: Datum, validate: bool, kind: relopt_kind) -> *mut bytea;
         }
         default_reloptions(arg_reloptions, arg_validate, arg_kind)
     })
@@ -49383,9 +48159,7 @@ pub unsafe fn SendSharedInvalidMessages(
 }
 #[track_caller]
 pub unsafe fn ReceiveSharedInvalidMessages(
-    arg_invalFunction: ::std::option::Option<
-        unsafe extern "C" fn(msg: *mut SharedInvalidationMessage),
-    >,
+    arg_invalFunction: ::std::option::Option<unsafe extern "C" fn(msg: *mut SharedInvalidationMessage)>,
     arg_resetFunction: ::std::option::Option<unsafe extern "C" fn()>,
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
@@ -49660,11 +48434,7 @@ pub unsafe fn interval2tm(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn interval2tm(
-                span: Interval,
-                tm: *mut pg_tm,
-                fsec: *mut fsec_t,
-            ) -> ::std::os::raw::c_int;
+            pub fn interval2tm(span: Interval, tm: *mut pg_tm, fsec: *mut fsec_t) -> ::std::os::raw::c_int;
         }
         interval2tm(arg_span, arg_tm, arg_fsec)
     })
@@ -49677,11 +48447,7 @@ pub unsafe fn tm2interval(
 ) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tm2interval(
-                tm: *mut pg_tm,
-                fsec: fsec_t,
-                span: *mut Interval,
-            ) -> ::std::os::raw::c_int;
+            pub fn tm2interval(tm: *mut pg_tm, fsec: fsec_t, span: *mut Interval) -> ::std::os::raw::c_int;
         }
         tm2interval(arg_tm, arg_fsec, arg_span)
     })
@@ -49705,10 +48471,7 @@ pub unsafe fn GetEpochTime(arg_tm: *mut pg_tm) {
     })
 }
 #[track_caller]
-pub unsafe fn timestamp_cmp_internal(
-    arg_dt1: Timestamp,
-    arg_dt2: Timestamp,
-) -> ::std::os::raw::c_int {
+pub unsafe fn timestamp_cmp_internal(arg_dt1: Timestamp, arg_dt2: Timestamp) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn timestamp_cmp_internal(dt1: Timestamp, dt2: Timestamp) -> ::std::os::raw::c_int;
@@ -49891,11 +48654,7 @@ pub unsafe fn GetCurrentTimeUsec(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetCurrentTimeUsec(
-                tm: *mut pg_tm,
-                fsec: *mut fsec_t,
-                tzp: *mut ::std::os::raw::c_int,
-            );
+            pub fn GetCurrentTimeUsec(tm: *mut pg_tm, fsec: *mut fsec_t, tzp: *mut ::std::os::raw::c_int);
         }
         GetCurrentTimeUsec(arg_tm, arg_fsec, arg_tzp)
     })
@@ -50096,16 +48855,10 @@ pub unsafe fn DateTimeParseError(
     })
 }
 #[track_caller]
-pub unsafe fn DetermineTimeZoneOffset(
-    arg_tm: *mut pg_tm,
-    arg_tzp: *mut pg_tz,
-) -> ::std::os::raw::c_int {
+pub unsafe fn DetermineTimeZoneOffset(arg_tm: *mut pg_tm, arg_tzp: *mut pg_tz) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn DetermineTimeZoneOffset(
-                tm: *mut pg_tm,
-                tzp: *mut pg_tz,
-            ) -> ::std::os::raw::c_int;
+            pub fn DetermineTimeZoneOffset(tm: *mut pg_tm, tzp: *mut pg_tz) -> ::std::os::raw::c_int;
         }
         DetermineTimeZoneOffset(arg_tm, arg_tzp)
     })
@@ -50929,16 +49682,10 @@ pub unsafe fn EstimateTransactionStateSpace() -> Size {
     })
 }
 #[track_caller]
-pub unsafe fn SerializeTransactionState(
-    arg_maxsize: Size,
-    arg_start_address: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn SerializeTransactionState(arg_maxsize: Size, arg_start_address: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SerializeTransactionState(
-                maxsize: Size,
-                start_address: *mut ::std::os::raw::c_char,
-            );
+            pub fn SerializeTransactionState(maxsize: Size, start_address: *mut ::std::os::raw::c_char);
         }
         SerializeTransactionState(arg_maxsize, arg_start_address)
     })
@@ -50998,46 +49745,28 @@ pub unsafe fn AbortOutOfAnyTransaction() {
     })
 }
 #[track_caller]
-pub unsafe fn PreventInTransactionBlock(
-    arg_isTopLevel: bool,
-    arg_stmtType: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn PreventInTransactionBlock(arg_isTopLevel: bool, arg_stmtType: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn PreventInTransactionBlock(
-                isTopLevel: bool,
-                stmtType: *const ::std::os::raw::c_char,
-            );
+            pub fn PreventInTransactionBlock(isTopLevel: bool, stmtType: *const ::std::os::raw::c_char);
         }
         PreventInTransactionBlock(arg_isTopLevel, arg_stmtType)
     })
 }
 #[track_caller]
-pub unsafe fn RequireTransactionBlock(
-    arg_isTopLevel: bool,
-    arg_stmtType: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn RequireTransactionBlock(arg_isTopLevel: bool, arg_stmtType: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RequireTransactionBlock(
-                isTopLevel: bool,
-                stmtType: *const ::std::os::raw::c_char,
-            );
+            pub fn RequireTransactionBlock(isTopLevel: bool, stmtType: *const ::std::os::raw::c_char);
         }
         RequireTransactionBlock(arg_isTopLevel, arg_stmtType)
     })
 }
 #[track_caller]
-pub unsafe fn WarnNoTransactionBlock(
-    arg_isTopLevel: bool,
-    arg_stmtType: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn WarnNoTransactionBlock(arg_isTopLevel: bool, arg_stmtType: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn WarnNoTransactionBlock(
-                isTopLevel: bool,
-                stmtType: *const ::std::os::raw::c_char,
-            );
+            pub fn WarnNoTransactionBlock(isTopLevel: bool, stmtType: *const ::std::os::raw::c_char);
         }
         WarnNoTransactionBlock(arg_isTopLevel, arg_stmtType)
     })
@@ -51052,10 +49781,7 @@ pub unsafe fn IsInTransactionBlock(arg_isTopLevel: bool) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn RegisterXactCallback(
-    arg_callback: XactCallback,
-    arg_arg: *mut ::std::os::raw::c_void,
-) {
+pub unsafe fn RegisterXactCallback(arg_callback: XactCallback, arg_arg: *mut ::std::os::raw::c_void) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn RegisterXactCallback(callback: XactCallback, arg: *mut ::std::os::raw::c_void);
@@ -51064,10 +49790,7 @@ pub unsafe fn RegisterXactCallback(
     })
 }
 #[track_caller]
-pub unsafe fn UnregisterXactCallback(
-    arg_callback: XactCallback,
-    arg_arg: *mut ::std::os::raw::c_void,
-) {
+pub unsafe fn UnregisterXactCallback(arg_callback: XactCallback, arg_arg: *mut ::std::os::raw::c_void) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn UnregisterXactCallback(callback: XactCallback, arg: *mut ::std::os::raw::c_void);
@@ -51076,31 +49799,19 @@ pub unsafe fn UnregisterXactCallback(
     })
 }
 #[track_caller]
-pub unsafe fn RegisterSubXactCallback(
-    arg_callback: SubXactCallback,
-    arg_arg: *mut ::std::os::raw::c_void,
-) {
+pub unsafe fn RegisterSubXactCallback(arg_callback: SubXactCallback, arg_arg: *mut ::std::os::raw::c_void) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RegisterSubXactCallback(
-                callback: SubXactCallback,
-                arg: *mut ::std::os::raw::c_void,
-            );
+            pub fn RegisterSubXactCallback(callback: SubXactCallback, arg: *mut ::std::os::raw::c_void);
         }
         RegisterSubXactCallback(arg_callback, arg_arg)
     })
 }
 #[track_caller]
-pub unsafe fn UnregisterSubXactCallback(
-    arg_callback: SubXactCallback,
-    arg_arg: *mut ::std::os::raw::c_void,
-) {
+pub unsafe fn UnregisterSubXactCallback(arg_callback: SubXactCallback, arg_arg: *mut ::std::os::raw::c_void) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn UnregisterSubXactCallback(
-                callback: SubXactCallback,
-                arg: *mut ::std::os::raw::c_void,
-            );
+            pub fn UnregisterSubXactCallback(callback: SubXactCallback, arg: *mut ::std::os::raw::c_void);
         }
         UnregisterSubXactCallback(arg_callback, arg_arg)
     })
@@ -51347,10 +50058,7 @@ pub const ObjectClass_OCLASS_SUBSCRIPTION: ObjectClass = 36;
 pub const ObjectClass_OCLASS_TRANSFORM: ObjectClass = 37;
 pub type ObjectClass = ::std::os::raw::c_uint;
 #[track_caller]
-pub unsafe fn AcquireDeletionLock(
-    arg_object: *const ObjectAddress,
-    arg_flags: ::std::os::raw::c_int,
-) {
+pub unsafe fn AcquireDeletionLock(arg_object: *const ObjectAddress, arg_flags: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn AcquireDeletionLock(object: *const ObjectAddress, flags: ::std::os::raw::c_int);
@@ -51469,16 +50177,10 @@ pub unsafe fn new_object_addresses() -> *mut ObjectAddresses {
     })
 }
 #[track_caller]
-pub unsafe fn add_exact_object_address(
-    arg_object: *const ObjectAddress,
-    arg_addrs: *mut ObjectAddresses,
-) {
+pub unsafe fn add_exact_object_address(arg_object: *const ObjectAddress, arg_addrs: *mut ObjectAddresses) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn add_exact_object_address(
-                object: *const ObjectAddress,
-                addrs: *mut ObjectAddresses,
-            );
+            pub fn add_exact_object_address(object: *const ObjectAddress, addrs: *mut ObjectAddresses);
         }
         add_exact_object_address(arg_object, arg_addrs)
     })
@@ -51570,16 +50272,10 @@ pub unsafe fn recordMultipleDependencies(
     })
 }
 #[track_caller]
-pub unsafe fn recordDependencyOnCurrentExtension(
-    arg_object: *const ObjectAddress,
-    arg_isReplace: bool,
-) {
+pub unsafe fn recordDependencyOnCurrentExtension(arg_object: *const ObjectAddress, arg_isReplace: bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn recordDependencyOnCurrentExtension(
-                object: *const ObjectAddress,
-                isReplace: bool,
-            );
+            pub fn recordDependencyOnCurrentExtension(object: *const ObjectAddress, isReplace: bool);
         }
         recordDependencyOnCurrentExtension(arg_object, arg_isReplace)
     })
@@ -51647,13 +50343,7 @@ pub unsafe fn changeDependencyFor(
                 newRefObjectId: Oid,
             ) -> ::std::os::raw::c_long;
         }
-        changeDependencyFor(
-            arg_classId,
-            arg_objectId,
-            arg_refClassId,
-            arg_oldRefObjectId,
-            arg_newRefObjectId,
-        )
+        changeDependencyFor(arg_classId, arg_objectId, arg_refClassId, arg_oldRefObjectId, arg_newRefObjectId)
     })
 }
 #[track_caller]
@@ -51790,18 +50480,10 @@ pub unsafe fn recordSharedDependencyOn(
     })
 }
 #[track_caller]
-pub unsafe fn deleteSharedDependencyRecordsFor(
-    arg_classId: Oid,
-    arg_objectId: Oid,
-    arg_objectSubId: int32,
-) {
+pub unsafe fn deleteSharedDependencyRecordsFor(arg_classId: Oid, arg_objectId: Oid, arg_objectSubId: int32) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn deleteSharedDependencyRecordsFor(
-                classId: Oid,
-                objectId: Oid,
-                objectSubId: int32,
-            );
+            pub fn deleteSharedDependencyRecordsFor(classId: Oid, objectId: Oid, objectSubId: int32);
         }
         deleteSharedDependencyRecordsFor(arg_classId, arg_objectId, arg_objectSubId)
     })
@@ -51825,11 +50507,7 @@ pub unsafe fn changeDependencyOnOwner(arg_classId: Oid, arg_objectId: Oid, arg_n
     })
 }
 #[track_caller]
-pub unsafe fn recordDependencyOnTablespace(
-    arg_classId: Oid,
-    arg_objectId: Oid,
-    arg_tablespace: Oid,
-) {
+pub unsafe fn recordDependencyOnTablespace(arg_classId: Oid, arg_objectId: Oid, arg_tablespace: Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn recordDependencyOnTablespace(classId: Oid, objectId: Oid, tablespace: Oid);
@@ -51838,11 +50516,7 @@ pub unsafe fn recordDependencyOnTablespace(
     })
 }
 #[track_caller]
-pub unsafe fn changeDependencyOnTablespace(
-    arg_classId: Oid,
-    arg_objectId: Oid,
-    arg_newTablespaceId: Oid,
-) {
+pub unsafe fn changeDependencyOnTablespace(arg_classId: Oid, arg_objectId: Oid, arg_newTablespaceId: Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn changeDependencyOnTablespace(classId: Oid, objectId: Oid, newTablespaceId: Oid);
@@ -52365,10 +51039,7 @@ pub unsafe fn EstimateReindexStateSpace() -> Size {
     })
 }
 #[track_caller]
-pub unsafe fn SerializeReindexState(
-    arg_maxsize: Size,
-    arg_start_address: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn SerializeReindexState(arg_maxsize: Size, arg_start_address: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn SerializeReindexState(maxsize: Size, start_address: *mut ::std::os::raw::c_char);
@@ -52430,11 +51101,7 @@ pub unsafe fn CatalogTupleInsertWithInfo(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CatalogTupleInsertWithInfo(
-                heapRel: Relation,
-                tup: HeapTuple,
-                indstate: CatalogIndexState,
-            );
+            pub fn CatalogTupleInsertWithInfo(heapRel: Relation, tup: HeapTuple, indstate: CatalogIndexState);
         }
         CatalogTupleInsertWithInfo(arg_heapRel, arg_tup, arg_indstate)
     })
@@ -52551,13 +51218,7 @@ pub unsafe fn RangeVarGetRelidExtended(
                 callback_arg: *mut ::std::os::raw::c_void,
             ) -> Oid;
         }
-        RangeVarGetRelidExtended(
-            arg_relation,
-            arg_lockmode,
-            arg_flags,
-            arg_callback,
-            arg_callback_arg,
-        )
+        RangeVarGetRelidExtended(arg_relation, arg_lockmode, arg_flags, arg_callback, arg_callback_arg)
     })
 }
 #[track_caller]
@@ -52583,11 +51244,7 @@ pub unsafe fn RangeVarGetAndCheckCreationNamespace(
                 existing_relation_id: *mut Oid,
             ) -> Oid;
         }
-        RangeVarGetAndCheckCreationNamespace(
-            arg_newRelation,
-            arg_lockmode,
-            arg_existing_relation_id,
-        )
+        RangeVarGetAndCheckCreationNamespace(arg_newRelation, arg_lockmode, arg_existing_relation_id)
     })
 }
 #[track_caller]
@@ -52627,16 +51284,10 @@ pub unsafe fn TypenameGetTypid(arg_typname: *const ::std::os::raw::c_char) -> Oi
     })
 }
 #[track_caller]
-pub unsafe fn TypenameGetTypidExtended(
-    arg_typname: *const ::std::os::raw::c_char,
-    arg_temp_ok: bool,
-) -> Oid {
+pub unsafe fn TypenameGetTypidExtended(arg_typname: *const ::std::os::raw::c_char, arg_temp_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn TypenameGetTypidExtended(
-                typname: *const ::std::os::raw::c_char,
-                temp_ok: bool,
-            ) -> Oid;
+            pub fn TypenameGetTypidExtended(typname: *const ::std::os::raw::c_char, temp_ok: bool) -> Oid;
         }
         TypenameGetTypidExtended(arg_typname, arg_temp_ok)
     })
@@ -52725,10 +51376,7 @@ pub unsafe fn OperatorIsVisible(arg_oprid: Oid) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn OpclassnameGetOpcid(
-    arg_amid: Oid,
-    arg_opcname: *const ::std::os::raw::c_char,
-) -> Oid {
+pub unsafe fn OpclassnameGetOpcid(arg_amid: Oid, arg_opcname: *const ::std::os::raw::c_char) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn OpclassnameGetOpcid(amid: Oid, opcname: *const ::std::os::raw::c_char) -> Oid;
@@ -52746,10 +51394,7 @@ pub unsafe fn OpclassIsVisible(arg_opcid: Oid) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn OpfamilynameGetOpfid(
-    arg_amid: Oid,
-    arg_opfname: *const ::std::os::raw::c_char,
-) -> Oid {
+pub unsafe fn OpfamilynameGetOpfid(arg_amid: Oid, arg_opfname: *const ::std::os::raw::c_char) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn OpfamilynameGetOpfid(amid: Oid, opfname: *const ::std::os::raw::c_char) -> Oid;
@@ -52925,25 +51570,16 @@ pub unsafe fn LookupExplicitNamespace(
 ) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn LookupExplicitNamespace(
-                nspname: *const ::std::os::raw::c_char,
-                missing_ok: bool,
-            ) -> Oid;
+            pub fn LookupExplicitNamespace(nspname: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         LookupExplicitNamespace(arg_nspname, arg_missing_ok)
     })
 }
 #[track_caller]
-pub unsafe fn get_namespace_oid(
-    arg_nspname: *const ::std::os::raw::c_char,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_namespace_oid(arg_nspname: *const ::std::os::raw::c_char, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_namespace_oid(
-                nspname: *const ::std::os::raw::c_char,
-                missing_ok: bool,
-            ) -> Oid;
+            pub fn get_namespace_oid(nspname: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         get_namespace_oid(arg_nspname, arg_missing_ok)
     })
@@ -53090,10 +51726,7 @@ pub unsafe fn GetTempToastNamespace() -> Oid {
     })
 }
 #[track_caller]
-pub unsafe fn GetTempNamespaceState(
-    arg_tempNamespaceId: *mut Oid,
-    arg_tempToastNamespaceId: *mut Oid,
-) {
+pub unsafe fn GetTempNamespaceState(arg_tempNamespaceId: *mut Oid, arg_tempToastNamespaceId: *mut Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn GetTempNamespaceState(tempNamespaceId: *mut Oid, tempToastNamespaceId: *mut Oid);
@@ -53132,8 +51765,7 @@ pub unsafe fn GetOverrideSearchPath(arg_context: MemoryContext) -> *mut Override
 pub unsafe fn CopyOverrideSearchPath(arg_path: *mut OverrideSearchPath) -> *mut OverrideSearchPath {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CopyOverrideSearchPath(path: *mut OverrideSearchPath)
-                -> *mut OverrideSearchPath;
+            pub fn CopyOverrideSearchPath(path: *mut OverrideSearchPath) -> *mut OverrideSearchPath;
         }
         CopyOverrideSearchPath(arg_path)
     })
@@ -53702,11 +52334,8 @@ pub unsafe fn NamespaceCreate(
 ) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn NamespaceCreate(
-                nspName: *const ::std::os::raw::c_char,
-                ownerId: Oid,
-                isTemp: bool,
-            ) -> Oid;
+            pub fn NamespaceCreate(nspName: *const ::std::os::raw::c_char, ownerId: Oid, isTemp: bool)
+                -> Oid;
         }
         NamespaceCreate(arg_nspName, arg_ownerId, arg_isTemp)
     })
@@ -54042,25 +52671,16 @@ pub unsafe fn CreateSharedComments(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CreateSharedComments(
-                oid: Oid,
-                classoid: Oid,
-                comment: *const ::std::os::raw::c_char,
-            );
+            pub fn CreateSharedComments(oid: Oid, classoid: Oid, comment: *const ::std::os::raw::c_char);
         }
         CreateSharedComments(arg_oid, arg_classoid, arg_comment)
     })
 }
 #[track_caller]
-pub unsafe fn GetComment(
-    arg_oid: Oid,
-    arg_classoid: Oid,
-    arg_subid: int32,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn GetComment(arg_oid: Oid, arg_classoid: Oid, arg_subid: int32) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetComment(oid: Oid, classoid: Oid, subid: int32)
-                -> *mut ::std::os::raw::c_char;
+            pub fn GetComment(oid: Oid, classoid: Oid, subid: int32) -> *mut ::std::os::raw::c_char;
         }
         GetComment(arg_oid, arg_classoid, arg_subid)
     })
@@ -54140,10 +52760,7 @@ pub unsafe fn AlterDatabaseOwner(
     })
 }
 #[track_caller]
-pub unsafe fn get_database_oid(
-    arg_dbname: *const ::std::os::raw::c_char,
-    arg_missingok: bool,
-) -> Oid {
+pub unsafe fn get_database_oid(arg_dbname: *const ::std::os::raw::c_char, arg_missingok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_database_oid(dbname: *const ::std::os::raw::c_char, missingok: bool) -> Oid;
@@ -54335,12 +52952,7 @@ pub unsafe fn CheckIndexCompatible(
                 exclusionOpNames: *mut List,
             ) -> bool;
         }
-        CheckIndexCompatible(
-            arg_oldId,
-            arg_accessMethodName,
-            arg_attributeList,
-            arg_exclusionOpNames,
-        )
+        CheckIndexCompatible(arg_oldId, arg_accessMethodName, arg_attributeList, arg_exclusionOpNames)
     })
 }
 #[track_caller]
@@ -54378,10 +52990,7 @@ pub unsafe fn CreateFunction(
 ) -> ObjectAddress {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CreateFunction(
-                pstate: *mut ParseState,
-                stmt: *mut CreateFunctionStmt,
-            ) -> ObjectAddress;
+            pub fn CreateFunction(pstate: *mut ParseState, stmt: *mut CreateFunctionStmt) -> ObjectAddress;
         }
         CreateFunction(arg_pstate, arg_stmt)
     })
@@ -54405,33 +53014,19 @@ pub unsafe fn SetFunctionReturnType(arg_funcOid: Oid, arg_newRetType: Oid) {
     })
 }
 #[track_caller]
-pub unsafe fn SetFunctionArgType(
-    arg_funcOid: Oid,
-    arg_argIndex: ::std::os::raw::c_int,
-    arg_newArgType: Oid,
-) {
+pub unsafe fn SetFunctionArgType(arg_funcOid: Oid, arg_argIndex: ::std::os::raw::c_int, arg_newArgType: Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SetFunctionArgType(
-                funcOid: Oid,
-                argIndex: ::std::os::raw::c_int,
-                newArgType: Oid,
-            );
+            pub fn SetFunctionArgType(funcOid: Oid, argIndex: ::std::os::raw::c_int, newArgType: Oid);
         }
         SetFunctionArgType(arg_funcOid, arg_argIndex, arg_newArgType)
     })
 }
 #[track_caller]
-pub unsafe fn AlterFunction(
-    arg_pstate: *mut ParseState,
-    arg_stmt: *mut AlterFunctionStmt,
-) -> ObjectAddress {
+pub unsafe fn AlterFunction(arg_pstate: *mut ParseState, arg_stmt: *mut AlterFunctionStmt) -> ObjectAddress {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn AlterFunction(
-                pstate: *mut ParseState,
-                stmt: *mut AlterFunctionStmt,
-            ) -> ObjectAddress;
+            pub fn AlterFunction(pstate: *mut ParseState, stmt: *mut AlterFunctionStmt) -> ObjectAddress;
         }
         AlterFunction(arg_pstate, arg_stmt)
     })
@@ -54529,11 +53124,7 @@ pub unsafe fn CallStmtResultDesc(arg_stmt: *mut CallStmt) -> TupleDesc {
     })
 }
 #[track_caller]
-pub unsafe fn get_cast_oid(
-    arg_sourcetypeid: Oid,
-    arg_targettypeid: Oid,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_cast_oid(arg_sourcetypeid: Oid, arg_targettypeid: Oid, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_cast_oid(sourcetypeid: Oid, targettypeid: Oid, missing_ok: bool) -> Oid;
@@ -54788,11 +53379,7 @@ pub unsafe fn IsThereOpFamilyInNamespace(
     })
 }
 #[track_caller]
-pub unsafe fn get_opclass_oid(
-    arg_amID: Oid,
-    arg_opclassname: *mut List,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_opclass_oid(arg_amID: Oid, arg_opclassname: *mut List, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_opclass_oid(amID: Oid, opclassname: *mut List, missing_ok: bool) -> Oid;
@@ -54801,11 +53388,7 @@ pub unsafe fn get_opclass_oid(
     })
 }
 #[track_caller]
-pub unsafe fn get_opfamily_oid(
-    arg_amID: Oid,
-    arg_opfamilyname: *mut List,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_opfamily_oid(arg_amID: Oid, arg_opfamilyname: *mut List, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_opfamily_oid(amID: Oid, opfamilyname: *mut List, missing_ok: bool) -> Oid;
@@ -55123,27 +53706,19 @@ pub unsafe fn RemoveAccessMethodById(arg_amOid: Oid) {
     })
 }
 #[track_caller]
-pub unsafe fn get_index_am_oid(
-    arg_amname: *const ::std::os::raw::c_char,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_index_am_oid(arg_amname: *const ::std::os::raw::c_char, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_index_am_oid(amname: *const ::std::os::raw::c_char, missing_ok: bool)
-                -> Oid;
+            pub fn get_index_am_oid(amname: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         get_index_am_oid(arg_amname, arg_missing_ok)
     })
 }
 #[track_caller]
-pub unsafe fn get_table_am_oid(
-    arg_amname: *const ::std::os::raw::c_char,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_table_am_oid(arg_amname: *const ::std::os::raw::c_char, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_table_am_oid(amname: *const ::std::os::raw::c_char, missing_ok: bool)
-                -> Oid;
+            pub fn get_table_am_oid(amname: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         get_table_am_oid(arg_amname, arg_missing_ok)
     })
@@ -55490,10 +54065,7 @@ pub unsafe fn get_event_trigger_oid(
 ) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_event_trigger_oid(
-                trigname: *const ::std::os::raw::c_char,
-                missing_ok: bool,
-            ) -> Oid;
+            pub fn get_event_trigger_oid(trigname: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         get_event_trigger_oid(arg_trigname, arg_missing_ok)
     })
@@ -55628,11 +54200,7 @@ pub unsafe fn EventTriggerSQLDropAddObject(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn EventTriggerSQLDropAddObject(
-                object: *const ObjectAddress,
-                original: bool,
-                normal: bool,
-            );
+            pub fn EventTriggerSQLDropAddObject(object: *const ObjectAddress, original: bool, normal: bool);
         }
         EventTriggerSQLDropAddObject(arg_object, arg_original, arg_normal)
     })
@@ -55691,10 +54259,7 @@ pub unsafe fn EventTriggerAlterTableRelid(arg_objectId: Oid) {
     })
 }
 #[track_caller]
-pub unsafe fn EventTriggerCollectAlterTableSubcmd(
-    arg_subcmd: *mut Node,
-    arg_address: ObjectAddress,
-) {
+pub unsafe fn EventTriggerCollectAlterTableSubcmd(arg_subcmd: *mut Node, arg_address: ObjectAddress) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn EventTriggerCollectAlterTableSubcmd(subcmd: *mut Node, address: ObjectAddress);
@@ -55900,14 +54465,7 @@ pub unsafe fn ExplainOneUtility(
                 queryEnv: *mut QueryEnvironment,
             );
         }
-        ExplainOneUtility(
-            arg_utilityStmt,
-            arg_into,
-            arg_es,
-            arg_queryString,
-            arg_params,
-            arg_queryEnv,
-        )
+        ExplainOneUtility(arg_utilityStmt, arg_into, arg_es, arg_queryString, arg_params, arg_queryEnv)
     })
 }
 #[track_caller]
@@ -56199,16 +54757,10 @@ pub unsafe fn PLTemplateExists(arg_languageName: *const ::std::os::raw::c_char) 
     })
 }
 #[track_caller]
-pub unsafe fn get_language_oid(
-    arg_langname: *const ::std::os::raw::c_char,
-    arg_missing_ok: bool,
-) -> Oid {
+pub unsafe fn get_language_oid(arg_langname: *const ::std::os::raw::c_char, arg_missing_ok: bool) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_language_oid(
-                langname: *const ::std::os::raw::c_char,
-                missing_ok: bool,
-            ) -> Oid;
+            pub fn get_language_oid(langname: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         get_language_oid(arg_langname, arg_missing_ok)
     })
@@ -56244,10 +54796,7 @@ pub unsafe fn RemoveRelations(arg_drop: *mut DropStmt) {
     })
 }
 #[track_caller]
-pub unsafe fn AlterTableLookupRelation(
-    arg_stmt: *mut AlterTableStmt,
-    arg_lockmode: LOCKMODE,
-) -> Oid {
+pub unsafe fn AlterTableLookupRelation(arg_stmt: *mut AlterTableStmt, arg_lockmode: LOCKMODE) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn AlterTableLookupRelation(stmt: *mut AlterTableStmt, lockmode: LOCKMODE) -> Oid;
@@ -56282,12 +54831,7 @@ pub unsafe fn ATExecChangeOwner(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ATExecChangeOwner(
-                relationOid: Oid,
-                newOwnerId: Oid,
-                recursing: bool,
-                lockmode: LOCKMODE,
-            );
+            pub fn ATExecChangeOwner(relationOid: Oid, newOwnerId: Oid, recursing: bool, lockmode: LOCKMODE);
         }
         ATExecChangeOwner(arg_relationOid, arg_newOwnerId, arg_recursing, arg_lockmode)
     })
@@ -56410,13 +54954,7 @@ pub unsafe fn ExecuteTruncateGuts(
                 restart_seqs: bool,
             );
         }
-        ExecuteTruncateGuts(
-            arg_explicit_rels,
-            arg_relids,
-            arg_relids_logged,
-            arg_behavior,
-            arg_restart_seqs,
-        )
+        ExecuteTruncateGuts(arg_explicit_rels, arg_relids, arg_relids_logged, arg_behavior, arg_restart_seqs)
     })
 }
 #[track_caller]
@@ -56616,10 +55154,8 @@ pub unsafe fn PartConstraintImpliedByRelConstraint(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn PartConstraintImpliedByRelConstraint(
-                scanrel: Relation,
-                partConstraint: *mut List,
-            ) -> bool;
+            pub fn PartConstraintImpliedByRelConstraint(scanrel: Relation, partConstraint: *mut List)
+                -> bool;
         }
         PartConstraintImpliedByRelConstraint(arg_scanrel, arg_partConstraint)
     })
@@ -56786,11 +55322,7 @@ pub unsafe fn get_trigger_oid(
 ) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_trigger_oid(
-                relid: Oid,
-                name: *const ::std::os::raw::c_char,
-                missing_ok: bool,
-            ) -> Oid;
+            pub fn get_trigger_oid(relid: Oid, name: *const ::std::os::raw::c_char, missing_ok: bool) -> Oid;
         }
         get_trigger_oid(arg_relid, arg_name, arg_missing_ok)
     })
@@ -56973,13 +55505,7 @@ pub unsafe fn ExecARInsertTriggers(
                 transition_capture: *mut TransitionCaptureState,
             );
         }
-        ExecARInsertTriggers(
-            arg_estate,
-            arg_relinfo,
-            arg_slot,
-            arg_recheckIndexes,
-            arg_transition_capture,
-        )
+        ExecARInsertTriggers(arg_estate, arg_relinfo, arg_slot, arg_recheckIndexes, arg_transition_capture)
     })
 }
 #[track_caller]
@@ -57073,13 +55599,7 @@ pub unsafe fn ExecARDeleteTriggers(
                 transition_capture: *mut TransitionCaptureState,
             );
         }
-        ExecARDeleteTriggers(
-            arg_estate,
-            arg_relinfo,
-            arg_tupleid,
-            arg_fdw_trigtuple,
-            arg_transition_capture,
-        )
+        ExecARDeleteTriggers(arg_estate, arg_relinfo, arg_tupleid, arg_fdw_trigtuple, arg_transition_capture)
     })
 }
 #[track_caller]
@@ -57145,14 +55665,7 @@ pub unsafe fn ExecBRUpdateTriggers(
                 slot: *mut TupleTableSlot,
             ) -> bool;
         }
-        ExecBRUpdateTriggers(
-            arg_estate,
-            arg_epqstate,
-            arg_relinfo,
-            arg_tupleid,
-            arg_fdw_trigtuple,
-            arg_slot,
-        )
+        ExecBRUpdateTriggers(arg_estate, arg_epqstate, arg_relinfo, arg_tupleid, arg_fdw_trigtuple, arg_slot)
     })
 }
 #[track_caller]
@@ -57352,11 +55865,7 @@ pub unsafe fn RI_Initial_Check(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RI_Initial_Check(
-                trigger: *mut Trigger,
-                fk_rel: Relation,
-                pk_rel: Relation,
-            ) -> bool;
+            pub fn RI_Initial_Check(trigger: *mut Trigger, fk_rel: Relation, pk_rel: Relation) -> bool;
         }
         RI_Initial_Check(arg_trigger, arg_fk_rel, arg_pk_rel)
     })
@@ -57369,11 +55878,7 @@ pub unsafe fn RI_PartitionRemove_Check(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RI_PartitionRemove_Check(
-                trigger: *mut Trigger,
-                fk_rel: Relation,
-                pk_rel: Relation,
-            );
+            pub fn RI_PartitionRemove_Check(trigger: *mut Trigger, fk_rel: Relation, pk_rel: Relation);
         }
         RI_PartitionRemove_Check(arg_trigger, arg_fk_rel, arg_pk_rel)
     })
@@ -57415,11 +55920,7 @@ pub struct FormData_pg_statistic {
 pub type Form_pg_statistic = *mut FormData_pg_statistic;
 pub type VacAttrStatsP = *mut VacAttrStats;
 pub type AnalyzeAttrFetchFunc = ::std::option::Option<
-    unsafe extern "C" fn(
-        stats: VacAttrStatsP,
-        rownum: ::std::os::raw::c_int,
-        isNull: *mut bool,
-    ) -> Datum,
+    unsafe extern "C" fn(stats: VacAttrStatsP, rownum: ::std::os::raw::c_int, isNull: *mut bool) -> Datum,
 >;
 pub type AnalyzeAttrComputeStatsFunc = ::std::option::Option<
     unsafe extern "C" fn(
@@ -57523,11 +56024,7 @@ extern "C" {
     pub static mut vacuum_multixact_freeze_table_age: ::std::os::raw::c_int;
 }
 #[track_caller]
-pub unsafe fn ExecVacuum(
-    arg_pstate: *mut ParseState,
-    arg_vacstmt: *mut VacuumStmt,
-    arg_isTopLevel: bool,
-) {
+pub unsafe fn ExecVacuum(arg_pstate: *mut ParseState, arg_vacstmt: *mut VacuumStmt, arg_isTopLevel: bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn ExecVacuum(pstate: *mut ParseState, vacstmt: *mut VacuumStmt, isTopLevel: bool);
@@ -57763,14 +56260,7 @@ pub unsafe fn analyze_rel(
                 bstrategy: BufferAccessStrategy,
             );
         }
-        analyze_rel(
-            arg_relid,
-            arg_relation,
-            arg_params,
-            arg_va_cols,
-            arg_in_outer_xact,
-            arg_bstrategy,
-        )
+        analyze_rel(arg_relid, arg_relation, arg_params, arg_va_cols, arg_in_outer_xact, arg_bstrategy)
     })
 }
 #[track_caller]
@@ -57801,11 +56291,7 @@ pub unsafe fn anl_init_selection_state(arg_n: ::std::os::raw::c_int) -> f64 {
     })
 }
 #[track_caller]
-pub unsafe fn anl_get_next_S(
-    arg_t: f64,
-    arg_n: ::std::os::raw::c_int,
-    arg_stateptr: *mut f64,
-) -> f64 {
+pub unsafe fn anl_get_next_S(arg_t: f64, arg_n: ::std::os::raw::c_int, arg_stateptr: *mut f64) -> f64 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn anl_get_next_S(t: f64, n: ::std::os::raw::c_int, stateptr: *mut f64) -> f64;
@@ -58023,10 +56509,7 @@ pub unsafe fn CachedPlanSetParentContext(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CachedPlanSetParentContext(
-                plansource: *mut CachedPlanSource,
-                newcontext: MemoryContext,
-            );
+            pub fn CachedPlanSetParentContext(plansource: *mut CachedPlanSource, newcontext: MemoryContext);
         }
         CachedPlanSetParentContext(arg_plansource, arg_newcontext)
     })
@@ -58504,14 +56987,7 @@ pub unsafe fn PortalDefineQuery(
                 cplan: *mut CachedPlan,
             );
         }
-        PortalDefineQuery(
-            arg_portal,
-            arg_prepStmtName,
-            arg_sourceText,
-            arg_commandTag,
-            arg_stmts,
-            arg_cplan,
-        )
+        PortalDefineQuery(arg_portal, arg_prepStmtName, arg_sourceText, arg_commandTag, arg_stmts, arg_cplan)
     })
 }
 #[track_caller]
@@ -58909,14 +57385,10 @@ pub unsafe fn SPI_plan_is_valid(arg_plan: SPIPlanPtr) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn SPI_result_code_string(
-    arg_code: ::std::os::raw::c_int,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn SPI_result_code_string(arg_code: ::std::os::raw::c_int) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SPI_result_code_string(
-                code: ::std::os::raw::c_int,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn SPI_result_code_string(code: ::std::os::raw::c_int) -> *const ::std::os::raw::c_char;
         }
         SPI_result_code_string(arg_code)
     })
@@ -59129,11 +57601,7 @@ pub unsafe fn SPI_datumTransfer(
 ) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SPI_datumTransfer(
-                value: Datum,
-                typByVal: bool,
-                typLen: ::std::os::raw::c_int,
-            ) -> Datum;
+            pub fn SPI_datumTransfer(value: Datum, typByVal: bool, typLen: ::std::os::raw::c_int) -> Datum;
         }
         SPI_datumTransfer(arg_value, arg_typByVal, arg_typLen)
     })
@@ -59242,11 +57710,7 @@ pub unsafe fn SPI_cursor_find(arg_name: *const ::std::os::raw::c_char) -> Portal
     })
 }
 #[track_caller]
-pub unsafe fn SPI_cursor_fetch(
-    arg_portal: Portal,
-    arg_forward: bool,
-    arg_count: ::std::os::raw::c_long,
-) {
+pub unsafe fn SPI_cursor_fetch(arg_portal: Portal, arg_forward: bool, arg_count: ::std::os::raw::c_long) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn SPI_cursor_fetch(portal: Portal, forward: bool, count: ::std::os::raw::c_long);
@@ -59255,11 +57719,7 @@ pub unsafe fn SPI_cursor_fetch(
     })
 }
 #[track_caller]
-pub unsafe fn SPI_cursor_move(
-    arg_portal: Portal,
-    arg_forward: bool,
-    arg_count: ::std::os::raw::c_long,
-) {
+pub unsafe fn SPI_cursor_move(arg_portal: Portal, arg_forward: bool, arg_count: ::std::os::raw::c_long) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn SPI_cursor_move(portal: Portal, forward: bool, count: ::std::os::raw::c_long);
@@ -59320,14 +57780,10 @@ pub unsafe fn SPI_register_relation(arg_enr: EphemeralNamedRelation) -> ::std::o
     })
 }
 #[track_caller]
-pub unsafe fn SPI_unregister_relation(
-    arg_name: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn SPI_unregister_relation(arg_name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SPI_unregister_relation(
-                name: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn SPI_unregister_relation(name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         SPI_unregister_relation(arg_name)
     })
@@ -59515,14 +57971,10 @@ pub unsafe fn WaitForBackgroundWorkerStartup(
     })
 }
 #[track_caller]
-pub unsafe fn WaitForBackgroundWorkerShutdown(
-    arg_arg1: *mut BackgroundWorkerHandle,
-) -> BgwHandleStatus {
+pub unsafe fn WaitForBackgroundWorkerShutdown(arg_arg1: *mut BackgroundWorkerHandle) -> BgwHandleStatus {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn WaitForBackgroundWorkerShutdown(
-                arg1: *mut BackgroundWorkerHandle,
-            ) -> BgwHandleStatus;
+            pub fn WaitForBackgroundWorkerShutdown(arg1: *mut BackgroundWorkerHandle) -> BgwHandleStatus;
         }
         WaitForBackgroundWorkerShutdown(arg_arg1)
     })
@@ -59566,18 +58018,10 @@ pub unsafe fn BackgroundWorkerInitializeConnection(
     })
 }
 #[track_caller]
-pub unsafe fn BackgroundWorkerInitializeConnectionByOid(
-    arg_dboid: Oid,
-    arg_useroid: Oid,
-    arg_flags: uint32,
-) {
+pub unsafe fn BackgroundWorkerInitializeConnectionByOid(arg_dboid: Oid, arg_useroid: Oid, arg_flags: uint32) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn BackgroundWorkerInitializeConnectionByOid(
-                dboid: Oid,
-                useroid: Oid,
-                flags: uint32,
-            );
+            pub fn BackgroundWorkerInitializeConnectionByOid(dboid: Oid, useroid: Oid, flags: uint32);
         }
         BackgroundWorkerInitializeConnectionByOid(arg_dboid, arg_useroid, arg_flags)
     })
@@ -59630,10 +58074,7 @@ pub const shm_mq_result_SHM_MQ_WOULD_BLOCK: shm_mq_result = 1;
 pub const shm_mq_result_SHM_MQ_DETACHED: shm_mq_result = 2;
 pub type shm_mq_result = ::std::os::raw::c_uint;
 #[track_caller]
-pub unsafe fn shm_mq_create(
-    arg_address: *mut ::std::os::raw::c_void,
-    arg_size: Size,
-) -> *mut shm_mq {
+pub unsafe fn shm_mq_create(arg_address: *mut ::std::os::raw::c_void, arg_size: Size) -> *mut shm_mq {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn shm_mq_create(address: *mut ::std::os::raw::c_void, size: Size) -> *mut shm_mq;
@@ -59695,10 +58136,7 @@ pub unsafe fn shm_mq_attach(
     })
 }
 #[track_caller]
-pub unsafe fn shm_mq_set_handle(
-    arg_arg1: *mut shm_mq_handle,
-    arg_arg2: *mut BackgroundWorkerHandle,
-) {
+pub unsafe fn shm_mq_set_handle(arg_arg1: *mut shm_mq_handle, arg_arg2: *mut BackgroundWorkerHandle) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn shm_mq_set_handle(arg1: *mut shm_mq_handle, arg2: *mut BackgroundWorkerHandle);
@@ -59816,29 +58254,19 @@ pub unsafe fn shm_toc_create(
     })
 }
 #[track_caller]
-pub unsafe fn shm_toc_attach(
-    arg_magic: uint64,
-    arg_address: *mut ::std::os::raw::c_void,
-) -> *mut shm_toc {
+pub unsafe fn shm_toc_attach(arg_magic: uint64, arg_address: *mut ::std::os::raw::c_void) -> *mut shm_toc {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn shm_toc_attach(
-                magic: uint64,
-                address: *mut ::std::os::raw::c_void,
-            ) -> *mut shm_toc;
+            pub fn shm_toc_attach(magic: uint64, address: *mut ::std::os::raw::c_void) -> *mut shm_toc;
         }
         shm_toc_attach(arg_magic, arg_address)
     })
 }
 #[track_caller]
-pub unsafe fn shm_toc_allocate(
-    arg_toc: *mut shm_toc,
-    arg_nbytes: Size,
-) -> *mut ::std::os::raw::c_void {
+pub unsafe fn shm_toc_allocate(arg_toc: *mut shm_toc, arg_nbytes: Size) -> *mut ::std::os::raw::c_void {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn shm_toc_allocate(toc: *mut shm_toc, nbytes: Size)
-                -> *mut ::std::os::raw::c_void;
+            pub fn shm_toc_allocate(toc: *mut shm_toc, nbytes: Size) -> *mut ::std::os::raw::c_void;
         }
         shm_toc_allocate(arg_toc, arg_nbytes)
     })
@@ -59860,11 +58288,7 @@ pub unsafe fn shm_toc_insert(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn shm_toc_insert(
-                toc: *mut shm_toc,
-                key: uint64,
-                address: *mut ::std::os::raw::c_void,
-            );
+            pub fn shm_toc_insert(toc: *mut shm_toc, key: uint64, address: *mut ::std::os::raw::c_void);
         }
         shm_toc_insert(arg_toc, arg_key, arg_address)
     })
@@ -61384,8 +59808,7 @@ impl Default for JoinPathExtraData {
 }
 pub const PartitionwiseAggregateType_PARTITIONWISE_AGGREGATE_NONE: PartitionwiseAggregateType = 0;
 pub const PartitionwiseAggregateType_PARTITIONWISE_AGGREGATE_FULL: PartitionwiseAggregateType = 1;
-pub const PartitionwiseAggregateType_PARTITIONWISE_AGGREGATE_PARTIAL: PartitionwiseAggregateType =
-    2;
+pub const PartitionwiseAggregateType_PARTITIONWISE_AGGREGATE_PARTIAL: PartitionwiseAggregateType = 2;
 pub type PartitionwiseAggregateType = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -61449,9 +59872,8 @@ pub type GetForeignPlan_function = ::std::option::Option<
         outer_plan: *mut Plan,
     ) -> *mut ForeignScan,
 >;
-pub type BeginForeignScan_function = ::std::option::Option<
-    unsafe extern "C" fn(node: *mut ForeignScanState, eflags: ::std::os::raw::c_int),
->;
+pub type BeginForeignScan_function =
+    ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState, eflags: ::std::os::raw::c_int)>;
 pub type IterateForeignScan_function =
     ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState) -> *mut TupleTableSlot>;
 pub type RecheckForeignScan_function = ::std::option::Option<
@@ -61459,8 +59881,7 @@ pub type RecheckForeignScan_function = ::std::option::Option<
 >;
 pub type ReScanForeignScan_function =
     ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState)>;
-pub type EndForeignScan_function =
-    ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState)>;
+pub type EndForeignScan_function = ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState)>;
 pub type GetForeignJoinPaths_function = ::std::option::Option<
     unsafe extern "C" fn(
         root: *mut PlannerInfo,
@@ -61481,11 +59902,7 @@ pub type GetForeignUpperPaths_function = ::std::option::Option<
     ),
 >;
 pub type AddForeignUpdateTargets_function = ::std::option::Option<
-    unsafe extern "C" fn(
-        parsetree: *mut Query,
-        target_rte: *mut RangeTblEntry,
-        target_relation: Relation,
-    ),
+    unsafe extern "C" fn(parsetree: *mut Query, target_rte: *mut RangeTblEntry, target_relation: Relation),
 >;
 pub type PlanForeignModify_function = ::std::option::Option<
     unsafe extern "C" fn(
@@ -61530,9 +59947,8 @@ pub type ExecForeignDelete_function = ::std::option::Option<
 >;
 pub type EndForeignModify_function =
     ::std::option::Option<unsafe extern "C" fn(estate: *mut EState, rinfo: *mut ResultRelInfo)>;
-pub type BeginForeignInsert_function = ::std::option::Option<
-    unsafe extern "C" fn(mtstate: *mut ModifyTableState, rinfo: *mut ResultRelInfo),
->;
+pub type BeginForeignInsert_function =
+    ::std::option::Option<unsafe extern "C" fn(mtstate: *mut ModifyTableState, rinfo: *mut ResultRelInfo)>;
 pub type EndForeignInsert_function =
     ::std::option::Option<unsafe extern "C" fn(estate: *mut EState, rinfo: *mut ResultRelInfo)>;
 pub type IsForeignRelUpdatable_function =
@@ -61545,13 +59961,11 @@ pub type PlanDirectModify_function = ::std::option::Option<
         subplan_index: ::std::os::raw::c_int,
     ) -> bool,
 >;
-pub type BeginDirectModify_function = ::std::option::Option<
-    unsafe extern "C" fn(node: *mut ForeignScanState, eflags: ::std::os::raw::c_int),
->;
+pub type BeginDirectModify_function =
+    ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState, eflags: ::std::os::raw::c_int)>;
 pub type IterateDirectModify_function =
     ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState) -> *mut TupleTableSlot>;
-pub type EndDirectModify_function =
-    ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState)>;
+pub type EndDirectModify_function = ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState)>;
 pub type GetForeignRowMarkType_function = ::std::option::Option<
     unsafe extern "C" fn(rte: *mut RangeTblEntry, strength: LockClauseStrength) -> RowMarkType,
 >;
@@ -61624,11 +60038,7 @@ pub type InitializeWorkerForeignScan_function = ::std::option::Option<
 pub type ShutdownForeignScan_function =
     ::std::option::Option<unsafe extern "C" fn(node: *mut ForeignScanState)>;
 pub type IsForeignScanParallelSafe_function = ::std::option::Option<
-    unsafe extern "C" fn(
-        root: *mut PlannerInfo,
-        rel: *mut RelOptInfo,
-        rte: *mut RangeTblEntry,
-    ) -> bool,
+    unsafe extern "C" fn(root: *mut PlannerInfo, rel: *mut RelOptInfo, rte: *mut RangeTblEntry) -> bool,
 >;
 pub type ReparameterizeForeignPathByChild_function = ::std::option::Option<
     unsafe extern "C" fn(
@@ -61726,10 +60136,7 @@ pub unsafe fn GetFdwRoutineByRelId(arg_relid: Oid) -> *mut FdwRoutine {
     })
 }
 #[track_caller]
-pub unsafe fn GetFdwRoutineForRelation(
-    arg_relation: Relation,
-    arg_makecopy: bool,
-) -> *mut FdwRoutine {
+pub unsafe fn GetFdwRoutineForRelation(arg_relation: Relation, arg_makecopy: bool) -> *mut FdwRoutine {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn GetFdwRoutineForRelation(relation: Relation, makecopy: bool) -> *mut FdwRoutine;
@@ -61889,16 +60296,10 @@ pub unsafe fn GetForeignDataWrapper(arg_fdwid: Oid) -> *mut ForeignDataWrapper {
     })
 }
 #[track_caller]
-pub unsafe fn GetForeignDataWrapperExtended(
-    arg_fdwid: Oid,
-    arg_flags: bits16,
-) -> *mut ForeignDataWrapper {
+pub unsafe fn GetForeignDataWrapperExtended(arg_fdwid: Oid, arg_flags: bits16) -> *mut ForeignDataWrapper {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn GetForeignDataWrapperExtended(
-                fdwid: Oid,
-                flags: bits16,
-            ) -> *mut ForeignDataWrapper;
+            pub fn GetForeignDataWrapperExtended(fdwid: Oid, flags: bits16) -> *mut ForeignDataWrapper;
         }
         GetForeignDataWrapperExtended(arg_fdwid, arg_flags)
     })
@@ -61958,10 +60359,8 @@ pub unsafe fn get_foreign_server_oid(
 ) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_foreign_server_oid(
-                servername: *const ::std::os::raw::c_char,
-                missing_ok: bool,
-            ) -> Oid;
+            pub fn get_foreign_server_oid(servername: *const ::std::os::raw::c_char, missing_ok: bool)
+                -> Oid;
         }
         get_foreign_server_oid(arg_servername, arg_missing_ok)
     })
@@ -62164,43 +60563,30 @@ pub struct pg_local_to_utf_combined {
     pub utf1: uint32,
     pub utf2: uint32,
 }
-pub type utf_local_conversion_func =
-    ::std::option::Option<unsafe extern "C" fn(code: uint32) -> uint32>;
+pub type utf_local_conversion_func = ::std::option::Option<unsafe extern "C" fn(code: uint32) -> uint32>;
 #[track_caller]
-pub unsafe fn pg_char_to_encoding(
-    arg_name: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn pg_char_to_encoding(arg_name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_char_to_encoding(
-                name: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn pg_char_to_encoding(name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         pg_char_to_encoding(arg_name)
     })
 }
 #[track_caller]
-pub unsafe fn pg_encoding_to_char(
-    arg_encoding: ::std::os::raw::c_int,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn pg_encoding_to_char(arg_encoding: ::std::os::raw::c_int) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_encoding_to_char(
-                encoding: ::std::os::raw::c_int,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn pg_encoding_to_char(encoding: ::std::os::raw::c_int) -> *const ::std::os::raw::c_char;
         }
         pg_encoding_to_char(arg_encoding)
     })
 }
 #[track_caller]
-pub unsafe fn pg_valid_server_encoding_id(
-    arg_encoding: ::std::os::raw::c_int,
-) -> ::std::os::raw::c_int {
+pub unsafe fn pg_valid_server_encoding_id(arg_encoding: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_valid_server_encoding_id(
-                encoding: ::std::os::raw::c_int,
-            ) -> ::std::os::raw::c_int;
+            pub fn pg_valid_server_encoding_id(encoding: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         pg_valid_server_encoding_id(arg_encoding)
     })
@@ -62529,8 +60915,7 @@ pub unsafe fn pg_mbcharcliplen(
 pub unsafe fn pg_encoding_max_length(arg_encoding: ::std::os::raw::c_int) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_encoding_max_length(encoding: ::std::os::raw::c_int)
-                -> ::std::os::raw::c_int;
+            pub fn pg_encoding_max_length(encoding: ::std::os::raw::c_int) -> ::std::os::raw::c_int;
         }
         pg_encoding_max_length(arg_encoding)
     })
@@ -62644,27 +61029,19 @@ pub unsafe fn GetMessageEncoding() -> ::std::os::raw::c_int {
     })
 }
 #[track_caller]
-pub unsafe fn pg_valid_client_encoding(
-    arg_name: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn pg_valid_client_encoding(arg_name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_valid_client_encoding(
-                name: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn pg_valid_client_encoding(name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         pg_valid_client_encoding(arg_name)
     })
 }
 #[track_caller]
-pub unsafe fn pg_valid_server_encoding(
-    arg_name: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn pg_valid_server_encoding(arg_name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_valid_server_encoding(
-                name: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn pg_valid_server_encoding(name: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         pg_valid_server_encoding(arg_name)
     })
@@ -62839,16 +61216,7 @@ pub unsafe fn UtfToLocal(
                 encoding: ::std::os::raw::c_int,
             );
         }
-        UtfToLocal(
-            arg_utf,
-            arg_len,
-            arg_iso,
-            arg_map,
-            arg_cmap,
-            arg_cmapsize,
-            arg_conv_func,
-            arg_encoding,
-        )
+        UtfToLocal(arg_utf, arg_len, arg_iso, arg_map, arg_cmap, arg_cmapsize, arg_conv_func, arg_encoding)
     })
 }
 #[track_caller]
@@ -62875,16 +61243,7 @@ pub unsafe fn LocalToUtf(
                 encoding: ::std::os::raw::c_int,
             );
         }
-        LocalToUtf(
-            arg_iso,
-            arg_len,
-            arg_utf,
-            arg_map,
-            arg_cmap,
-            arg_cmapsize,
-            arg_conv_func,
-            arg_encoding,
-        )
+        LocalToUtf(arg_iso, arg_len, arg_utf, arg_map, arg_cmap, arg_cmapsize, arg_conv_func, arg_encoding)
     })
 }
 #[track_caller]
@@ -63191,9 +61550,8 @@ pub struct ExtensibleNodeMethods {
     pub nodeEqual: ::std::option::Option<
         unsafe extern "C" fn(a: *const ExtensibleNode, b: *const ExtensibleNode) -> bool,
     >,
-    pub nodeOut: ::std::option::Option<
-        unsafe extern "C" fn(str_: *mut StringInfoData, node: *const ExtensibleNode),
-    >,
+    pub nodeOut:
+        ::std::option::Option<unsafe extern "C" fn(str_: *mut StringInfoData, node: *const ExtensibleNode)>,
     pub nodeRead: ::std::option::Option<unsafe extern "C" fn(node: *mut ExtensibleNode)>,
 }
 impl Default for ExtensibleNodeMethods {
@@ -63281,15 +61639,10 @@ impl Default for CustomScanMethods {
 pub struct CustomExecMethods {
     pub CustomName: *const ::std::os::raw::c_char,
     pub BeginCustomScan: ::std::option::Option<
-        unsafe extern "C" fn(
-            node: *mut CustomScanState,
-            estate: *mut EState,
-            eflags: ::std::os::raw::c_int,
-        ),
+        unsafe extern "C" fn(node: *mut CustomScanState, estate: *mut EState, eflags: ::std::os::raw::c_int),
     >,
-    pub ExecCustomScan: ::std::option::Option<
-        unsafe extern "C" fn(node: *mut CustomScanState) -> *mut TupleTableSlot,
-    >,
+    pub ExecCustomScan:
+        ::std::option::Option<unsafe extern "C" fn(node: *mut CustomScanState) -> *mut TupleTableSlot>,
     pub EndCustomScan: ::std::option::Option<unsafe extern "C" fn(node: *mut CustomScanState)>,
     pub ReScanCustomScan: ::std::option::Option<unsafe extern "C" fn(node: *mut CustomScanState)>,
     pub MarkPosCustomScan: ::std::option::Option<unsafe extern "C" fn(node: *mut CustomScanState)>,
@@ -63320,11 +61673,7 @@ pub struct CustomExecMethods {
     >,
     pub ShutdownCustomScan: ::std::option::Option<unsafe extern "C" fn(node: *mut CustomScanState)>,
     pub ExplainCustomScan: ::std::option::Option<
-        unsafe extern "C" fn(
-            node: *mut CustomScanState,
-            ancestors: *mut List,
-            es: *mut ExplainState,
-        ),
+        unsafe extern "C" fn(node: *mut CustomScanState, ancestors: *mut List, es: *mut ExplainState),
     >,
 }
 impl Default for CustomExecMethods {
@@ -63524,18 +61873,10 @@ pub unsafe fn makeConst(
     })
 }
 #[track_caller]
-pub unsafe fn makeNullConst(
-    arg_consttype: Oid,
-    arg_consttypmod: int32,
-    arg_constcollid: Oid,
-) -> *mut Const {
+pub unsafe fn makeNullConst(arg_consttype: Oid, arg_consttypmod: int32, arg_constcollid: Oid) -> *mut Const {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn makeNullConst(
-                consttype: Oid,
-                consttypmod: int32,
-                constcollid: Oid,
-            ) -> *mut Const;
+            pub fn makeNullConst(consttype: Oid, consttypmod: int32, constcollid: Oid) -> *mut Const;
         }
         makeNullConst(arg_consttype, arg_consttypmod, arg_constcollid)
     })
@@ -63567,16 +61908,10 @@ pub unsafe fn makeBoolExpr(
     })
 }
 #[track_caller]
-pub unsafe fn makeAlias(
-    arg_aliasname: *const ::std::os::raw::c_char,
-    arg_colnames: *mut List,
-) -> *mut Alias {
+pub unsafe fn makeAlias(arg_aliasname: *const ::std::os::raw::c_char, arg_colnames: *mut List) -> *mut Alias {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn makeAlias(
-                aliasname: *const ::std::os::raw::c_char,
-                colnames: *mut List,
-            ) -> *mut Alias;
+            pub fn makeAlias(aliasname: *const ::std::os::raw::c_char, colnames: *mut List) -> *mut Alias;
         }
         makeAlias(arg_aliasname, arg_colnames)
     })
@@ -63685,14 +62020,7 @@ pub unsafe fn makeFuncExpr(
                 fformat: CoercionForm,
             ) -> *mut FuncExpr;
         }
-        makeFuncExpr(
-            arg_funcid,
-            arg_rettype,
-            arg_args,
-            arg_funccollid,
-            arg_inputcollid,
-            arg_fformat,
-        )
+        makeFuncExpr(arg_funcid, arg_rettype, arg_args, arg_funccollid, arg_inputcollid, arg_fformat)
     })
 }
 #[track_caller]
@@ -63907,9 +62235,8 @@ pub unsafe fn makeVacuumRelation(
         makeVacuumRelation(arg_relation, arg_oid, arg_va_cols)
     })
 }
-pub type check_function_callback = ::std::option::Option<
-    unsafe extern "C" fn(func_id: Oid, context: *mut ::std::os::raw::c_void) -> bool,
->;
+pub type check_function_callback =
+    ::std::option::Option<unsafe extern "C" fn(func_id: Oid, context: *mut ::std::os::raw::c_void) -> bool>;
 #[track_caller]
 pub unsafe fn exprType(arg_expr: *const Node) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
@@ -64289,14 +62616,10 @@ pub unsafe fn elog_node_display(
     })
 }
 #[track_caller]
-pub unsafe fn format_node_dump(
-    arg_dump: *const ::std::os::raw::c_char,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn format_node_dump(arg_dump: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn format_node_dump(
-                dump: *const ::std::os::raw::c_char,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn format_node_dump(dump: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char;
         }
         format_node_dump(arg_dump)
     })
@@ -64627,12 +62950,7 @@ pub unsafe fn adjust_appendrel_attrs_multilevel(
                 top_parent_relids: Relids,
             ) -> *mut Node;
         }
-        adjust_appendrel_attrs_multilevel(
-            arg_root,
-            arg_node,
-            arg_child_relids,
-            arg_top_parent_relids,
-        )
+        adjust_appendrel_attrs_multilevel(arg_root, arg_node, arg_child_relids, arg_top_parent_relids)
     })
 }
 #[track_caller]
@@ -64668,12 +62986,7 @@ pub unsafe fn adjust_child_relids_multilevel(
                 top_parent_relids: Relids,
             ) -> Relids;
         }
-        adjust_child_relids_multilevel(
-            arg_root,
-            arg_relids,
-            arg_child_relids,
-            arg_top_parent_relids,
-        )
+        adjust_child_relids_multilevel(arg_root, arg_relids, arg_child_relids, arg_top_parent_relids)
     })
 }
 #[track_caller]
@@ -64747,25 +63060,16 @@ pub unsafe fn contain_window_function(arg_clause: *mut Node) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn find_window_functions(
-    arg_clause: *mut Node,
-    arg_maxWinRef: Index,
-) -> *mut WindowFuncLists {
+pub unsafe fn find_window_functions(arg_clause: *mut Node, arg_maxWinRef: Index) -> *mut WindowFuncLists {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn find_window_functions(
-                clause: *mut Node,
-                maxWinRef: Index,
-            ) -> *mut WindowFuncLists;
+            pub fn find_window_functions(clause: *mut Node, maxWinRef: Index) -> *mut WindowFuncLists;
         }
         find_window_functions(arg_clause, arg_maxWinRef)
     })
 }
 #[track_caller]
-pub unsafe fn expression_returns_set_rows(
-    arg_root: *mut PlannerInfo,
-    arg_clause: *mut Node,
-) -> f64 {
+pub unsafe fn expression_returns_set_rows(arg_root: *mut PlannerInfo, arg_clause: *mut Node) -> f64 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn expression_returns_set_rows(root: *mut PlannerInfo, clause: *mut Node) -> f64;
@@ -64891,16 +63195,10 @@ pub unsafe fn NumRelids(arg_clause: *mut Node) -> ::std::os::raw::c_int {
     })
 }
 #[track_caller]
-pub unsafe fn NumRelids_new(
-    arg_root: *mut PlannerInfo,
-    arg_clause: *mut Node,
-) -> ::std::os::raw::c_int {
+pub unsafe fn NumRelids_new(arg_root: *mut PlannerInfo, arg_clause: *mut Node) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn NumRelids_new(
-                root: *mut PlannerInfo,
-                clause: *mut Node,
-            ) -> ::std::os::raw::c_int;
+            pub fn NumRelids_new(root: *mut PlannerInfo, clause: *mut Node) -> ::std::os::raw::c_int;
         }
         NumRelids_new(arg_root, arg_clause)
     })
@@ -65089,14 +63387,7 @@ pub unsafe fn cost_bitmap_heap_scan(
                 loop_count: f64,
             );
         }
-        cost_bitmap_heap_scan(
-            arg_path,
-            arg_root,
-            arg_baserel,
-            arg_param_info,
-            arg_bitmapqual,
-            arg_loop_count,
-        )
+        cost_bitmap_heap_scan(arg_path, arg_root, arg_baserel, arg_param_info, arg_bitmapqual, arg_loop_count)
     })
 }
 #[track_caller]
@@ -65118,11 +63409,7 @@ pub unsafe fn cost_bitmap_or_node(arg_path: *mut BitmapOrPath, arg_root: *mut Pl
     })
 }
 #[track_caller]
-pub unsafe fn cost_bitmap_tree_node(
-    arg_path: *mut Path,
-    arg_cost: *mut Cost,
-    arg_selec: *mut Selectivity,
-) {
+pub unsafe fn cost_bitmap_tree_node(arg_path: *mut Path, arg_cost: *mut Cost, arg_selec: *mut Selectivity) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn cost_bitmap_tree_node(path: *mut Path, cost: *mut Cost, selec: *mut Selectivity);
@@ -65285,11 +63572,7 @@ pub unsafe fn cost_resultscan(
     })
 }
 #[track_caller]
-pub unsafe fn cost_recursive_union(
-    arg_runion: *mut Path,
-    arg_nrterm: *mut Path,
-    arg_rterm: *mut Path,
-) {
+pub unsafe fn cost_recursive_union(arg_runion: *mut Path, arg_nrterm: *mut Path, arg_rterm: *mut Path) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn cost_recursive_union(runion: *mut Path, nrterm: *mut Path, rterm: *mut Path);
@@ -65730,11 +64013,7 @@ pub unsafe fn cost_gather_merge(
     })
 }
 #[track_caller]
-pub unsafe fn cost_subplan(
-    arg_root: *mut PlannerInfo,
-    arg_subplan: *mut SubPlan,
-    arg_plan: *mut Plan,
-) {
+pub unsafe fn cost_subplan(arg_root: *mut PlannerInfo, arg_subplan: *mut SubPlan, arg_plan: *mut Plan) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn cost_subplan(root: *mut PlannerInfo, subplan: *mut SubPlan, plan: *mut Plan);
@@ -65743,11 +64022,7 @@ pub unsafe fn cost_subplan(
     })
 }
 #[track_caller]
-pub unsafe fn cost_qual_eval(
-    arg_cost: *mut QualCost,
-    arg_quals: *mut List,
-    arg_root: *mut PlannerInfo,
-) {
+pub unsafe fn cost_qual_eval(arg_cost: *mut QualCost, arg_quals: *mut List, arg_root: *mut PlannerInfo) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn cost_qual_eval(cost: *mut QualCost, quals: *mut List, root: *mut PlannerInfo);
@@ -65756,18 +64031,10 @@ pub unsafe fn cost_qual_eval(
     })
 }
 #[track_caller]
-pub unsafe fn cost_qual_eval_node(
-    arg_cost: *mut QualCost,
-    arg_qual: *mut Node,
-    arg_root: *mut PlannerInfo,
-) {
+pub unsafe fn cost_qual_eval_node(arg_cost: *mut QualCost, arg_qual: *mut Node, arg_root: *mut PlannerInfo) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn cost_qual_eval_node(
-                cost: *mut QualCost,
-                qual: *mut Node,
-                root: *mut PlannerInfo,
-            );
+            pub fn cost_qual_eval_node(cost: *mut QualCost, qual: *mut Node, root: *mut PlannerInfo);
         }
         cost_qual_eval_node(arg_cost, arg_qual, arg_root)
     })
@@ -65929,11 +64196,7 @@ pub unsafe fn set_cte_size_estimates(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn set_cte_size_estimates(
-                root: *mut PlannerInfo,
-                rel: *mut RelOptInfo,
-                cte_rows: f64,
-            );
+            pub fn set_cte_size_estimates(root: *mut PlannerInfo, rel: *mut RelOptInfo, cte_rows: f64);
         }
         set_cte_size_estimates(arg_root, arg_rel, arg_cte_rows)
     })
@@ -65948,10 +64211,7 @@ pub unsafe fn set_tablefunc_size_estimates(arg_root: *mut PlannerInfo, arg_rel: 
     })
 }
 #[track_caller]
-pub unsafe fn set_namedtuplestore_size_estimates(
-    arg_root: *mut PlannerInfo,
-    arg_rel: *mut RelOptInfo,
-) {
+pub unsafe fn set_namedtuplestore_size_estimates(arg_root: *mut PlannerInfo, arg_rel: *mut RelOptInfo) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn set_namedtuplestore_size_estimates(root: *mut PlannerInfo, rel: *mut RelOptInfo);
@@ -66012,14 +64272,7 @@ pub unsafe fn compute_bitmap_pages(
                 tuple: *mut f64,
             ) -> f64;
         }
-        compute_bitmap_pages(
-            arg_root,
-            arg_baserel,
-            arg_bitmapqual,
-            arg_loop_count,
-            arg_cost,
-            arg_tuple,
-        )
+        compute_bitmap_pages(arg_root, arg_baserel, arg_bitmapqual, arg_loop_count, arg_cost, arg_tuple)
     })
 }
 #[track_caller]
@@ -66128,10 +64381,7 @@ pub unsafe fn clamp_row_est(arg_nrows: f64) -> f64 {
     })
 }
 #[track_caller]
-pub unsafe fn is_pseudo_constant_for_index(
-    arg_expr: *mut Node,
-    arg_index: *mut IndexOptInfo,
-) -> bool {
+pub unsafe fn is_pseudo_constant_for_index(arg_expr: *mut Node, arg_index: *mut IndexOptInfo) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn is_pseudo_constant_for_index(expr: *mut Node, index: *mut IndexOptInfo) -> bool;
@@ -66219,14 +64469,10 @@ pub unsafe fn plan_cluster_use_sort(arg_tableOid: Oid, arg_indexOid: Oid) -> boo
     })
 }
 #[track_caller]
-pub unsafe fn plan_create_index_workers(
-    arg_tableOid: Oid,
-    arg_indexOid: Oid,
-) -> ::std::os::raw::c_int {
+pub unsafe fn plan_create_index_workers(arg_tableOid: Oid, arg_indexOid: Oid) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn plan_create_index_workers(tableOid: Oid, indexOid: Oid)
-                -> ::std::os::raw::c_int;
+            pub fn plan_create_index_workers(tableOid: Oid, indexOid: Oid) -> ::std::os::raw::c_int;
         }
         plan_create_index_workers(arg_tableOid, arg_indexOid)
     })
@@ -66305,10 +64551,7 @@ pub unsafe fn eval_const_expressions(arg_root: *mut PlannerInfo, arg_node: *mut 
     })
 }
 #[track_caller]
-pub unsafe fn estimate_expression_value(
-    arg_root: *mut PlannerInfo,
-    arg_node: *mut Node,
-) -> *mut Node {
+pub unsafe fn estimate_expression_value(arg_root: *mut PlannerInfo, arg_node: *mut Node) -> *mut Node {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn estimate_expression_value(root: *mut PlannerInfo, node: *mut Node) -> *mut Node;
@@ -66396,10 +64639,7 @@ pub unsafe fn count_nonjunk_tlist_entries(arg_tlist: *mut List) -> ::std::os::ra
     })
 }
 #[track_caller]
-pub unsafe fn get_sortgroupref_tle(
-    arg_sortref: Index,
-    arg_targetList: *mut List,
-) -> *mut TargetEntry {
+pub unsafe fn get_sortgroupref_tle(arg_sortref: Index, arg_targetList: *mut List) -> *mut TargetEntry {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_sortgroupref_tle(sortref: Index, targetList: *mut List) -> *mut TargetEntry;
@@ -66438,31 +64678,19 @@ pub unsafe fn get_sortgroupclause_expr(
     })
 }
 #[track_caller]
-pub unsafe fn get_sortgrouplist_exprs(
-    arg_sgClauses: *mut List,
-    arg_targetList: *mut List,
-) -> *mut List {
+pub unsafe fn get_sortgrouplist_exprs(arg_sgClauses: *mut List, arg_targetList: *mut List) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_sortgrouplist_exprs(
-                sgClauses: *mut List,
-                targetList: *mut List,
-            ) -> *mut List;
+            pub fn get_sortgrouplist_exprs(sgClauses: *mut List, targetList: *mut List) -> *mut List;
         }
         get_sortgrouplist_exprs(arg_sgClauses, arg_targetList)
     })
 }
 #[track_caller]
-pub unsafe fn get_sortgroupref_clause(
-    arg_sortref: Index,
-    arg_clauses: *mut List,
-) -> *mut SortGroupClause {
+pub unsafe fn get_sortgroupref_clause(arg_sortref: Index, arg_clauses: *mut List) -> *mut SortGroupClause {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_sortgroupref_clause(
-                sortref: Index,
-                clauses: *mut List,
-            ) -> *mut SortGroupClause;
+            pub fn get_sortgroupref_clause(sortref: Index, clauses: *mut List) -> *mut SortGroupClause;
         }
         get_sortgroupref_clause(arg_sortref, arg_clauses)
     })
@@ -66474,10 +64702,7 @@ pub unsafe fn get_sortgroupref_clause_noerr(
 ) -> *mut SortGroupClause {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_sortgroupref_clause_noerr(
-                sortref: Index,
-                clauses: *mut List,
-            ) -> *mut SortGroupClause;
+            pub fn get_sortgroupref_clause_noerr(sortref: Index, clauses: *mut List) -> *mut SortGroupClause;
         }
         get_sortgroupref_clause_noerr(arg_sortref, arg_clauses)
     })
@@ -66498,10 +64723,7 @@ pub unsafe fn pull_varnos_of_level(
 ) -> *mut Bitmapset {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pull_varnos_of_level(
-                node: *mut Node,
-                levelsup: ::std::os::raw::c_int,
-            ) -> *mut Bitmapset;
+            pub fn pull_varnos_of_level(node: *mut Node, levelsup: ::std::os::raw::c_int) -> *mut Bitmapset;
         }
         pull_varnos_of_level(arg_node, arg_levelsup)
     })
@@ -66533,11 +64755,7 @@ pub unsafe fn pull_varnos_of_level_new(
     })
 }
 #[track_caller]
-pub unsafe fn pull_varattnos(
-    arg_node: *mut Node,
-    arg_varno: Index,
-    arg_varattnos: *mut *mut Bitmapset,
-) {
+pub unsafe fn pull_varattnos(arg_node: *mut Node, arg_varno: Index, arg_varattnos: *mut *mut Bitmapset) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn pull_varattnos(node: *mut Node, varno: Index, varattnos: *mut *mut Bitmapset);
@@ -66546,16 +64764,10 @@ pub unsafe fn pull_varattnos(
     })
 }
 #[track_caller]
-pub unsafe fn pull_vars_of_level(
-    arg_node: *mut Node,
-    arg_levelsup: ::std::os::raw::c_int,
-) -> *mut List {
+pub unsafe fn pull_vars_of_level(arg_node: *mut Node, arg_levelsup: ::std::os::raw::c_int) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pull_vars_of_level(
-                node: *mut Node,
-                levelsup: ::std::os::raw::c_int,
-            ) -> *mut List;
+            pub fn pull_vars_of_level(node: *mut Node, levelsup: ::std::os::raw::c_int) -> *mut List;
         }
         pull_vars_of_level(arg_node, arg_levelsup)
     })
@@ -66570,10 +64782,7 @@ pub unsafe fn contain_var_clause(arg_node: *mut Node) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn contain_vars_of_level(
-    arg_node: *mut Node,
-    arg_levelsup: ::std::os::raw::c_int,
-) -> bool {
+pub unsafe fn contain_vars_of_level(arg_node: *mut Node, arg_levelsup: ::std::os::raw::c_int) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn contain_vars_of_level(node: *mut Node, levelsup: ::std::os::raw::c_int) -> bool;
@@ -66684,13 +64893,7 @@ pub unsafe fn add_path_precheck(
                 required_outer: Relids,
             ) -> bool;
         }
-        add_path_precheck(
-            arg_parent_rel,
-            arg_startup_cost,
-            arg_total_cost,
-            arg_pathkeys,
-            arg_required_outer,
-        )
+        add_path_precheck(arg_parent_rel, arg_startup_cost, arg_total_cost, arg_pathkeys, arg_required_outer)
     })
 }
 #[track_caller]
@@ -66975,16 +65178,10 @@ pub unsafe fn create_group_result_path(
     })
 }
 #[track_caller]
-pub unsafe fn create_material_path(
-    arg_rel: *mut RelOptInfo,
-    arg_subpath: *mut Path,
-) -> *mut MaterialPath {
+pub unsafe fn create_material_path(arg_rel: *mut RelOptInfo, arg_subpath: *mut Path) -> *mut MaterialPath {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn create_material_path(
-                rel: *mut RelOptInfo,
-                subpath: *mut Path,
-            ) -> *mut MaterialPath;
+            pub fn create_material_path(rel: *mut RelOptInfo, subpath: *mut Path) -> *mut MaterialPath;
         }
         create_material_path(arg_rel, arg_subpath)
     })
@@ -67360,10 +65557,7 @@ pub unsafe fn calc_non_nestloop_required_outer(
 ) -> Relids {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn calc_non_nestloop_required_outer(
-                outer_path: *mut Path,
-                inner_path: *mut Path,
-            ) -> Relids;
+            pub fn calc_non_nestloop_required_outer(outer_path: *mut Path, inner_path: *mut Path) -> Relids;
         }
         calc_non_nestloop_required_outer(arg_outer_path, arg_inner_path)
     })
@@ -67747,14 +65941,7 @@ pub unsafe fn create_windowagg_path(
                 winclause: *mut WindowClause,
             ) -> *mut WindowAggPath;
         }
-        create_windowagg_path(
-            arg_root,
-            arg_rel,
-            arg_subpath,
-            arg_target,
-            arg_windowFuncs,
-            arg_winclause,
-        )
+        create_windowagg_path(arg_root, arg_rel, arg_subpath, arg_target, arg_windowFuncs, arg_winclause)
     })
 }
 #[track_caller]
@@ -67964,13 +66151,7 @@ pub unsafe fn adjust_limit_rows_costs(
                 count_est: int64,
             );
         }
-        adjust_limit_rows_costs(
-            arg_rows,
-            arg_startup_cost,
-            arg_total_cost,
-            arg_offset_est,
-            arg_count_est,
-        )
+        adjust_limit_rows_costs(arg_rows, arg_startup_cost, arg_total_cost, arg_offset_est, arg_count_est)
     })
 }
 #[track_caller]
@@ -68028,10 +66209,7 @@ pub unsafe fn setup_append_rel_array(arg_root: *mut PlannerInfo) {
     })
 }
 #[track_caller]
-pub unsafe fn expand_planner_arrays(
-    arg_root: *mut PlannerInfo,
-    arg_add_size: ::std::os::raw::c_int,
-) {
+pub unsafe fn expand_planner_arrays(arg_root: *mut PlannerInfo, arg_add_size: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn expand_planner_arrays(root: *mut PlannerInfo, add_size: ::std::os::raw::c_int);
@@ -68057,16 +66235,10 @@ pub unsafe fn build_simple_rel(
     })
 }
 #[track_caller]
-pub unsafe fn find_base_rel(
-    arg_root: *mut PlannerInfo,
-    arg_relid: ::std::os::raw::c_int,
-) -> *mut RelOptInfo {
+pub unsafe fn find_base_rel(arg_root: *mut PlannerInfo, arg_relid: ::std::os::raw::c_int) -> *mut RelOptInfo {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn find_base_rel(
-                root: *mut PlannerInfo,
-                relid: ::std::os::raw::c_int,
-            ) -> *mut RelOptInfo;
+            pub fn find_base_rel(root: *mut PlannerInfo, relid: ::std::os::raw::c_int) -> *mut RelOptInfo;
         }
         find_base_rel(arg_root, arg_relid)
     })
@@ -68147,10 +66319,7 @@ pub unsafe fn fetch_upper_rel(
     })
 }
 #[track_caller]
-pub unsafe fn find_childrel_parents(
-    arg_root: *mut PlannerInfo,
-    arg_rel: *mut RelOptInfo,
-) -> Relids {
+pub unsafe fn find_childrel_parents(arg_root: *mut PlannerInfo, arg_rel: *mut RelOptInfo) -> Relids {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn find_childrel_parents(root: *mut PlannerInfo, rel: *mut RelOptInfo) -> Relids;
@@ -68230,10 +66399,7 @@ pub unsafe fn find_param_path_info(
 ) -> *mut ParamPathInfo {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn find_param_path_info(
-                rel: *mut RelOptInfo,
-                required_outer: Relids,
-            ) -> *mut ParamPathInfo;
+            pub fn find_param_path_info(rel: *mut RelOptInfo, required_outer: Relids) -> *mut ParamPathInfo;
         }
         find_param_path_info(arg_rel, arg_required_outer)
     })
@@ -68284,12 +66450,7 @@ extern "C" {
     pub static mut min_parallel_index_scan_size: ::std::os::raw::c_int;
 }
 pub type set_rel_pathlist_hook_type = ::std::option::Option<
-    unsafe extern "C" fn(
-        root: *mut PlannerInfo,
-        rel: *mut RelOptInfo,
-        rti: Index,
-        rte: *mut RangeTblEntry,
-    ),
+    unsafe extern "C" fn(root: *mut PlannerInfo, rel: *mut RelOptInfo, rti: Index, rte: *mut RangeTblEntry),
 >;
 extern "C" {
     pub static mut set_rel_pathlist_hook: set_rel_pathlist_hook_type;
@@ -68351,11 +66512,7 @@ pub unsafe fn generate_gather_paths(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn generate_gather_paths(
-                root: *mut PlannerInfo,
-                rel: *mut RelOptInfo,
-                override_rows: bool,
-            );
+            pub fn generate_gather_paths(root: *mut PlannerInfo, rel: *mut RelOptInfo, override_rows: bool);
         }
         generate_gather_paths(arg_root, arg_rel, arg_override_rows)
     })
@@ -68397,10 +66554,7 @@ pub unsafe fn create_partial_bitmap_paths(
     })
 }
 #[track_caller]
-pub unsafe fn generate_partitionwise_join_paths(
-    arg_root: *mut PlannerInfo,
-    arg_rel: *mut RelOptInfo,
-) {
+pub unsafe fn generate_partitionwise_join_paths(arg_root: *mut PlannerInfo, arg_rel: *mut RelOptInfo) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn generate_partitionwise_join_paths(root: *mut PlannerInfo, rel: *mut RelOptInfo);
@@ -68435,13 +66589,7 @@ pub unsafe fn relation_has_unique_index_for(
                 oprlist: *mut List,
             ) -> bool;
         }
-        relation_has_unique_index_for(
-            arg_root,
-            arg_rel,
-            arg_restrictlist,
-            arg_exprlist,
-            arg_oprlist,
-        )
+        relation_has_unique_index_for(arg_root, arg_rel, arg_restrictlist, arg_exprlist, arg_oprlist)
     })
 }
 #[track_caller]
@@ -68773,11 +66921,7 @@ pub unsafe fn exprs_known_equal(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn exprs_known_equal(
-                root: *mut PlannerInfo,
-                item1: *mut Node,
-                item2: *mut Node,
-            ) -> bool;
+            pub fn exprs_known_equal(root: *mut PlannerInfo, item1: *mut Node, item2: *mut Node) -> bool;
         }
         exprs_known_equal(arg_root, arg_item1, arg_item2)
     })
@@ -68836,13 +66980,7 @@ pub unsafe fn add_child_join_rel_equivalences(
                 child_rel: *mut RelOptInfo,
             );
         }
-        add_child_join_rel_equivalences(
-            arg_root,
-            arg_nappinfos,
-            arg_appinfos,
-            arg_parent_rel,
-            arg_child_rel,
-        )
+        add_child_join_rel_equivalences(arg_root, arg_nappinfos, arg_appinfos, arg_parent_rel, arg_child_rel)
     })
 }
 #[track_caller]
@@ -68890,16 +67028,10 @@ pub unsafe fn have_relevant_eclass_joinclause(
     })
 }
 #[track_caller]
-pub unsafe fn has_relevant_eclass_joinclause(
-    arg_root: *mut PlannerInfo,
-    arg_rel1: *mut RelOptInfo,
-) -> bool {
+pub unsafe fn has_relevant_eclass_joinclause(arg_root: *mut PlannerInfo, arg_rel1: *mut RelOptInfo) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn has_relevant_eclass_joinclause(
-                root: *mut PlannerInfo,
-                rel1: *mut RelOptInfo,
-            ) -> bool;
+            pub fn has_relevant_eclass_joinclause(root: *mut PlannerInfo, rel1: *mut RelOptInfo) -> bool;
         }
         has_relevant_eclass_joinclause(arg_root, arg_rel1)
     })
@@ -68922,16 +67054,10 @@ pub unsafe fn eclass_useful_for_merging(
     })
 }
 #[track_caller]
-pub unsafe fn is_redundant_derived_clause(
-    arg_rinfo: *mut RestrictInfo,
-    arg_clauselist: *mut List,
-) -> bool {
+pub unsafe fn is_redundant_derived_clause(arg_rinfo: *mut RestrictInfo, arg_clauselist: *mut List) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn is_redundant_derived_clause(
-                rinfo: *mut RestrictInfo,
-                clauselist: *mut List,
-            ) -> bool;
+            pub fn is_redundant_derived_clause(rinfo: *mut RestrictInfo, clauselist: *mut List) -> bool;
         }
         is_redundant_derived_clause(arg_rinfo, arg_clauselist)
     })
@@ -68943,10 +67069,7 @@ pub unsafe fn is_redundant_with_indexclauses(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn is_redundant_with_indexclauses(
-                rinfo: *mut RestrictInfo,
-                indexclauses: *mut List,
-            ) -> bool;
+            pub fn is_redundant_with_indexclauses(rinfo: *mut RestrictInfo, indexclauses: *mut List) -> bool;
         }
         is_redundant_with_indexclauses(arg_rinfo, arg_indexclauses)
     })
@@ -69017,12 +67140,7 @@ pub unsafe fn get_cheapest_fractional_path_for_pathkeys(
                 fraction: f64,
             ) -> *mut Path;
         }
-        get_cheapest_fractional_path_for_pathkeys(
-            arg_paths,
-            arg_pathkeys,
-            arg_required_outer,
-            arg_fraction,
-        )
+        get_cheapest_fractional_path_for_pathkeys(arg_paths, arg_pathkeys, arg_required_outer, arg_fraction)
     })
 }
 #[track_caller]
@@ -69090,14 +67208,7 @@ pub unsafe fn build_expression_pathkey(
                 create_it: bool,
             ) -> *mut List;
         }
-        build_expression_pathkey(
-            arg_root,
-            arg_expr,
-            arg_nullable_relids,
-            arg_opno,
-            arg_rel,
-            arg_create_it,
-        )
+        build_expression_pathkey(arg_root, arg_expr, arg_nullable_relids, arg_opno, arg_rel, arg_create_it)
     })
 }
 #[track_caller]
@@ -69162,25 +67273,16 @@ pub unsafe fn initialize_mergeclause_eclasses(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn initialize_mergeclause_eclasses(
-                root: *mut PlannerInfo,
-                restrictinfo: *mut RestrictInfo,
-            );
+            pub fn initialize_mergeclause_eclasses(root: *mut PlannerInfo, restrictinfo: *mut RestrictInfo);
         }
         initialize_mergeclause_eclasses(arg_root, arg_restrictinfo)
     })
 }
 #[track_caller]
-pub unsafe fn update_mergeclause_eclasses(
-    arg_root: *mut PlannerInfo,
-    arg_restrictinfo: *mut RestrictInfo,
-) {
+pub unsafe fn update_mergeclause_eclasses(arg_root: *mut PlannerInfo, arg_restrictinfo: *mut RestrictInfo) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn update_mergeclause_eclasses(
-                root: *mut PlannerInfo,
-                restrictinfo: *mut RestrictInfo,
-            );
+            pub fn update_mergeclause_eclasses(root: *mut PlannerInfo, restrictinfo: *mut RestrictInfo);
         }
         update_mergeclause_eclasses(arg_root, arg_restrictinfo)
     })
@@ -69320,9 +67422,8 @@ pub unsafe fn add_paths_to_append_rel(
 extern "C" {
     pub static mut cursor_tuple_fraction: f64;
 }
-pub type query_pathkeys_callback = ::std::option::Option<
-    unsafe extern "C" fn(root: *mut PlannerInfo, extra: *mut ::std::os::raw::c_void),
->;
+pub type query_pathkeys_callback =
+    ::std::option::Option<unsafe extern "C" fn(root: *mut PlannerInfo, extra: *mut ::std::os::raw::c_void)>;
 #[track_caller]
 pub unsafe fn query_planner(
     arg_root: *mut PlannerInfo,
@@ -69439,14 +67540,10 @@ pub unsafe fn is_projection_capable_plan(arg_plan: *mut Plan) -> bool {
     })
 }
 #[track_caller]
-pub unsafe fn make_sort_from_sortclauses(
-    arg_sortcls: *mut List,
-    arg_lefttree: *mut Plan,
-) -> *mut Sort {
+pub unsafe fn make_sort_from_sortclauses(arg_sortcls: *mut List, arg_lefttree: *mut Plan) -> *mut Sort {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn make_sort_from_sortclauses(sortcls: *mut List, lefttree: *mut Plan)
-                -> *mut Sort;
+            pub fn make_sort_from_sortclauses(sortcls: *mut List, lefttree: *mut Plan) -> *mut Sort;
         }
         make_sort_from_sortclauses(arg_sortcls, arg_lefttree)
     })
@@ -69602,10 +67699,7 @@ pub unsafe fn distribute_restrictinfo_to_rels(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn distribute_restrictinfo_to_rels(
-                root: *mut PlannerInfo,
-                restrictinfo: *mut RestrictInfo,
-            );
+            pub fn distribute_restrictinfo_to_rels(root: *mut PlannerInfo, restrictinfo: *mut RestrictInfo);
         }
         distribute_restrictinfo_to_rels(arg_root, arg_restrictinfo)
     })
@@ -69698,10 +67792,7 @@ pub unsafe fn match_foreign_keys_to_quals(arg_root: *mut PlannerInfo) {
     })
 }
 #[track_caller]
-pub unsafe fn remove_useless_joins(
-    arg_root: *mut PlannerInfo,
-    arg_joinlist: *mut List,
-) -> *mut List {
+pub unsafe fn remove_useless_joins(arg_root: *mut PlannerInfo, arg_joinlist: *mut List) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn remove_useless_joins(root: *mut PlannerInfo, joinlist: *mut List) -> *mut List;
@@ -69735,11 +67826,7 @@ pub unsafe fn query_is_distinct_for(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn query_is_distinct_for(
-                query: *mut Query,
-                colnos: *mut List,
-                opids: *mut List,
-            ) -> bool;
+            pub fn query_is_distinct_for(query: *mut Query, colnos: *mut List, opids: *mut List) -> bool;
         }
         query_is_distinct_for(arg_query, arg_colnos, arg_opids)
     })
@@ -69805,16 +67892,10 @@ pub unsafe fn record_plan_type_dependency(arg_root: *mut PlannerInfo, arg_typid:
     })
 }
 #[track_caller]
-pub unsafe fn extract_query_dependencies_walker(
-    arg_node: *mut Node,
-    arg_root: *mut PlannerInfo,
-) -> bool {
+pub unsafe fn extract_query_dependencies_walker(arg_node: *mut Node, arg_root: *mut PlannerInfo) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn extract_query_dependencies_walker(
-                node: *mut Node,
-                root: *mut PlannerInfo,
-            ) -> bool;
+            pub fn extract_query_dependencies_walker(node: *mut Node, root: *mut PlannerInfo) -> bool;
         }
         extract_query_dependencies_walker(arg_node, arg_root)
     })
@@ -69886,10 +67967,7 @@ pub unsafe fn select_rowmark_type(
 ) -> RowMarkType {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn select_rowmark_type(
-                rte: *mut RangeTblEntry,
-                strength: LockClauseStrength,
-            ) -> RowMarkType;
+            pub fn select_rowmark_type(rte: *mut RangeTblEntry, strength: LockClauseStrength) -> RowMarkType;
         }
         select_rowmark_type(arg_rte, arg_strength)
     })
@@ -69913,25 +67991,16 @@ pub unsafe fn mark_partial_aggref(arg_agg: *mut Aggref, arg_aggsplit: AggSplit) 
     })
 }
 #[track_caller]
-pub unsafe fn get_cheapest_fractional_path(
-    arg_rel: *mut RelOptInfo,
-    arg_tuple_fraction: f64,
-) -> *mut Path {
+pub unsafe fn get_cheapest_fractional_path(arg_rel: *mut RelOptInfo, arg_tuple_fraction: f64) -> *mut Path {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_cheapest_fractional_path(
-                rel: *mut RelOptInfo,
-                tuple_fraction: f64,
-            ) -> *mut Path;
+            pub fn get_cheapest_fractional_path(rel: *mut RelOptInfo, tuple_fraction: f64) -> *mut Path;
         }
         get_cheapest_fractional_path(arg_rel, arg_tuple_fraction)
     })
 }
 #[track_caller]
-pub unsafe fn preprocess_phv_expression(
-    arg_root: *mut PlannerInfo,
-    arg_expr: *mut Expr,
-) -> *mut Expr {
+pub unsafe fn preprocess_phv_expression(arg_root: *mut PlannerInfo, arg_expr: *mut Expr) -> *mut Expr {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn preprocess_phv_expression(root: *mut PlannerInfo, expr: *mut Expr) -> *mut Expr;
@@ -70015,16 +68084,10 @@ pub unsafe fn make_restrictinfo_new(
     })
 }
 #[track_caller]
-pub unsafe fn commute_restrictinfo(
-    arg_rinfo: *mut RestrictInfo,
-    arg_comm_op: Oid,
-) -> *mut RestrictInfo {
+pub unsafe fn commute_restrictinfo(arg_rinfo: *mut RestrictInfo, arg_comm_op: Oid) -> *mut RestrictInfo {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn commute_restrictinfo(
-                rinfo: *mut RestrictInfo,
-                comm_op: Oid,
-            ) -> *mut RestrictInfo;
+            pub fn commute_restrictinfo(rinfo: *mut RestrictInfo, comm_op: Oid) -> *mut RestrictInfo;
         }
         commute_restrictinfo(arg_rinfo, arg_comm_op)
     })
@@ -70069,10 +68132,7 @@ pub unsafe fn extract_actual_clauses(
 ) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn extract_actual_clauses(
-                restrictinfo_list: *mut List,
-                pseudoconstant: bool,
-            ) -> *mut List;
+            pub fn extract_actual_clauses(restrictinfo_list: *mut List, pseudoconstant: bool) -> *mut List;
         }
         extract_actual_clauses(arg_restrictinfo_list, arg_pseudoconstant)
     })
@@ -70093,25 +68153,14 @@ pub unsafe fn extract_actual_join_clauses(
                 otherquals: *mut *mut List,
             );
         }
-        extract_actual_join_clauses(
-            arg_restrictinfo_list,
-            arg_joinrelids,
-            arg_joinquals,
-            arg_otherquals,
-        )
+        extract_actual_join_clauses(arg_restrictinfo_list, arg_joinrelids, arg_joinquals, arg_otherquals)
     })
 }
 #[track_caller]
-pub unsafe fn join_clause_is_movable_to(
-    arg_rinfo: *mut RestrictInfo,
-    arg_baserel: *mut RelOptInfo,
-) -> bool {
+pub unsafe fn join_clause_is_movable_to(arg_rinfo: *mut RestrictInfo, arg_baserel: *mut RelOptInfo) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn join_clause_is_movable_to(
-                rinfo: *mut RestrictInfo,
-                baserel: *mut RelOptInfo,
-            ) -> bool;
+            pub fn join_clause_is_movable_to(rinfo: *mut RestrictInfo, baserel: *mut RelOptInfo) -> bool;
         }
         join_clause_is_movable_to(arg_rinfo, arg_baserel)
     })
@@ -70149,10 +68198,7 @@ pub unsafe fn tlist_member_ignore_relabel(
 ) -> *mut TargetEntry {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tlist_member_ignore_relabel(
-                node: *mut Expr,
-                targetlist: *mut List,
-            ) -> *mut TargetEntry;
+            pub fn tlist_member_ignore_relabel(node: *mut Expr, targetlist: *mut List) -> *mut TargetEntry;
         }
         tlist_member_ignore_relabel(arg_node, arg_targetlist)
     })
@@ -70185,18 +68231,10 @@ pub unsafe fn tlist_same_exprs(arg_tlist1: *mut List, arg_tlist2: *mut List) -> 
     })
 }
 #[track_caller]
-pub unsafe fn tlist_same_datatypes(
-    arg_tlist: *mut List,
-    arg_colTypes: *mut List,
-    arg_junkOK: bool,
-) -> bool {
+pub unsafe fn tlist_same_datatypes(arg_tlist: *mut List, arg_colTypes: *mut List, arg_junkOK: bool) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tlist_same_datatypes(
-                tlist: *mut List,
-                colTypes: *mut List,
-                junkOK: bool,
-            ) -> bool;
+            pub fn tlist_same_datatypes(tlist: *mut List, colTypes: *mut List, junkOK: bool) -> bool;
         }
         tlist_same_datatypes(arg_tlist, arg_colTypes, arg_junkOK)
     })
@@ -70209,11 +68247,7 @@ pub unsafe fn tlist_same_collations(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn tlist_same_collations(
-                tlist: *mut List,
-                colCollations: *mut List,
-                junkOK: bool,
-            ) -> bool;
+            pub fn tlist_same_collations(tlist: *mut List, colCollations: *mut List, junkOK: bool) -> bool;
         }
         tlist_same_collations(arg_tlist, arg_colCollations, arg_junkOK)
     })
@@ -70237,31 +68271,19 @@ pub unsafe fn extract_grouping_ops(arg_groupClause: *mut List) -> *mut Oid {
     })
 }
 #[track_caller]
-pub unsafe fn extract_grouping_collations(
-    arg_groupClause: *mut List,
-    arg_tlist: *mut List,
-) -> *mut Oid {
+pub unsafe fn extract_grouping_collations(arg_groupClause: *mut List, arg_tlist: *mut List) -> *mut Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn extract_grouping_collations(
-                groupClause: *mut List,
-                tlist: *mut List,
-            ) -> *mut Oid;
+            pub fn extract_grouping_collations(groupClause: *mut List, tlist: *mut List) -> *mut Oid;
         }
         extract_grouping_collations(arg_groupClause, arg_tlist)
     })
 }
 #[track_caller]
-pub unsafe fn extract_grouping_cols(
-    arg_groupClause: *mut List,
-    arg_tlist: *mut List,
-) -> *mut AttrNumber {
+pub unsafe fn extract_grouping_cols(arg_groupClause: *mut List, arg_tlist: *mut List) -> *mut AttrNumber {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn extract_grouping_cols(
-                groupClause: *mut List,
-                tlist: *mut List,
-            ) -> *mut AttrNumber;
+            pub fn extract_grouping_cols(groupClause: *mut List, tlist: *mut List) -> *mut AttrNumber;
         }
         extract_grouping_cols(arg_groupClause, arg_tlist)
     })
@@ -70328,11 +68350,7 @@ pub unsafe fn add_column_to_pathtarget(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn add_column_to_pathtarget(
-                target: *mut PathTarget,
-                expr: *mut Expr,
-                sortgroupref: Index,
-            );
+            pub fn add_column_to_pathtarget(target: *mut PathTarget, expr: *mut Expr, sortgroupref: Index);
         }
         add_column_to_pathtarget(arg_target, arg_expr, arg_sortgroupref)
     })
@@ -70356,10 +68374,7 @@ pub unsafe fn add_new_columns_to_pathtarget(arg_target: *mut PathTarget, arg_exp
     })
 }
 #[track_caller]
-pub unsafe fn apply_pathtarget_labeling_to_tlist(
-    arg_tlist: *mut List,
-    arg_target: *mut PathTarget,
-) {
+pub unsafe fn apply_pathtarget_labeling_to_tlist(arg_tlist: *mut List, arg_target: *mut PathTarget) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn apply_pathtarget_labeling_to_tlist(tlist: *mut List, target: *mut PathTarget);
@@ -70467,16 +68482,10 @@ pub unsafe fn parse_sub_analyze(
     })
 }
 #[track_caller]
-pub unsafe fn transformTopLevelStmt(
-    arg_pstate: *mut ParseState,
-    arg_parseTree: *mut RawStmt,
-) -> *mut Query {
+pub unsafe fn transformTopLevelStmt(arg_pstate: *mut ParseState, arg_parseTree: *mut RawStmt) -> *mut Query {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn transformTopLevelStmt(
-                pstate: *mut ParseState,
-                parseTree: *mut RawStmt,
-            ) -> *mut Query;
+            pub fn transformTopLevelStmt(pstate: *mut ParseState, parseTree: *mut RawStmt) -> *mut Query;
         }
         transformTopLevelStmt(arg_pstate, arg_parseTree)
     })
@@ -70545,10 +68554,7 @@ pub unsafe fn BuildOnConflictExcludedTargetlist(
 ) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn BuildOnConflictExcludedTargetlist(
-                targetrel: Relation,
-                exclRelIndex: Index,
-            ) -> *mut List;
+            pub fn BuildOnConflictExcludedTargetlist(targetrel: Relation, exclRelIndex: Index) -> *mut List;
         }
         BuildOnConflictExcludedTargetlist(arg_targetrel, arg_exclRelIndex)
     })
@@ -70815,14 +68821,7 @@ pub unsafe fn LookupOperName(
                 location: ::std::os::raw::c_int,
             ) -> Oid;
         }
-        LookupOperName(
-            arg_pstate,
-            arg_opername,
-            arg_oprleft,
-            arg_oprright,
-            arg_noError,
-            arg_location,
-        )
+        LookupOperName(arg_pstate, arg_opername, arg_oprleft, arg_oprright, arg_noError, arg_location)
     })
 }
 #[track_caller]
@@ -71262,11 +69261,7 @@ pub unsafe fn stringTypeDatum(
 ) -> Datum {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn stringTypeDatum(
-                tp: Type,
-                string: *mut ::std::os::raw::c_char,
-                atttypmod: int32,
-            ) -> Datum;
+            pub fn stringTypeDatum(tp: Type, string: *mut ::std::os::raw::c_char, atttypmod: int32) -> Datum;
         }
         stringTypeDatum(arg_tp, arg_string, arg_atttypmod)
     })
@@ -71394,16 +69389,10 @@ pub unsafe fn get_rte_attribute_type(
     })
 }
 #[track_caller]
-pub unsafe fn get_rte_attribute_is_dropped(
-    arg_rte: *mut RangeTblEntry,
-    arg_attnum: AttrNumber,
-) -> bool {
+pub unsafe fn get_rte_attribute_is_dropped(arg_rte: *mut RangeTblEntry, arg_attnum: AttrNumber) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_rte_attribute_is_dropped(
-                rte: *mut RangeTblEntry,
-                attnum: AttrNumber,
-            ) -> bool;
+            pub fn get_rte_attribute_is_dropped(rte: *mut RangeTblEntry, attnum: AttrNumber) -> bool;
         }
         get_rte_attribute_is_dropped(arg_rte, arg_attnum)
     })
@@ -71723,19 +69712,13 @@ pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INSERT: ReorderBufferCha
 pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_UPDATE: ReorderBufferChangeType = 1;
 pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_DELETE: ReorderBufferChangeType = 2;
 pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_MESSAGE: ReorderBufferChangeType = 3;
-pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SNAPSHOT: ReorderBufferChangeType =
-    4;
-pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_COMMAND_ID:
-    ReorderBufferChangeType = 5;
-pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_TUPLECID: ReorderBufferChangeType =
-    6;
-pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SPEC_INSERT:
-    ReorderBufferChangeType = 7;
-pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SPEC_CONFIRM:
-    ReorderBufferChangeType = 8;
+pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SNAPSHOT: ReorderBufferChangeType = 4;
+pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_COMMAND_ID: ReorderBufferChangeType = 5;
+pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_TUPLECID: ReorderBufferChangeType = 6;
+pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SPEC_INSERT: ReorderBufferChangeType = 7;
+pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SPEC_CONFIRM: ReorderBufferChangeType = 8;
 pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_TRUNCATE: ReorderBufferChangeType = 9;
-pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SPEC_ABORT:
-    ReorderBufferChangeType = 10;
+pub const ReorderBufferChangeType_REORDER_BUFFER_CHANGE_INTERNAL_SPEC_ABORT: ReorderBufferChangeType = 10;
 pub type ReorderBufferChangeType = ::std::os::raw::c_uint;
 #[repr(C)]
 #[derive(Copy, Clone)]
@@ -71893,11 +69876,7 @@ pub type ReorderBufferApplyTruncateCB = ::std::option::Option<
 pub type ReorderBufferBeginCB =
     ::std::option::Option<unsafe extern "C" fn(rb: *mut ReorderBuffer, txn: *mut ReorderBufferTXN)>;
 pub type ReorderBufferCommitCB = ::std::option::Option<
-    unsafe extern "C" fn(
-        rb: *mut ReorderBuffer,
-        txn: *mut ReorderBufferTXN,
-        commit_lsn: XLogRecPtr,
-    ),
+    unsafe extern "C" fn(rb: *mut ReorderBuffer, txn: *mut ReorderBufferTXN, commit_lsn: XLogRecPtr),
 >;
 pub type ReorderBufferMessageCB = ::std::option::Option<
     unsafe extern "C" fn(
@@ -71982,10 +69961,7 @@ pub unsafe fn ReorderBufferReturnTupleBuf(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReorderBufferReturnTupleBuf(
-                arg1: *mut ReorderBuffer,
-                tuple: *mut ReorderBufferTupleBuf,
-            );
+            pub fn ReorderBufferReturnTupleBuf(arg1: *mut ReorderBuffer, tuple: *mut ReorderBufferTupleBuf);
         }
         ReorderBufferReturnTupleBuf(arg_arg1, arg_tuple)
     })
@@ -72000,16 +69976,10 @@ pub unsafe fn ReorderBufferGetChange(arg_arg1: *mut ReorderBuffer) -> *mut Reord
     })
 }
 #[track_caller]
-pub unsafe fn ReorderBufferReturnChange(
-    arg_arg1: *mut ReorderBuffer,
-    arg_arg2: *mut ReorderBufferChange,
-) {
+pub unsafe fn ReorderBufferReturnChange(arg_arg1: *mut ReorderBuffer, arg_arg2: *mut ReorderBufferChange) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReorderBufferReturnChange(
-                arg1: *mut ReorderBuffer,
-                arg2: *mut ReorderBufferChange,
-            );
+            pub fn ReorderBufferReturnChange(arg1: *mut ReorderBuffer, arg2: *mut ReorderBufferChange);
         }
         ReorderBufferReturnChange(arg_arg1, arg_arg2)
     })
@@ -72167,18 +70137,10 @@ pub unsafe fn ReorderBufferCommitChild(
     })
 }
 #[track_caller]
-pub unsafe fn ReorderBufferAbort(
-    arg_arg1: *mut ReorderBuffer,
-    arg_arg2: TransactionId,
-    arg_lsn: XLogRecPtr,
-) {
+pub unsafe fn ReorderBufferAbort(arg_arg1: *mut ReorderBuffer, arg_arg2: TransactionId, arg_lsn: XLogRecPtr) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReorderBufferAbort(
-                arg1: *mut ReorderBuffer,
-                arg2: TransactionId,
-                lsn: XLogRecPtr,
-            );
+            pub fn ReorderBufferAbort(arg1: *mut ReorderBuffer, arg2: TransactionId, lsn: XLogRecPtr);
         }
         ReorderBufferAbort(arg_arg1, arg_arg2, arg_lsn)
     })
@@ -72200,11 +70162,7 @@ pub unsafe fn ReorderBufferForget(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReorderBufferForget(
-                arg1: *mut ReorderBuffer,
-                arg2: TransactionId,
-                lsn: XLogRecPtr,
-            );
+            pub fn ReorderBufferForget(arg1: *mut ReorderBuffer, arg2: TransactionId, lsn: XLogRecPtr);
         }
         ReorderBufferForget(arg_arg1, arg_arg2, arg_lsn)
     })
@@ -72348,11 +70306,7 @@ pub unsafe fn ReorderBufferProcessXid(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReorderBufferProcessXid(
-                arg1: *mut ReorderBuffer,
-                xid: TransactionId,
-                lsn: XLogRecPtr,
-            );
+            pub fn ReorderBufferProcessXid(arg1: *mut ReorderBuffer, xid: TransactionId, lsn: XLogRecPtr);
         }
         ReorderBufferProcessXid(arg_arg1, arg_xid, arg_lsn)
     })
@@ -72381,25 +70335,16 @@ pub unsafe fn ReorderBufferXidHasCatalogChanges(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReorderBufferXidHasCatalogChanges(
-                arg1: *mut ReorderBuffer,
-                xid: TransactionId,
-            ) -> bool;
+            pub fn ReorderBufferXidHasCatalogChanges(arg1: *mut ReorderBuffer, xid: TransactionId) -> bool;
         }
         ReorderBufferXidHasCatalogChanges(arg_arg1, arg_xid)
     })
 }
 #[track_caller]
-pub unsafe fn ReorderBufferXidHasBaseSnapshot(
-    arg_arg1: *mut ReorderBuffer,
-    arg_xid: TransactionId,
-) -> bool {
+pub unsafe fn ReorderBufferXidHasBaseSnapshot(arg_arg1: *mut ReorderBuffer, arg_xid: TransactionId) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReorderBufferXidHasBaseSnapshot(
-                arg1: *mut ReorderBuffer,
-                xid: TransactionId,
-            ) -> bool;
+            pub fn ReorderBufferXidHasBaseSnapshot(arg1: *mut ReorderBuffer, xid: TransactionId) -> bool;
         }
         ReorderBufferXidHasBaseSnapshot(arg_arg1, arg_xid)
     })
@@ -72461,15 +70406,10 @@ impl Default for OutputPluginOptions {
 pub type LogicalOutputPluginInit =
     ::std::option::Option<unsafe extern "C" fn(cb: *mut OutputPluginCallbacks)>;
 pub type LogicalDecodeStartupCB = ::std::option::Option<
-    unsafe extern "C" fn(
-        ctx: *mut LogicalDecodingContext,
-        options: *mut OutputPluginOptions,
-        is_init: bool,
-    ),
+    unsafe extern "C" fn(ctx: *mut LogicalDecodingContext, options: *mut OutputPluginOptions, is_init: bool),
 >;
-pub type LogicalDecodeBeginCB = ::std::option::Option<
-    unsafe extern "C" fn(ctx: *mut LogicalDecodingContext, txn: *mut ReorderBufferTXN),
->;
+pub type LogicalDecodeBeginCB =
+    ::std::option::Option<unsafe extern "C" fn(ctx: *mut LogicalDecodingContext, txn: *mut ReorderBufferTXN)>;
 pub type LogicalDecodeChangeCB = ::std::option::Option<
     unsafe extern "C" fn(
         ctx: *mut LogicalDecodingContext,
@@ -72715,10 +70655,7 @@ pub unsafe fn LogicalIncreaseRestartDecodingForSlot(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn LogicalIncreaseRestartDecodingForSlot(
-                current_lsn: XLogRecPtr,
-                restart_lsn: XLogRecPtr,
-            );
+            pub fn LogicalIncreaseRestartDecodingForSlot(current_lsn: XLogRecPtr, restart_lsn: XLogRecPtr);
         }
         LogicalIncreaseRestartDecodingForSlot(arg_current_lsn, arg_restart_lsn)
     })
@@ -72764,20 +70701,13 @@ pub unsafe fn AcquireRewriteLocks(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn AcquireRewriteLocks(
-                parsetree: *mut Query,
-                forExecute: bool,
-                forUpdatePushedDown: bool,
-            );
+            pub fn AcquireRewriteLocks(parsetree: *mut Query, forExecute: bool, forUpdatePushedDown: bool);
         }
         AcquireRewriteLocks(arg_parsetree, arg_forExecute, arg_forUpdatePushedDown)
     })
 }
 #[track_caller]
-pub unsafe fn build_column_default(
-    arg_rel: Relation,
-    arg_attrno: ::std::os::raw::c_int,
-) -> *mut Node {
+pub unsafe fn build_column_default(arg_rel: Relation, arg_attrno: ::std::os::raw::c_int) -> *mut Node {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn build_column_default(rel: Relation, attrno: ::std::os::raw::c_int) -> *mut Node;
@@ -72803,10 +70733,7 @@ pub unsafe fn rewriteTargetListUD(
     })
 }
 #[track_caller]
-pub unsafe fn fill_extraUpdatedCols(
-    arg_target_rte: *mut RangeTblEntry,
-    arg_target_relation: Relation,
-) {
+pub unsafe fn fill_extraUpdatedCols(arg_target_rte: *mut RangeTblEntry, arg_target_relation: Relation) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn fill_extraUpdatedCols(target_rte: *mut RangeTblEntry, target_relation: Relation);
@@ -73002,16 +70929,10 @@ pub unsafe fn PushActiveSnapshot(arg_snapshot: Snapshot) {
     })
 }
 #[track_caller]
-pub unsafe fn PushActiveSnapshotWithLevel(
-    arg_snapshot: Snapshot,
-    arg_snap_level: ::std::os::raw::c_int,
-) {
+pub unsafe fn PushActiveSnapshotWithLevel(arg_snapshot: Snapshot, arg_snap_level: ::std::os::raw::c_int) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn PushActiveSnapshotWithLevel(
-                snapshot: Snapshot,
-                snap_level: ::std::os::raw::c_int,
-            );
+            pub fn PushActiveSnapshotWithLevel(snapshot: Snapshot, snap_level: ::std::os::raw::c_int);
         }
         PushActiveSnapshotWithLevel(arg_snapshot, arg_snap_level)
     })
@@ -73080,10 +71001,7 @@ pub unsafe fn UnregisterSnapshot(arg_snapshot: Snapshot) {
     })
 }
 #[track_caller]
-pub unsafe fn RegisterSnapshotOnOwner(
-    arg_snapshot: Snapshot,
-    arg_owner: ResourceOwner,
-) -> Snapshot {
+pub unsafe fn RegisterSnapshotOnOwner(arg_snapshot: Snapshot, arg_owner: ResourceOwner) -> Snapshot {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn RegisterSnapshotOnOwner(snapshot: Snapshot, owner: ResourceOwner) -> Snapshot;
@@ -73251,16 +71169,10 @@ pub unsafe fn EstimateSnapshotSpace(arg_snapshot: Snapshot) -> Size {
     })
 }
 #[track_caller]
-pub unsafe fn SerializeSnapshot(
-    arg_snapshot: Snapshot,
-    arg_start_address: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn SerializeSnapshot(arg_snapshot: Snapshot, arg_start_address: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SerializeSnapshot(
-                snapshot: Snapshot,
-                start_address: *mut ::std::os::raw::c_char,
-            );
+            pub fn SerializeSnapshot(snapshot: Snapshot, start_address: *mut ::std::os::raw::c_char);
         }
         SerializeSnapshot(arg_snapshot, arg_start_address)
     })
@@ -73281,10 +71193,7 @@ pub unsafe fn RestoreTransactionSnapshot(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RestoreTransactionSnapshot(
-                snapshot: Snapshot,
-                master_pgproc: *mut ::std::os::raw::c_void,
-            );
+            pub fn RestoreTransactionSnapshot(snapshot: Snapshot, master_pgproc: *mut ::std::os::raw::c_void);
         }
         RestoreTransactionSnapshot(arg_snapshot, arg_master_pgproc)
     })
@@ -73346,26 +71255,16 @@ extern "C" {
     pub static mut LocalRefCount: *mut int32;
 }
 #[track_caller]
-pub unsafe fn ComputeIoConcurrency(
-    arg_io_concurrency: ::std::os::raw::c_int,
-    arg_target: *mut f64,
-) -> bool {
+pub unsafe fn ComputeIoConcurrency(arg_io_concurrency: ::std::os::raw::c_int, arg_target: *mut f64) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ComputeIoConcurrency(
-                io_concurrency: ::std::os::raw::c_int,
-                target: *mut f64,
-            ) -> bool;
+            pub fn ComputeIoConcurrency(io_concurrency: ::std::os::raw::c_int, target: *mut f64) -> bool;
         }
         ComputeIoConcurrency(arg_io_concurrency, arg_target)
     })
 }
 #[track_caller]
-pub unsafe fn PrefetchBuffer(
-    arg_reln: Relation,
-    arg_forkNum: ForkNumber,
-    arg_blockNum: BlockNumber,
-) {
+pub unsafe fn PrefetchBuffer(arg_reln: Relation, arg_forkNum: ForkNumber, arg_blockNum: BlockNumber) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn PrefetchBuffer(reln: Relation, forkNum: ForkNumber, blockNum: BlockNumber);
@@ -73468,11 +71367,7 @@ pub unsafe fn ReleaseAndReadBuffer(
 ) -> Buffer {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ReleaseAndReadBuffer(
-                buffer: Buffer,
-                relation: Relation,
-                blockNum: BlockNumber,
-            ) -> Buffer;
+            pub fn ReleaseAndReadBuffer(buffer: Buffer, relation: Relation, blockNum: BlockNumber) -> Buffer;
         }
         ReleaseAndReadBuffer(arg_buffer, arg_relation, arg_blockNum)
     })
@@ -73547,10 +71442,7 @@ pub unsafe fn RelationGetNumberOfBlocksInFork(
 ) -> BlockNumber {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn RelationGetNumberOfBlocksInFork(
-                relation: Relation,
-                forkNum: ForkNumber,
-            ) -> BlockNumber;
+            pub fn RelationGetNumberOfBlocksInFork(relation: Relation, forkNum: ForkNumber) -> BlockNumber;
         }
         RelationGetNumberOfBlocksInFork(arg_relation, arg_forkNum)
     })
@@ -73606,10 +71498,7 @@ pub unsafe fn DropRelFileNodesAllBuffers(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn DropRelFileNodesAllBuffers(
-                rnodes: *mut RelFileNodeBackend,
-                nnodes: ::std::os::raw::c_int,
-            );
+            pub fn DropRelFileNodesAllBuffers(rnodes: *mut RelFileNodeBackend, nnodes: ::std::os::raw::c_int);
         }
         DropRelFileNodesAllBuffers(arg_rnodes, arg_nnodes)
     })
@@ -73835,11 +71724,7 @@ pub unsafe fn BufFileRead(
 ) -> usize {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn BufFileRead(
-                file: *mut BufFile,
-                ptr: *mut ::std::os::raw::c_void,
-                size: usize,
-            ) -> usize;
+            pub fn BufFileRead(file: *mut BufFile, ptr: *mut ::std::os::raw::c_void, size: usize) -> usize;
         }
         BufFileRead(arg_file, arg_ptr, arg_size)
     })
@@ -73852,11 +71737,7 @@ pub unsafe fn BufFileWrite(
 ) -> usize {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn BufFileWrite(
-                file: *mut BufFile,
-                ptr: *mut ::std::os::raw::c_void,
-                size: usize,
-            ) -> usize;
+            pub fn BufFileWrite(file: *mut BufFile, ptr: *mut ::std::os::raw::c_void, size: usize) -> usize;
         }
         BufFileWrite(arg_file, arg_ptr, arg_size)
     })
@@ -73888,11 +71769,7 @@ pub unsafe fn BufFileTell(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn BufFileTell(
-                file: *mut BufFile,
-                fileno: *mut ::std::os::raw::c_int,
-                offset: *mut off_t,
-            );
+            pub fn BufFileTell(file: *mut BufFile, fileno: *mut ::std::os::raw::c_int, offset: *mut off_t);
         }
         BufFileTell(arg_file, arg_fileno, arg_offset)
     })
@@ -73922,16 +71799,10 @@ pub unsafe fn BufFileSize(arg_file: *mut BufFile) -> int64 {
     })
 }
 #[track_caller]
-pub unsafe fn BufFileAppend(
-    arg_target: *mut BufFile,
-    arg_source: *mut BufFile,
-) -> ::std::os::raw::c_long {
+pub unsafe fn BufFileAppend(arg_target: *mut BufFile, arg_source: *mut BufFile) -> ::std::os::raw::c_long {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn BufFileAppend(
-                target: *mut BufFile,
-                source: *mut BufFile,
-            ) -> ::std::os::raw::c_long;
+            pub fn BufFileAppend(target: *mut BufFile, source: *mut BufFile) -> ::std::os::raw::c_long;
         }
         BufFileAppend(arg_target, arg_source)
     })
@@ -73976,16 +71847,10 @@ pub unsafe fn BufFileOpenShared(
     })
 }
 #[track_caller]
-pub unsafe fn BufFileDeleteShared(
-    arg_fileset: *mut SharedFileSet,
-    arg_name: *const ::std::os::raw::c_char,
-) {
+pub unsafe fn BufFileDeleteShared(arg_fileset: *mut SharedFileSet, arg_name: *const ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn BufFileDeleteShared(
-                fileset: *mut SharedFileSet,
-                name: *const ::std::os::raw::c_char,
-            );
+            pub fn BufFileDeleteShared(fileset: *mut SharedFileSet, name: *const ::std::os::raw::c_char);
         }
         BufFileDeleteShared(arg_fileset, arg_name)
     })
@@ -74264,10 +72129,7 @@ pub unsafe fn ResolveRecoveryConflictWithSnapshot(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn ResolveRecoveryConflictWithSnapshot(
-                latestRemovedXid: TransactionId,
-                node: RelFileNode,
-            );
+            pub fn ResolveRecoveryConflictWithSnapshot(latestRemovedXid: TransactionId, node: RelFileNode);
         }
         ResolveRecoveryConflictWithSnapshot(arg_latestRemovedXid, arg_node)
     })
@@ -74345,11 +72207,7 @@ pub unsafe fn StandbyLockTimeoutHandler() {
     })
 }
 #[track_caller]
-pub unsafe fn StandbyAcquireAccessExclusiveLock(
-    arg_xid: TransactionId,
-    arg_dbOid: Oid,
-    arg_relOid: Oid,
-) {
+pub unsafe fn StandbyAcquireAccessExclusiveLock(arg_xid: TransactionId, arg_dbOid: Oid, arg_relOid: Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn StandbyAcquireAccessExclusiveLock(xid: TransactionId, dbOid: Oid, relOid: Oid);
@@ -74635,10 +72493,7 @@ pub unsafe fn ProcArrayInstallImportedXmin(
     })
 }
 #[track_caller]
-pub unsafe fn ProcArrayInstallRestoredXmin(
-    arg_xmin: TransactionId,
-    arg_proc_: *mut PGPROC,
-) -> bool {
+pub unsafe fn ProcArrayInstallRestoredXmin(arg_xmin: TransactionId, arg_proc_: *mut PGPROC) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn ProcArrayInstallRestoredXmin(xmin: TransactionId, proc_: *mut PGPROC) -> bool;
@@ -74810,13 +72665,7 @@ pub unsafe fn GetCurrentVirtualXIDs(
                 nvxids: *mut ::std::os::raw::c_int,
             ) -> *mut VirtualTransactionId;
         }
-        GetCurrentVirtualXIDs(
-            arg_limitXmin,
-            arg_excludeXmin0,
-            arg_allDbs,
-            arg_excludeVacuum,
-            arg_nvxids,
-        )
+        GetCurrentVirtualXIDs(arg_limitXmin, arg_excludeXmin0, arg_allDbs, arg_excludeVacuum, arg_nvxids)
     })
 }
 #[track_caller]
@@ -74841,10 +72690,7 @@ pub unsafe fn CancelVirtualTransaction(
 ) -> pid_t {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CancelVirtualTransaction(
-                vxid: VirtualTransactionId,
-                sigmode: ProcSignalReason,
-            ) -> pid_t;
+            pub fn CancelVirtualTransaction(vxid: VirtualTransactionId, sigmode: ProcSignalReason) -> pid_t;
         }
         CancelVirtualTransaction(arg_vxid, arg_sigmode)
     })
@@ -74901,11 +72747,7 @@ pub unsafe fn CancelDBBackends(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn CancelDBBackends(
-                databaseid: Oid,
-                sigmode: ProcSignalReason,
-                conflictPending: bool,
-            );
+            pub fn CancelDBBackends(databaseid: Oid, sigmode: ProcSignalReason, conflictPending: bool);
         }
         CancelDBBackends(arg_databaseid, arg_sigmode, arg_conflictPending)
     })
@@ -75029,11 +72871,7 @@ impl WordEntry {
         }
     }
     #[inline]
-    pub fn new_bitfield_1(
-        haspos: uint32,
-        len: uint32,
-        pos: uint32,
-    ) -> __BindgenBitfieldUnit<[u8; 4usize]> {
+    pub fn new_bitfield_1(haspos: uint32, len: uint32, pos: uint32) -> __BindgenBitfieldUnit<[u8; 4usize]> {
         let mut __bindgen_bitfield_unit: __BindgenBitfieldUnit<[u8; 4usize]> = Default::default();
         __bindgen_bitfield_unit.set(0usize, 1u8, {
             let haspos: u32 = unsafe { ::std::mem::transmute(haspos) };
@@ -75406,9 +73244,7 @@ pub unsafe fn readstoplist(
                 fname: *const ::std::os::raw::c_char,
                 s: *mut StopList,
                 wordop: ::std::option::Option<
-                    unsafe extern "C" fn(
-                        arg1: *const ::std::os::raw::c_char,
-                    ) -> *mut ::std::os::raw::c_char,
+                    unsafe extern "C" fn(arg1: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char,
                 >,
             );
         }
@@ -75478,16 +73314,10 @@ pub unsafe fn init_tsvector_parser(
     })
 }
 #[track_caller]
-pub unsafe fn reset_tsvector_parser(
-    arg_state: TSVectorParseState,
-    arg_input: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn reset_tsvector_parser(arg_state: TSVectorParseState, arg_input: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn reset_tsvector_parser(
-                state: TSVectorParseState,
-                input: *mut ::std::os::raw::c_char,
-            );
+            pub fn reset_tsvector_parser(state: TSVectorParseState, input: *mut ::std::os::raw::c_char);
         }
         reset_tsvector_parser(arg_state, arg_input)
     })
@@ -75820,14 +73650,10 @@ impl Default for QTNode {
 }
 pub type TSQuerySign = uint64;
 #[track_caller]
-pub unsafe fn QT2QTN(
-    arg_in_: *mut QueryItem,
-    arg_operand: *mut ::std::os::raw::c_char,
-) -> *mut QTNode {
+pub unsafe fn QT2QTN(arg_in_: *mut QueryItem, arg_operand: *mut ::std::os::raw::c_char) -> *mut QTNode {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn QT2QTN(in_: *mut QueryItem, operand: *mut ::std::os::raw::c_char)
-                -> *mut QTNode;
+            pub fn QT2QTN(in_: *mut QueryItem, operand: *mut ::std::os::raw::c_char) -> *mut QTNode;
         }
         QT2QTN(arg_in_, arg_operand)
     })
@@ -75988,13 +73814,7 @@ pub unsafe fn pg_analyze_and_rewrite(
                 queryEnv: *mut QueryEnvironment,
             ) -> *mut List;
         }
-        pg_analyze_and_rewrite(
-            arg_parsetree,
-            arg_query_string,
-            arg_paramTypes,
-            arg_numParams,
-            arg_queryEnv,
-        )
+        pg_analyze_and_rewrite(arg_parsetree, arg_query_string, arg_paramTypes, arg_numParams, arg_queryEnv)
     })
 }
 #[track_caller]
@@ -76082,10 +73902,7 @@ pub unsafe fn assign_max_stack_depth(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn assign_max_stack_depth(
-                newval: ::std::os::raw::c_int,
-                extra: *mut ::std::os::raw::c_void,
-            );
+            pub fn assign_max_stack_depth(newval: ::std::os::raw::c_int, extra: *mut ::std::os::raw::c_void);
         }
         assign_max_stack_depth(arg_newval, arg_extra)
     })
@@ -76268,14 +74085,11 @@ pub unsafe fn set_plan_disabling_options(
     })
 }
 #[track_caller]
-pub unsafe fn get_stats_option_name(
-    arg_arg: *const ::std::os::raw::c_char,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn get_stats_option_name(arg_arg: *const ::std::os::raw::c_char) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_stats_option_name(
-                arg: *const ::std::os::raw::c_char,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn get_stats_option_name(arg: *const ::std::os::raw::c_char)
+                -> *const ::std::os::raw::c_char;
         }
         get_stats_option_name(arg_arg)
     })
@@ -99520,16 +97334,10 @@ pub unsafe fn hex_decode(
     })
 }
 #[track_caller]
-pub unsafe fn buildint2vector(
-    arg_int2s: *const int16,
-    arg_n: ::std::os::raw::c_int,
-) -> *mut int2vector {
+pub unsafe fn buildint2vector(arg_int2s: *const int16, arg_n: ::std::os::raw::c_int) -> *mut int2vector {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn buildint2vector(
-                int2s: *const int16,
-                n: ::std::os::raw::c_int,
-            ) -> *mut int2vector;
+            pub fn buildint2vector(int2s: *const int16, n: ::std::os::raw::c_int) -> *mut int2vector;
         }
         buildint2vector(arg_int2s, arg_n)
     })
@@ -99544,31 +97352,19 @@ pub unsafe fn namecpy(arg_n1: Name, arg_n2: *const NameData) -> ::std::os::raw::
     })
 }
 #[track_caller]
-pub unsafe fn namestrcpy(
-    arg_name: Name,
-    arg_str_: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn namestrcpy(arg_name: Name, arg_str_: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn namestrcpy(
-                name: Name,
-                str_: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn namestrcpy(name: Name, str_: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         namestrcpy(arg_name, arg_str_)
     })
 }
 #[track_caller]
-pub unsafe fn namestrcmp(
-    arg_name: Name,
-    arg_str_: *const ::std::os::raw::c_char,
-) -> ::std::os::raw::c_int {
+pub unsafe fn namestrcmp(arg_name: Name, arg_str_: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn namestrcmp(
-                name: Name,
-                str_: *const ::std::os::raw::c_char,
-            ) -> ::std::os::raw::c_int;
+            pub fn namestrcmp(name: Name, str_: *const ::std::os::raw::c_char) -> ::std::os::raw::c_int;
         }
         namestrcmp(arg_name, arg_str_)
     })
@@ -99659,10 +97455,7 @@ pub unsafe fn pg_ltostr(
 ) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn pg_ltostr(
-                str_: *mut ::std::os::raw::c_char,
-                value: int32,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn pg_ltostr(str_: *mut ::std::os::raw::c_char, value: int32) -> *mut ::std::os::raw::c_char;
         }
         pg_ltostr(arg_str_, arg_value)
     })
@@ -99740,14 +97533,10 @@ extern "C" {
     pub static mut quote_all_identifiers: bool;
 }
 #[track_caller]
-pub unsafe fn quote_identifier(
-    arg_ident: *const ::std::os::raw::c_char,
-) -> *const ::std::os::raw::c_char {
+pub unsafe fn quote_identifier(arg_ident: *const ::std::os::raw::c_char) -> *const ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn quote_identifier(
-                ident: *const ::std::os::raw::c_char,
-            ) -> *const ::std::os::raw::c_char;
+            pub fn quote_identifier(ident: *const ::std::os::raw::c_char) -> *const ::std::os::raw::c_char;
         }
         quote_identifier(arg_ident)
     })
@@ -99787,14 +97576,7 @@ pub unsafe fn generate_operator_clause(
                 rightoptype: Oid,
             );
         }
-        generate_operator_clause(
-            arg_buf,
-            arg_leftop,
-            arg_leftoptype,
-            arg_opoid,
-            arg_rightop,
-            arg_rightoptype,
-        )
+        generate_operator_clause(arg_buf, arg_leftop, arg_leftoptype, arg_opoid, arg_rightop, arg_rightoptype)
     })
 }
 #[track_caller]
@@ -99853,11 +97635,7 @@ pub unsafe fn text_to_cstring_buffer(
 ) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn text_to_cstring_buffer(
-                src: *const text,
-                dst: *mut ::std::os::raw::c_char,
-                dst_len: usize,
-            );
+            pub fn text_to_cstring_buffer(src: *const text, dst: *mut ::std::os::raw::c_char, dst_len: usize);
         }
         text_to_cstring_buffer(arg_src, arg_dst, arg_dst_len)
     })
@@ -99914,11 +97692,7 @@ pub unsafe fn inet_cidr_ntop(
     })
 }
 #[track_caller]
-pub unsafe fn convert_network_to_scalar(
-    arg_value: Datum,
-    arg_typid: Oid,
-    arg_failure: *mut bool,
-) -> f64 {
+pub unsafe fn convert_network_to_scalar(arg_value: Datum, arg_typid: Oid, arg_failure: *mut bool) -> f64 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn convert_network_to_scalar(value: Datum, typid: Oid, failure: *mut bool) -> f64;
@@ -99945,16 +97719,10 @@ pub unsafe fn network_scan_last(arg_in_: Datum) -> Datum {
     })
 }
 #[track_caller]
-pub unsafe fn clean_ipv6_addr(
-    arg_addr_family: ::std::os::raw::c_int,
-    arg_addr: *mut ::std::os::raw::c_char,
-) {
+pub unsafe fn clean_ipv6_addr(arg_addr_family: ::std::os::raw::c_int, arg_addr: *mut ::std::os::raw::c_char) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn clean_ipv6_addr(
-                addr_family: ::std::os::raw::c_int,
-                addr: *mut ::std::os::raw::c_char,
-            );
+            pub fn clean_ipv6_addr(addr_family: ::std::os::raw::c_int, addr: *mut ::std::os::raw::c_char);
         }
         clean_ipv6_addr(arg_addr_family, arg_addr)
     })
@@ -100004,16 +97772,10 @@ pub unsafe fn format_type_be_qualified(arg_type_oid: Oid) -> *mut ::std::os::raw
     })
 }
 #[track_caller]
-pub unsafe fn format_type_with_typemod(
-    arg_type_oid: Oid,
-    arg_typemod: int32,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn format_type_with_typemod(arg_type_oid: Oid, arg_typemod: int32) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn format_type_with_typemod(
-                type_oid: Oid,
-                typemod: int32,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn format_type_with_typemod(type_oid: Oid, typemod: int32) -> *mut ::std::os::raw::c_char;
         }
         format_type_with_typemod(arg_type_oid, arg_typemod)
     })
@@ -100028,14 +97790,10 @@ pub unsafe fn type_maximum_size(arg_type_oid: Oid, arg_typemod: int32) -> int32 
     })
 }
 #[track_caller]
-pub unsafe fn quote_literal_cstr(
-    arg_rawstr: *const ::std::os::raw::c_char,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn quote_literal_cstr(arg_rawstr: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn quote_literal_cstr(
-                rawstr: *const ::std::os::raw::c_char,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn quote_literal_cstr(rawstr: *const ::std::os::raw::c_char) -> *mut ::std::os::raw::c_char;
         }
         quote_literal_cstr(arg_rawstr)
     })
@@ -100103,18 +97861,10 @@ pub unsafe fn GetSQLLocalTime(arg_typmod: int32) -> TimeADT {
     })
 }
 #[track_caller]
-pub unsafe fn time2tm(
-    arg_time: TimeADT,
-    arg_tm: *mut pg_tm,
-    arg_fsec: *mut fsec_t,
-) -> ::std::os::raw::c_int {
+pub unsafe fn time2tm(arg_time: TimeADT, arg_tm: *mut pg_tm, arg_fsec: *mut fsec_t) -> ::std::os::raw::c_int {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn time2tm(
-                time: TimeADT,
-                tm: *mut pg_tm,
-                fsec: *mut fsec_t,
-            ) -> ::std::os::raw::c_int;
+            pub fn time2tm(time: TimeADT, tm: *mut pg_tm, fsec: *mut fsec_t) -> ::std::os::raw::c_int;
         }
         time2tm(arg_time, arg_tm, arg_fsec)
     })
@@ -100250,13 +98000,7 @@ pub unsafe fn float8in_internal_opt_error(
                 have_error: *mut bool,
             ) -> float8;
         }
-        float8in_internal_opt_error(
-            arg_num,
-            arg_endptr_p,
-            arg_type_name,
-            arg_orig_string,
-            arg_have_error,
-        )
+        float8in_internal_opt_error(arg_num, arg_endptr_p, arg_type_name, arg_orig_string, arg_have_error)
     })
 }
 #[track_caller]
@@ -100382,10 +98126,8 @@ pub unsafe fn numeric_out_sci(
 ) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn numeric_out_sci(
-                num: Numeric,
-                scale: ::std::os::raw::c_int,
-            ) -> *mut ::std::os::raw::c_char;
+            pub fn numeric_out_sci(num: Numeric, scale: ::std::os::raw::c_int)
+                -> *mut ::std::os::raw::c_char;
         }
         numeric_out_sci(arg_num, arg_scale)
     })
@@ -100407,11 +98149,7 @@ pub unsafe fn numeric_add_opt_error(
 ) -> Numeric {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn numeric_add_opt_error(
-                num1: Numeric,
-                num2: Numeric,
-                have_error: *mut bool,
-            ) -> Numeric;
+            pub fn numeric_add_opt_error(num1: Numeric, num2: Numeric, have_error: *mut bool) -> Numeric;
         }
         numeric_add_opt_error(arg_num1, arg_num2, arg_have_error)
     })
@@ -100424,11 +98162,7 @@ pub unsafe fn numeric_sub_opt_error(
 ) -> Numeric {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn numeric_sub_opt_error(
-                num1: Numeric,
-                num2: Numeric,
-                have_error: *mut bool,
-            ) -> Numeric;
+            pub fn numeric_sub_opt_error(num1: Numeric, num2: Numeric, have_error: *mut bool) -> Numeric;
         }
         numeric_sub_opt_error(arg_num1, arg_num2, arg_have_error)
     })
@@ -100441,11 +98175,7 @@ pub unsafe fn numeric_mul_opt_error(
 ) -> Numeric {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn numeric_mul_opt_error(
-                num1: Numeric,
-                num2: Numeric,
-                have_error: *mut bool,
-            ) -> Numeric;
+            pub fn numeric_mul_opt_error(num1: Numeric, num2: Numeric, have_error: *mut bool) -> Numeric;
         }
         numeric_mul_opt_error(arg_num1, arg_num2, arg_have_error)
     })
@@ -100458,11 +98188,7 @@ pub unsafe fn numeric_div_opt_error(
 ) -> Numeric {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn numeric_div_opt_error(
-                num1: Numeric,
-                num2: Numeric,
-                have_error: *mut bool,
-            ) -> Numeric;
+            pub fn numeric_div_opt_error(num1: Numeric, num2: Numeric, have_error: *mut bool) -> Numeric;
         }
         numeric_div_opt_error(arg_num1, arg_num2, arg_have_error)
     })
@@ -100475,11 +98201,7 @@ pub unsafe fn numeric_mod_opt_error(
 ) -> Numeric {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn numeric_mod_opt_error(
-                num1: Numeric,
-                num2: Numeric,
-                have_error: *mut bool,
-            ) -> Numeric;
+            pub fn numeric_mod_opt_error(num1: Numeric, num2: Numeric, have_error: *mut bool) -> Numeric;
         }
         numeric_mod_opt_error(arg_num1, arg_num2, arg_have_error)
     })
@@ -100680,31 +98402,19 @@ impl Default for JsonbIterator {
     }
 }
 #[track_caller]
-pub unsafe fn getJsonbOffset(
-    arg_jc: *const JsonbContainer,
-    arg_index: ::std::os::raw::c_int,
-) -> uint32 {
+pub unsafe fn getJsonbOffset(arg_jc: *const JsonbContainer, arg_index: ::std::os::raw::c_int) -> uint32 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getJsonbOffset(
-                jc: *const JsonbContainer,
-                index: ::std::os::raw::c_int,
-            ) -> uint32;
+            pub fn getJsonbOffset(jc: *const JsonbContainer, index: ::std::os::raw::c_int) -> uint32;
         }
         getJsonbOffset(arg_jc, arg_index)
     })
 }
 #[track_caller]
-pub unsafe fn getJsonbLength(
-    arg_jc: *const JsonbContainer,
-    arg_index: ::std::os::raw::c_int,
-) -> uint32 {
+pub unsafe fn getJsonbLength(arg_jc: *const JsonbContainer, arg_index: ::std::os::raw::c_int) -> uint32 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getJsonbLength(
-                jc: *const JsonbContainer,
-                index: ::std::os::raw::c_int,
-            ) -> uint32;
+            pub fn getJsonbLength(jc: *const JsonbContainer, index: ::std::os::raw::c_int) -> uint32;
         }
         getJsonbLength(arg_jc, arg_index)
     })
@@ -100748,10 +98458,7 @@ pub unsafe fn getIthJsonbValueFromContainer(
 ) -> *mut JsonbValue {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn getIthJsonbValueFromContainer(
-                sheader: *mut JsonbContainer,
-                i: uint32,
-            ) -> *mut JsonbValue;
+            pub fn getIthJsonbValueFromContainer(sheader: *mut JsonbContainer, i: uint32) -> *mut JsonbValue;
         }
         getIthJsonbValueFromContainer(arg_sheader, arg_i)
     })
@@ -101007,12 +98714,7 @@ pub unsafe fn get_opfamily_member(
 ) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_opfamily_member(
-                opfamily: Oid,
-                lefttype: Oid,
-                righttype: Oid,
-                strategy: int16,
-            ) -> Oid;
+            pub fn get_opfamily_member(opfamily: Oid, lefttype: Oid, righttype: Oid, strategy: int16) -> Oid;
         }
         get_opfamily_member(arg_opfamily, arg_lefttype, arg_righttype, arg_strategy)
     })
@@ -101071,11 +98773,7 @@ pub unsafe fn get_compatible_hash_operators(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_compatible_hash_operators(
-                opno: Oid,
-                lhs_opno: *mut Oid,
-                rhs_opno: *mut Oid,
-            ) -> bool;
+            pub fn get_compatible_hash_operators(opno: Oid, lhs_opno: *mut Oid, rhs_opno: *mut Oid) -> bool;
         }
         get_compatible_hash_operators(arg_opno, arg_lhs_opno, arg_rhs_opno)
     })
@@ -101124,12 +98822,7 @@ pub unsafe fn get_opfamily_proc(
 ) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_opfamily_proc(
-                opfamily: Oid,
-                lefttype: Oid,
-                righttype: Oid,
-                procnum: int16,
-            ) -> Oid;
+            pub fn get_opfamily_proc(opfamily: Oid, lefttype: Oid, righttype: Oid, procnum: int16) -> Oid;
         }
         get_opfamily_proc(arg_opfamily, arg_lefttype, arg_righttype, arg_procnum)
     })
@@ -101236,14 +98929,10 @@ pub unsafe fn get_constraint_name(arg_conoid: Oid) -> *mut ::std::os::raw::c_cha
     })
 }
 #[track_caller]
-pub unsafe fn get_language_name(
-    arg_langoid: Oid,
-    arg_missing_ok: bool,
-) -> *mut ::std::os::raw::c_char {
+pub unsafe fn get_language_name(arg_langoid: Oid, arg_missing_ok: bool) -> *mut ::std::os::raw::c_char {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_language_name(langoid: Oid, missing_ok: bool)
-                -> *mut ::std::os::raw::c_char;
+            pub fn get_language_name(langoid: Oid, missing_ok: bool) -> *mut ::std::os::raw::c_char;
         }
         get_language_name(arg_langoid, arg_missing_ok)
     })
@@ -101517,16 +99206,10 @@ pub unsafe fn get_func_support(arg_funcid: Oid) -> RegProcedure {
     })
 }
 #[track_caller]
-pub unsafe fn get_relname_relid(
-    arg_relname: *const ::std::os::raw::c_char,
-    arg_relnamespace: Oid,
-) -> Oid {
+pub unsafe fn get_relname_relid(arg_relname: *const ::std::os::raw::c_char, arg_relnamespace: Oid) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_relname_relid(
-                relname: *const ::std::os::raw::c_char,
-                relnamespace: Oid,
-            ) -> Oid;
+            pub fn get_relname_relid(relname: *const ::std::os::raw::c_char, relnamespace: Oid) -> Oid;
         }
         get_relname_relid(arg_relname, arg_relnamespace)
     })
@@ -101595,11 +99278,7 @@ pub unsafe fn get_rel_persistence(arg_relid: Oid) -> ::std::os::raw::c_char {
     })
 }
 #[track_caller]
-pub unsafe fn get_transform_fromsql(
-    arg_typid: Oid,
-    arg_langid: Oid,
-    arg_trftypes: *mut List,
-) -> Oid {
+pub unsafe fn get_transform_fromsql(arg_typid: Oid, arg_langid: Oid, arg_trftypes: *mut List) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_transform_fromsql(typid: Oid, langid: Oid, trftypes: *mut List) -> Oid;
@@ -101842,11 +99521,7 @@ pub unsafe fn getTypeInputInfo(arg_type_: Oid, arg_typInput: *mut Oid, arg_typIO
     })
 }
 #[track_caller]
-pub unsafe fn getTypeOutputInfo(
-    arg_type_: Oid,
-    arg_typOutput: *mut Oid,
-    arg_typIsVarlena: *mut bool,
-) {
+pub unsafe fn getTypeOutputInfo(arg_type_: Oid, arg_typOutput: *mut Oid, arg_typIsVarlena: *mut bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn getTypeOutputInfo(type_: Oid, typOutput: *mut Oid, typIsVarlena: *mut bool);
@@ -101855,11 +99530,7 @@ pub unsafe fn getTypeOutputInfo(
     })
 }
 #[track_caller]
-pub unsafe fn getTypeBinaryInputInfo(
-    arg_type_: Oid,
-    arg_typReceive: *mut Oid,
-    arg_typIOParam: *mut Oid,
-) {
+pub unsafe fn getTypeBinaryInputInfo(arg_type_: Oid, arg_typReceive: *mut Oid, arg_typIOParam: *mut Oid) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn getTypeBinaryInputInfo(type_: Oid, typReceive: *mut Oid, typIOParam: *mut Oid);
@@ -101868,11 +99539,7 @@ pub unsafe fn getTypeBinaryInputInfo(
     })
 }
 #[track_caller]
-pub unsafe fn getTypeBinaryOutputInfo(
-    arg_type_: Oid,
-    arg_typSend: *mut Oid,
-    arg_typIsVarlena: *mut bool,
-) {
+pub unsafe fn getTypeBinaryOutputInfo(arg_type_: Oid, arg_typSend: *mut Oid, arg_typIsVarlena: *mut bool) {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn getTypeBinaryOutputInfo(type_: Oid, typSend: *mut Oid, typIsVarlena: *mut bool);
@@ -102010,10 +99677,7 @@ pub unsafe fn get_range_collation(arg_rangeOid: Oid) -> Oid {
     })
 }
 #[track_caller]
-pub unsafe fn get_index_column_opclass(
-    arg_index_oid: Oid,
-    arg_attno: ::std::os::raw::c_int,
-) -> Oid {
+pub unsafe fn get_index_column_opclass(arg_index_oid: Oid, arg_attno: ::std::os::raw::c_int) -> Oid {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
             pub fn get_index_column_opclass(index_oid: Oid, attno: ::std::os::raw::c_int) -> Oid;
@@ -102137,18 +99801,10 @@ pub unsafe fn reservoir_init_selection_state(arg_rs: ReservoirState, arg_n: ::st
     })
 }
 #[track_caller]
-pub unsafe fn reservoir_get_next_S(
-    arg_rs: ReservoirState,
-    arg_t: f64,
-    arg_n: ::std::os::raw::c_int,
-) -> f64 {
+pub unsafe fn reservoir_get_next_S(arg_rs: ReservoirState, arg_t: f64, arg_n: ::std::os::raw::c_int) -> f64 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn reservoir_get_next_S(
-                rs: ReservoirState,
-                t: f64,
-                n: ::std::os::raw::c_int,
-            ) -> f64;
+            pub fn reservoir_get_next_S(rs: ReservoirState, t: f64, n: ::std::os::raw::c_int) -> f64;
         }
         reservoir_get_next_S(arg_rs, arg_t, arg_n)
     })
@@ -102229,16 +99885,10 @@ pub unsafe fn examine_variable(
     })
 }
 #[track_caller]
-pub unsafe fn statistic_proc_security_check(
-    arg_vardata: *mut VariableStatData,
-    arg_func_oid: Oid,
-) -> bool {
+pub unsafe fn statistic_proc_security_check(arg_vardata: *mut VariableStatData, arg_func_oid: Oid) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn statistic_proc_security_check(
-                vardata: *mut VariableStatData,
-                func_oid: Oid,
-            ) -> bool;
+            pub fn statistic_proc_security_check(vardata: *mut VariableStatData, func_oid: Oid) -> bool;
         }
         statistic_proc_security_check(arg_vardata, arg_func_oid)
     })
@@ -102263,14 +99913,7 @@ pub unsafe fn get_restriction_variable(
                 varonleft: *mut bool,
             ) -> bool;
         }
-        get_restriction_variable(
-            arg_root,
-            arg_args,
-            arg_varRelid,
-            arg_vardata,
-            arg_other,
-            arg_varonleft,
-        )
+        get_restriction_variable(arg_root, arg_args, arg_varRelid, arg_vardata, arg_other, arg_varonleft)
     })
 }
 #[track_caller]
@@ -102293,27 +99936,14 @@ pub unsafe fn get_join_variables(
                 join_is_reversed: *mut bool,
             );
         }
-        get_join_variables(
-            arg_root,
-            arg_args,
-            arg_sjinfo,
-            arg_vardata1,
-            arg_vardata2,
-            arg_join_is_reversed,
-        )
+        get_join_variables(arg_root, arg_args, arg_sjinfo, arg_vardata1, arg_vardata2, arg_join_is_reversed)
     })
 }
 #[track_caller]
-pub unsafe fn get_variable_numdistinct(
-    arg_vardata: *mut VariableStatData,
-    arg_isdefault: *mut bool,
-) -> f64 {
+pub unsafe fn get_variable_numdistinct(arg_vardata: *mut VariableStatData, arg_isdefault: *mut bool) -> f64 {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn get_variable_numdistinct(
-                vardata: *mut VariableStatData,
-                isdefault: *mut bool,
-            ) -> f64;
+            pub fn get_variable_numdistinct(vardata: *mut VariableStatData, isdefault: *mut bool) -> f64;
         }
         get_variable_numdistinct(arg_vardata, arg_isdefault)
     })
@@ -102527,14 +100157,7 @@ pub unsafe fn var_eq_const(
                 negate: bool,
             ) -> f64;
         }
-        var_eq_const(
-            arg_vardata,
-            arg_oproid,
-            arg_constval,
-            arg_constisnull,
-            arg_varonleft,
-            arg_negate,
-        )
+        var_eq_const(arg_vardata, arg_oproid, arg_constval, arg_constisnull, arg_varonleft, arg_negate)
     })
 }
 #[track_caller]
@@ -102674,14 +100297,7 @@ pub unsafe fn scalararraysel(
                 sjinfo: *mut SpecialJoinInfo,
             ) -> Selectivity;
         }
-        scalararraysel(
-            arg_root,
-            arg_clause,
-            arg_is_join_clause,
-            arg_varRelid,
-            arg_jointype,
-            arg_sjinfo,
-        )
+        scalararraysel(arg_root, arg_clause, arg_is_join_clause, arg_varRelid, arg_jointype, arg_sjinfo)
     })
 }
 #[track_caller]
@@ -102790,13 +100406,7 @@ pub unsafe fn estimate_hash_bucket_stats(
                 bucketsize_frac: *mut Selectivity,
             );
         }
-        estimate_hash_bucket_stats(
-            arg_root,
-            arg_hashkey,
-            arg_nbuckets,
-            arg_mcv_freq,
-            arg_bucketsize_frac,
-        )
+        estimate_hash_bucket_stats(arg_root, arg_hashkey, arg_nbuckets, arg_mcv_freq, arg_bucketsize_frac)
     })
 }
 #[track_caller]
@@ -102826,16 +100436,10 @@ pub unsafe fn get_quals_from_indexclauses(arg_indexclauses: *mut List) -> *mut L
     })
 }
 #[track_caller]
-pub unsafe fn index_other_operands_eval_cost(
-    arg_root: *mut PlannerInfo,
-    arg_indexquals: *mut List,
-) -> Cost {
+pub unsafe fn index_other_operands_eval_cost(arg_root: *mut PlannerInfo, arg_indexquals: *mut List) -> Cost {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn index_other_operands_eval_cost(
-                root: *mut PlannerInfo,
-                indexquals: *mut List,
-            ) -> Cost;
+            pub fn index_other_operands_eval_cost(root: *mut PlannerInfo, indexquals: *mut List) -> Cost;
         }
         index_other_operands_eval_cost(arg_root, arg_indexquals)
     })
@@ -102847,10 +100451,8 @@ pub unsafe fn add_predicate_to_index_quals(
 ) -> *mut List {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn add_predicate_to_index_quals(
-                index: *mut IndexOptInfo,
-                indexQuals: *mut List,
-            ) -> *mut List;
+            pub fn add_predicate_to_index_quals(index: *mut IndexOptInfo, indexQuals: *mut List)
+                -> *mut List;
         }
         add_predicate_to_index_quals(arg_index, arg_indexQuals)
     })
@@ -103042,11 +100644,7 @@ pub unsafe fn SearchSysCache2(
 ) -> HeapTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SearchSysCache2(
-                cacheId: ::std::os::raw::c_int,
-                key1: Datum,
-                key2: Datum,
-            ) -> HeapTuple;
+            pub fn SearchSysCache2(cacheId: ::std::os::raw::c_int, key1: Datum, key2: Datum) -> HeapTuple;
         }
         SearchSysCache2(arg_cacheId, arg_key1, arg_key2)
     })
@@ -103166,16 +100764,10 @@ pub unsafe fn GetSysCacheOid(
     })
 }
 #[track_caller]
-pub unsafe fn SearchSysCacheAttName(
-    arg_relid: Oid,
-    arg_attname: *const ::std::os::raw::c_char,
-) -> HeapTuple {
+pub unsafe fn SearchSysCacheAttName(arg_relid: Oid, arg_attname: *const ::std::os::raw::c_char) -> HeapTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SearchSysCacheAttName(
-                relid: Oid,
-                attname: *const ::std::os::raw::c_char,
-            ) -> HeapTuple;
+            pub fn SearchSysCacheAttName(relid: Oid, attname: *const ::std::os::raw::c_char) -> HeapTuple;
         }
         SearchSysCacheAttName(arg_relid, arg_attname)
     })
@@ -103187,10 +100779,8 @@ pub unsafe fn SearchSysCacheCopyAttName(
 ) -> HeapTuple {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SearchSysCacheCopyAttName(
-                relid: Oid,
-                attname: *const ::std::os::raw::c_char,
-            ) -> HeapTuple;
+            pub fn SearchSysCacheCopyAttName(relid: Oid, attname: *const ::std::os::raw::c_char)
+                -> HeapTuple;
         }
         SearchSysCacheCopyAttName(arg_relid, arg_attname)
     })
@@ -103202,10 +100792,7 @@ pub unsafe fn SearchSysCacheExistsAttName(
 ) -> bool {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn SearchSysCacheExistsAttName(
-                relid: Oid,
-                attname: *const ::std::os::raw::c_char,
-            ) -> bool;
+            pub fn SearchSysCacheExistsAttName(relid: Oid, attname: *const ::std::os::raw::c_char) -> bool;
         }
         SearchSysCacheExistsAttName(arg_relid, arg_attname)
     })
@@ -103414,16 +101001,10 @@ pub struct SharedRecordTypmodRegistry {
     _unused: [u8; 0],
 }
 #[track_caller]
-pub unsafe fn lookup_type_cache(
-    arg_type_id: Oid,
-    arg_flags: ::std::os::raw::c_int,
-) -> *mut TypeCacheEntry {
+pub unsafe fn lookup_type_cache(arg_type_id: Oid, arg_flags: ::std::os::raw::c_int) -> *mut TypeCacheEntry {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn lookup_type_cache(
-                type_id: Oid,
-                flags: ::std::os::raw::c_int,
-            ) -> *mut TypeCacheEntry;
+            pub fn lookup_type_cache(type_id: Oid, flags: ::std::os::raw::c_int) -> *mut TypeCacheEntry;
         }
         lookup_type_cache(arg_type_id, arg_flags)
     })
@@ -103482,11 +101063,7 @@ pub unsafe fn lookup_rowtype_tupdesc_noerror(
 ) -> TupleDesc {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn lookup_rowtype_tupdesc_noerror(
-                type_id: Oid,
-                typmod: int32,
-                noError: bool,
-            ) -> TupleDesc;
+            pub fn lookup_rowtype_tupdesc_noerror(type_id: Oid, typmod: int32, noError: bool) -> TupleDesc;
         }
         lookup_rowtype_tupdesc_noerror(arg_type_id, arg_typmod, arg_noError)
     })
@@ -103508,11 +101085,7 @@ pub unsafe fn lookup_rowtype_tupdesc_domain(
 ) -> TupleDesc {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn lookup_rowtype_tupdesc_domain(
-                type_id: Oid,
-                typmod: int32,
-                noError: bool,
-            ) -> TupleDesc;
+            pub fn lookup_rowtype_tupdesc_domain(type_id: Oid, typmod: int32, noError: bool) -> TupleDesc;
         }
         lookup_rowtype_tupdesc_domain(arg_type_id, arg_typmod, arg_noError)
     })
@@ -103798,16 +101371,10 @@ pub unsafe fn range_overright_internal(
     })
 }
 #[track_caller]
-pub unsafe fn range_get_typcache(
-    arg_fcinfo: FunctionCallInfo,
-    arg_rngtypid: Oid,
-) -> *mut TypeCacheEntry {
+pub unsafe fn range_get_typcache(arg_fcinfo: FunctionCallInfo, arg_rngtypid: Oid) -> *mut TypeCacheEntry {
     crate::ffi::pg_guard_ffi_boundary(move || {
         extern "C" {
-            pub fn range_get_typcache(
-                fcinfo: FunctionCallInfo,
-                rngtypid: Oid,
-            ) -> *mut TypeCacheEntry;
+            pub fn range_get_typcache(fcinfo: FunctionCallInfo, rngtypid: Oid) -> *mut TypeCacheEntry;
         }
         range_get_typcache(arg_fcinfo, arg_rngtypid)
     })

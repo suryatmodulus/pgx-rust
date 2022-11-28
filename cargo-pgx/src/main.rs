@@ -82,26 +82,17 @@ fn main() -> color_eyre::Result<()> {
                 _ => "trace",
             };
             let filter_layer = EnvFilter::new("warn");
-            let filter_layer =
-                filter_layer.add_directive(format!("cargo_pgx={}", log_level).parse()?);
+            let filter_layer = filter_layer.add_directive(format!("cargo_pgx={}", log_level).parse()?);
             let filter_layer = filter_layer.add_directive(format!("pgx={}", log_level).parse()?);
-            let filter_layer =
-                filter_layer.add_directive(format!("pgx_macros={}", log_level).parse()?);
-            let filter_layer =
-                filter_layer.add_directive(format!("pgx_tests={}", log_level).parse()?);
-            let filter_layer =
-                filter_layer.add_directive(format!("pgx_pg_sys={}", log_level).parse()?);
-            let filter_layer =
-                filter_layer.add_directive(format!("pgx_utils={}", log_level).parse()?);
+            let filter_layer = filter_layer.add_directive(format!("pgx_macros={}", log_level).parse()?);
+            let filter_layer = filter_layer.add_directive(format!("pgx_tests={}", log_level).parse()?);
+            let filter_layer = filter_layer.add_directive(format!("pgx_pg_sys={}", log_level).parse()?);
+            let filter_layer = filter_layer.add_directive(format!("pgx_utils={}", log_level).parse()?);
             filter_layer
         }
     };
 
-    tracing_subscriber::registry()
-        .with(filter_layer)
-        .with(fmt_layer)
-        .with(ErrorLayer::default())
-        .init();
+    tracing_subscriber::registry().with(filter_layer).with(fmt_layer).with(ErrorLayer::default()).init();
 
     cargo_cli.execute()
 }

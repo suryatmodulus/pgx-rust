@@ -143,34 +143,32 @@ mod tests {
 
     #[pg_test]
     fn test_accept_range_i32() {
-        let matched =
-            Spi::get_one::<bool>("SELECT accept_range_i32(int4range'[1,10)') = int4range'[1,10)'")
-                .expect("failed to get SPI result");
+        let matched = Spi::get_one::<bool>("SELECT accept_range_i32(int4range'[1,10)') = int4range'[1,10)'")
+            .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_accept_range_i64() {
-        let matched =
-            Spi::get_one::<bool>("SELECT accept_range_i64(int8range'[1,10)') = int8range'[1,10)'")
-                .expect("failed to get SPI result");
+        let matched = Spi::get_one::<bool>("SELECT accept_range_i64(int8range'[1,10)') = int8range'[1,10)'")
+            .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_accept_range_numeric() {
-        let matched = Spi::get_one::<bool>(
-            "SELECT accept_range_numeric(numrange'[1.0,10.0)') = numrange'[1.0,10.0)'",
-        )
-        .expect("failed to get SPI result");
+        let matched =
+            Spi::get_one::<bool>("SELECT accept_range_numeric(numrange'[1.0,10.0)') = numrange'[1.0,10.0)'")
+                .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_accept_range_date() {
-        let matched =
-            Spi::get_one::<bool>("SELECT accept_range_date(daterange'[2000-01-01,2022-01-01)') = daterange'[2000-01-01,2022-01-01)'")
-            .expect("failed to get SPI result");
+        let matched = Spi::get_one::<bool>(
+            "SELECT accept_range_date(daterange'[2000-01-01,2022-01-01)') = daterange'[2000-01-01,2022-01-01)'",
+        )
+        .expect("failed to get SPI result");
         assert!(matched);
     }
 
@@ -192,54 +190,48 @@ mod tests {
 
     #[pg_test]
     fn test_range_i32_rt_values() {
-        let matched = Spi::get_one::<bool>(
-            "SELECT range_i32_rt_values(int4range'[1,10)') = int4range'[1,10)'",
-        )
-        .expect("failed to get SPI result");
+        let matched =
+            Spi::get_one::<bool>("SELECT range_i32_rt_values(int4range'[1,10)') = int4range'[1,10)'")
+                .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_range_i32_rt_bounds() {
-        let matched = Spi::get_one::<bool>(
-            "SELECT range_i32_rt_bounds(int4range'[1,10)') = int4range'[1,10)'",
-        )
-        .expect("failed to get SPI result");
+        let matched =
+            Spi::get_one::<bool>("SELECT range_i32_rt_bounds(int4range'[1,10)') = int4range'[1,10)'")
+                .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_range_i64_rt_values() {
-        let matched = Spi::get_one::<bool>(
-            "SELECT range_i64_rt_values(int8range'[1,10)') = int8range'[1,10)'",
-        );
+        let matched =
+            Spi::get_one::<bool>("SELECT range_i64_rt_values(int8range'[1,10)') = int8range'[1,10)'");
         assert!(matched.unwrap());
     }
 
     #[pg_test]
     fn test_range_i64_rt_bounds() {
-        let matched = Spi::get_one::<bool>(
-            "SELECT range_i64_rt_bounds(int8range'[1,10)') = int8range'[1,10)'",
-        )
-        .expect("failed to get SPI result");
+        let matched =
+            Spi::get_one::<bool>("SELECT range_i64_rt_bounds(int8range'[1,10)') = int8range'[1,10)'")
+                .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_range_num_rt_values() {
-        let matched = Spi::get_one::<bool>(
-            "SELECT range_num_rt_values(numrange'[1.0,10.0)') = numrange'[1.0,10.0)'",
-        )
-        .expect("failed to get SPI result");
+        let matched =
+            Spi::get_one::<bool>("SELECT range_num_rt_values(numrange'[1.0,10.0)') = numrange'[1.0,10.0)'")
+                .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_range_num_rt_bounds() {
-        let matched = Spi::get_one::<bool>(
-            "SELECT range_num_rt_bounds(numrange'[1.0,10.0)') = numrange'[1.0,10.0)'",
-        )
-        .expect("failed to get SPI result");
+        let matched =
+            Spi::get_one::<bool>("SELECT range_num_rt_bounds(numrange'[1.0,10.0)') = numrange'[1.0,10.0)'")
+                .expect("failed to get SPI result");
         assert!(matched);
     }
 
@@ -254,9 +246,10 @@ mod tests {
 
     #[pg_test]
     fn test_range_date_rt_bounds() {
-        let matched =
-            Spi::get_one::<bool>("SELECT range_date_rt_bounds(daterange'[2000-01-01,2022-01-01)') = daterange'[2000-01-01,2022-01-01)'")
-            .expect("failed to get SPI result");
+        let matched = Spi::get_one::<bool>(
+            "SELECT range_date_rt_bounds(daterange'[2000-01-01,2022-01-01)') = daterange'[2000-01-01,2022-01-01)'",
+        )
+        .expect("failed to get SPI result");
         assert!(matched);
     }
 
@@ -387,17 +380,15 @@ mod tests {
 
     #[pg_test]
     fn test_range_date_rt_values_full() {
-        let matched =
-            Spi::get_one::<bool>("SELECT range_date_rt_values(daterange'(,)') = daterange'(,)'")
-                .expect("failed to get SPI result");
+        let matched = Spi::get_one::<bool>("SELECT range_date_rt_values(daterange'(,)') = daterange'(,)'")
+            .expect("failed to get SPI result");
         assert!(matched);
     }
 
     #[pg_test]
     fn test_range_date_rt_bounds_full() {
-        let matched =
-            Spi::get_one::<bool>("SELECT range_date_rt_bounds(daterange'(,)') = daterange'(,)'")
-                .expect("failed to get SPI result");
+        let matched = Spi::get_one::<bool>("SELECT range_date_rt_bounds(daterange'(,)') = daterange'(,)'")
+            .expect("failed to get SPI result");
         assert!(matched);
     }
 }

@@ -39,10 +39,7 @@ impl PgExternArgument {
         }
     }
 
-    pub fn build_from_pat_type(
-        fn_arg: syn::FnArg,
-        value: syn::PatType,
-    ) -> Result<Self, syn::Error> {
+    pub fn build_from_pat_type(fn_arg: syn::FnArg, value: syn::PatType) -> Result<Self, syn::Error> {
         let identifier = match *value.pat {
             Pat::Ident(ref p) => p.ident.clone(),
             Pat::Reference(ref p_ref) => match *p_ref.pat {

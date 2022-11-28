@@ -51,11 +51,7 @@ pub extern "C" fn background_worker_main(arg: pg_sys::Datum) {
     // did the initdb. You can specify a specific user with Some("my_user")
     BackgroundWorker::connect_worker_to_spi(Some("postgres"), None);
 
-    log!(
-        "Hello from inside the {} BGWorker!  Argument value={}",
-        BackgroundWorker::get_name(),
-        arg.unwrap()
-    );
+    log!("Hello from inside the {} BGWorker!  Argument value={}", BackgroundWorker::get_name(), arg.unwrap());
 
     // wake up every 10s or if we received a SIGTERM
     while BackgroundWorker::wait_latch(Some(Duration::from_secs(10))) {

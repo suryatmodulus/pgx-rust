@@ -75,35 +75,21 @@ impl PostgresType {
                 return Err(syn::Error::new(derive_input.ident.span(), "expected struct or enum"))
             }
         };
-        let to_sql_config =
-            ToSqlConfig::from_attributes(derive_input.attrs.as_slice())?.unwrap_or_default();
-        let funcname_in = Ident::new(
-            &format!("{}_in", derive_input.ident).to_lowercase(),
-            derive_input.ident.span(),
-        );
-        let funcname_out = Ident::new(
-            &format!("{}_out", derive_input.ident).to_lowercase(),
-            derive_input.ident.span(),
-        );
-        Self::new(
-            derive_input.ident,
-            derive_input.generics,
-            funcname_in,
-            funcname_out,
-            to_sql_config,
-        )
+        let to_sql_config = ToSqlConfig::from_attributes(derive_input.attrs.as_slice())?.unwrap_or_default();
+        let funcname_in =
+            Ident::new(&format!("{}_in", derive_input.ident).to_lowercase(), derive_input.ident.span());
+        let funcname_out =
+            Ident::new(&format!("{}_out", derive_input.ident).to_lowercase(), derive_input.ident.span());
+        Self::new(derive_input.ident, derive_input.generics, funcname_in, funcname_out, to_sql_config)
     }
 }
 
 impl Parse for PostgresType {
     fn parse(input: ParseStream) -> Result<Self, syn::Error> {
         let parsed: ItemStruct = input.parse()?;
-        let to_sql_config =
-            ToSqlConfig::from_attributes(parsed.attrs.as_slice())?.unwrap_or_default();
-        let funcname_in =
-            Ident::new(&format!("{}_in", parsed.ident).to_lowercase(), parsed.ident.span());
-        let funcname_out =
-            Ident::new(&format!("{}_out", parsed.ident).to_lowercase(), parsed.ident.span());
+        let to_sql_config = ToSqlConfig::from_attributes(parsed.attrs.as_slice())?.unwrap_or_default();
+        let funcname_in = Ident::new(&format!("{}_in", parsed.ident).to_lowercase(), parsed.ident.span());
+        let funcname_out = Ident::new(&format!("{}_out", parsed.ident).to_lowercase(), parsed.ident.span());
         Self::new(parsed.ident, parsed.generics, funcname_in, funcname_out, to_sql_config)
     }
 }
@@ -117,9 +103,7 @@ impl ToTokens for PostgresType {
             .clone()
             .into_iter()
             .flat_map(|param| match param {
-                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => {
-                    Some(item)
-                }
+                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => Some(item),
                 syn::GenericParam::Lifetime(mut lifetime) => {
                     lifetime.lifetime.ident = Ident::new("static", Span::call_site());
                     Some(syn::GenericParam::Lifetime(lifetime))
@@ -132,9 +116,7 @@ impl ToTokens for PostgresType {
             .clone()
             .into_iter()
             .flat_map(|param| match param {
-                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => {
-                    Some(item)
-                }
+                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => Some(item),
                 syn::GenericParam::Lifetime(_) => None,
             })
             .collect();

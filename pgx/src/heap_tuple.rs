@@ -99,8 +99,7 @@ impl<'a> PgHeapTuple<'a, AllocatedByPostgres> {
         trigger_data: &'a pg_sys::TriggerData,
         which_tuple: TriggerTuple,
     ) -> Option<PgHeapTuple<'a, AllocatedByPostgres>> {
-        let tupdesc =
-            PgTupleDesc::from_pg_unchecked(trigger_data.tg_relation.as_ref().unwrap().rd_att);
+        let tupdesc = PgTupleDesc::from_pg_unchecked(trigger_data.tg_relation.as_ref().unwrap().rd_att);
 
         let tuple = match which_tuple {
             TriggerTuple::Current => trigger_data.tg_trigtuple,
@@ -149,19 +148,15 @@ impl<'a> PgHeapTuple<'a, AllocatedByRust> {
     assert_eq!(heap_tuple.get_by_name("age").unwrap(), Some(42i32));
     ```
     */
-    pub fn new_composite_type(
-        type_name: &str,
-    ) -> Result<PgHeapTuple<'a, AllocatedByRust>, PgHeapTupleError> {
+    pub fn new_composite_type(type_name: &str) -> Result<PgHeapTuple<'a, AllocatedByRust>, PgHeapTupleError> {
         let tuple_desc = PgTupleDesc::for_composite_type(type_name)
             .ok_or_else(|| PgHeapTupleError::NoSuchType(type_name.to_string()))?;
         let natts = tuple_desc.len();
         unsafe {
-            let datums =
-                pg_sys::palloc0(natts * std::mem::size_of::<pg_sys::Datum>()) as *mut pg_sys::Datum;
+            let datums = pg_sys::palloc0(natts * std::mem::size_of::<pg_sys::Datum>()) as *mut pg_sys::Datum;
             let mut is_null = (0..natts).map(|_| true).collect::<Vec<_>>();
 
-            let heap_tuple =
-                pg_sys::heap_form_tuple(tuple_desc.as_ptr(), datums, is_null.as_mut_ptr());
+            let heap_tuple = pg_sys::heap_form_tuple(tuple_desc.as_ptr(), datums, is_null.as_mut_ptr());
 
             Ok(PgHeapTuple {
                 tuple: PgBox::<pg_sys::HeapTupleData, AllocatedByRust>::from_rust(heap_tuple),
@@ -215,8 +210,7 @@ impl<'a> PgHeapTuple<'a, AllocatedByRust> {
     /// This function is unsafe as we cannot guarantee that the provided Datum is a valid [pg_sys::HeapTupleHeader]
     /// pointer.
     pub unsafe fn from_composite_datum(composite: pg_sys::Datum) -> Self {
-        let htup_header =
-            pg_sys::pg_detoast_datum(composite.cast_mut_ptr()) as pg_sys::HeapTupleHeader;
+        let htup_header = pg_sys::pg_detoast_datum(composite.cast_mut_ptr()) as pg_sys::HeapTupleHeader;
         let tup_type = crate::heap_tuple_header_get_type_id(htup_header);
         let tup_typmod = crate::heap_tuple_header_get_typmod(htup_header);
         let tupdesc = pg_sys::lookup_rowtype_tupdesc(tup_type, tup_typmod);
@@ -238,11 +232,7 @@ impl<'a> PgHeapTuple<'a, AllocatedByRust> {
     /// - return [TryFromDatumError::NoSuchAttributeName] if the attribute does not exist
     /// - return [TryFromDatumError::IncompatibleTypes] if the Rust type of the `value` is not
     /// compatible with the attribute's Postgres type
-    pub fn set_by_name<T: IntoDatum>(
-        &mut self,
-        attname: &str,
-        value: T,
-    ) -> Result<(), TryFromDatumError> {
+    pub fn set_by_name<T: IntoDatum>(&mut self, attname: &str, value: T) -> Result<(), TryFromDatumError> {
         match self.get_attribute_by_name(attname) {
             None => Err(TryFromDatumError::NoSuchAttributeName(attname.to_string())),
             Some((attnum, _)) => self.set_by_index(attnum, value),
@@ -276,8 +266,7 @@ impl<'a> PgHeapTuple<'a, AllocatedByRust> {
                 }
             }
 
-            let mut datums =
-                (0..self.tupdesc.len()).map(|i| pg_sys::Datum::from(i)).collect::<Vec<_>>();
+            let mut datums = (0..self.tupdesc.len()).map(|i| pg_sys::Datum::from(i)).collect::<Vec<_>>();
             let mut nulls = (0..self.tupdesc.len()).map(|_| false).collect::<Vec<_>>();
             let mut do_replace = (0..self.tupdesc.len()).map(|_| false).collect::<Vec<_>>();
 
@@ -288,15 +277,14 @@ impl<'a> PgHeapTuple<'a, AllocatedByRust> {
             datums[attno] = datum.unwrap_or(0.into());
             do_replace[attno] = true;
 
-            let new_tuple = PgBox::<pg_sys::HeapTupleData, AllocatedByRust>::from_rust(
-                pg_sys::heap_modify_tuple(
+            let new_tuple =
+                PgBox::<pg_sys::HeapTupleData, AllocatedByRust>::from_rust(pg_sys::heap_modify_tuple(
                     self.tuple.as_ptr(),
                     self.tupdesc.as_ptr(),
                     datums.as_mut_ptr(),
                     nulls.as_mut_ptr(),
                     do_replace.as_mut_ptr(),
-                ),
-            );
+                ));
             let old_tuple = std::mem::replace(&mut self.tuple, new_tuple);
             drop(old_tuple);
             Ok(())
@@ -304,9 +292,7 @@ impl<'a> PgHeapTuple<'a, AllocatedByRust> {
     }
 }
 
-impl<'a, AllocatedBy: WhoAllocated<pg_sys::HeapTupleData>> IntoDatum
-    for PgHeapTuple<'a, AllocatedBy>
-{
+impl<'a, AllocatedBy: WhoAllocated<pg_sys::HeapTupleData>> IntoDatum for PgHeapTuple<'a, AllocatedBy> {
     // Delegate to `into_composite_datum()` as this will normally be used with composite types.
     // See `into_trigger_datum()` if using as a trigger.
     fn into_datum(self) -> Option<pg_sys::Datum> {
@@ -326,9 +312,7 @@ impl<'a, AllocatedBy: WhoAllocated<pg_sys::HeapTupleData>> PgHeapTuple<'a, Alloc
     /// Consume this [`PgHeapTuple`] and return a composite Datum representation, containing the tuple
     /// data and the corresponding tuple descriptor information.
     pub fn into_composite_datum(self) -> Option<pg_sys::Datum> {
-        unsafe {
-            Some(pg_sys::heap_copy_tuple_as_datum(self.tuple.as_ptr(), self.tupdesc.as_ptr()))
-        }
+        unsafe { Some(pg_sys::heap_copy_tuple_as_datum(self.tuple.as_ptr(), self.tupdesc.as_ptr())) }
     }
 
     /// Consume this [`PgHeapTuple`] and return a Datum representation appropriate for returning from
@@ -430,9 +414,7 @@ impl<'a, AllocatedBy: WhoAllocated<pg_sys::HeapTupleData>> PgHeapTuple<'a, Alloc
                         return Ok(None);
                     }
                     match T::type_oid() {
-                        record @ pg_sys::RECORDOID => {
-                            T::try_from_datum(datum.unwrap(), false, record)
-                        }
+                        record @ pg_sys::RECORDOID => T::try_from_datum(datum.unwrap(), false, record),
                         _ => T::try_from_datum(datum.unwrap(), false, att.type_oid().value()),
                     }
                 }

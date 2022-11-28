@@ -195,13 +195,12 @@ fn download_postgres(pg_config: &PgConfig, pgx_home: &PathBuf) -> eyre::Result<P
     );
     let url = pg_config.url().expect("no url for pg_config").as_str();
     tracing::debug!(url = %url, "Fetching");
-    let http_client = if let Some((host, port)) =
-        for_url_str(pg_config.url().expect("no url for pg_config")).host_port()
-    {
-        AgentBuilder::new().proxy(Proxy::new(format!("https://{host}:{port}"))?).build()
-    } else {
-        Agent::new()
-    };
+    let http_client =
+        if let Some((host, port)) = for_url_str(pg_config.url().expect("no url for pg_config")).host_port() {
+            AgentBuilder::new().proxy(Proxy::new(format!("https://{host}:{port}"))?).build()
+        } else {
+            Agent::new()
+        };
     let http_response = http_client.get(url).call()?;
     let status = http_response.status();
     tracing::trace!(status_code = %status, url = %url, "Fetched");
@@ -442,12 +441,7 @@ fn is_root_user() -> bool {
 pub(crate) fn initdb(bindir: &PathBuf, datadir: &PathBuf) -> eyre::Result<()> {
     println!(" {} data directory at {}", "Initializing".bold().green(), datadir.display());
     let mut command = std::process::Command::new(format!("{}/initdb", bindir.display()));
-    command
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .args(get_c_locale_flags())
-        .arg("-D")
-        .arg(&datadir);
+    command.stdout(Stdio::piped()).stderr(Stdio::piped()).args(get_c_locale_flags()).arg("-D").arg(&datadir);
 
     let command_str = format!("{:?}", command);
     tracing::debug!(command = %command_str, "Running");

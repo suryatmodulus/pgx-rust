@@ -112,8 +112,8 @@ pub use pg_sys::pg_try::PgTryBuilder;
 pub use pg_sys::utils::name_data_to_str;
 pub use pg_sys::PgBuiltInOids;
 pub use pg_sys::{
-    check_for_interrupts, debug1, debug2, debug3, debug4, debug5, ereport, error, function_name,
-    info, log, notice, warning, FATAL, PANIC,
+    check_for_interrupts, debug1, debug2, debug3, debug4, debug5, ereport, error, function_name, info, log,
+    notice, warning, FATAL, PANIC,
 };
 pub use pgx_utils as utils;
 
@@ -293,7 +293,7 @@ macro_rules! pg_magic_func {
 #[macro_export]
 macro_rules! pg_sql_graph_magic {
     () => {
-        #[no_mangle]
+#[no_mangle]
         #[doc(hidden)]
         #[rustfmt::skip] // explict extern "Rust" is more clear here
         pub extern "Rust" fn __pgx_sql_mappings() -> ::pgx::utils::sql_entity_graph::RustToSqlMapping {
@@ -303,7 +303,7 @@ macro_rules! pg_sql_graph_magic {
         }
 
         // A marker which must exist in the root of the extension.
-        #[no_mangle]
+#[no_mangle]
         #[doc(hidden)]
         #[rustfmt::skip] // explict extern "Rust" is more clear here
         pub extern "Rust" fn __pgx_marker(

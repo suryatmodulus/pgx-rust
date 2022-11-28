@@ -24,8 +24,7 @@ mod rss {
         pub(super) fn new(supported_major_versions: &[u16]) -> eyre::Result<Vec<PgVersion>> {
             static VERSIONS_RSS_URL: &str = "https://www.postgresql.org/versions.rss";
 
-            let http_client = if let Some((host, port)) = for_url_str(VERSIONS_RSS_URL).host_port()
-            {
+            let http_client = if let Some((host, port)) = for_url_str(VERSIONS_RSS_URL).host_port() {
                 AgentBuilder::new().proxy(Proxy::new(format!("https://{host}:{port}"))?).build()
             } else {
                 Agent::new()
@@ -54,16 +53,16 @@ mod rss {
                 let minor = minor.unwrap().parse::<u16>().unwrap_or_default();
 
                 if supported_major_versions.contains(&major) {
-                    versions.push(
-                        PgVersion::new(
-                            major,
-                            minor,
-                            Url::parse(
-                                &format!("https://ftp.postgresql.org/pub/source/v{major}.{minor}/postgresql-{major}.{minor}.tar.bz2",
-                                         major = major, minor = minor)
-                            ).expect("invalid url")
-                        ),
-                    )
+                    versions.push(PgVersion::new(
+                        major,
+                        minor,
+                        Url::parse(&format!(
+                            "https://ftp.postgresql.org/pub/source/v{major}.{minor}/postgresql-{major}.{minor}.tar.bz2",
+                            major = major,
+                            minor = minor
+                        ))
+                        .expect("invalid url"),
+                    ))
                 }
             }
 

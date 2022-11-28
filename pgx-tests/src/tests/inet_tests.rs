@@ -18,15 +18,13 @@ mod tests {
 
     #[pg_test]
     fn test_deserialize_inet() {
-        let inet =
-            serde_json::from_str::<Inet>("\"192.168.0.1\"").expect("failed to deserialize inet");
+        let inet = serde_json::from_str::<Inet>("\"192.168.0.1\"").expect("failed to deserialize inet");
         assert_eq!("192.168.0.1", &inet.0)
     }
 
     #[pg_test]
     fn test_serialize_inet() {
-        let json = serde_json::to_string(&Inet("192.168.0.1".to_owned()))
-            .expect("failed to serialize inet");
+        let json = serde_json::to_string(&Inet("192.168.0.1".to_owned())).expect("failed to serialize inet");
         assert_eq!("\"192.168.0.1\"", &json);
     }
 
@@ -37,10 +35,9 @@ mod tests {
 
     #[pg_test]
     fn test_take_and_return_inet() {
-        let rc = Spi::get_one::<bool>(
-            "SELECT tests.take_and_return_inet('192.168.0.1') = '192.168.0.1'::inet;",
-        )
-        .expect("failed to get SPI result");
+        let rc =
+            Spi::get_one::<bool>("SELECT tests.take_and_return_inet('192.168.0.1') = '192.168.0.1'::inet;")
+                .expect("failed to get SPI result");
         assert!(rc)
     }
 }

@@ -94,10 +94,7 @@ pub struct PgxOperatorOpName {
 impl Parse for PgxOperatorOpName {
     fn parse(input: &ParseBuffer) -> Result<Self, syn::Error> {
         let inner;
-        Ok(PgxOperatorOpName {
-            paren_token: parenthesized!(inner in input),
-            op_name: inner.parse()?,
-        })
+        Ok(PgxOperatorOpName { paren_token: parenthesized!(inner in input), op_name: inner.parse()? })
     }
 }
 

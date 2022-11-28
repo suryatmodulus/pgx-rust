@@ -36,9 +36,8 @@ impl CommandExecute for Get {
         let metadata = crate::metadata::metadata(&Default::default(), self.manifest_path.as_ref())
             .wrap_err("couldn't get cargo metadata")?;
         crate::metadata::validate(&metadata)?;
-        let package_manifest_path =
-            crate::manifest::manifest_path(&metadata, self.package.as_ref())
-                .wrap_err("Couldn't get manifest path")?;
+        let package_manifest_path = crate::manifest::manifest_path(&metadata, self.package.as_ref())
+            .wrap_err("Couldn't get manifest path")?;
 
         if let Some(value) = get_property(&package_manifest_path, &self.name)? {
             println!("{}", value);
@@ -84,24 +83,22 @@ pub fn get_property(manifest_path: impl AsRef<Path>, name: &str) -> eyre::Result
     Ok(None)
 }
 
-pub(crate) fn find_control_file(
-    manifest_path: impl AsRef<Path>,
-) -> eyre::Result<(PathBuf, String)> {
+pub(crate) fn find_control_file(manifest_path: impl AsRef<Path>) -> eyre::Result<(PathBuf, String)> {
     let parent = manifest_path
         .as_ref()
         .parent()
         .ok_or_else(|| eyre!("could not get parent of `{}`", manifest_path.as_ref().display()))?;
 
-    for f in std::fs::read_dir(parent).wrap_err_with(|| {
-        eyre!("cannot open current directory `{}` for reading", parent.display())
-    })? {
+    for f in std::fs::read_dir(parent)
+        .wrap_err_with(|| eyre!("cannot open current directory `{}` for reading", parent.display()))?
+    {
         if f.is_ok() {
             if let Ok(f) = f {
                 let f_path = f.path();
                 if f_path.extension() == Some("control".as_ref()) {
-                    let file_stem = f_path.file_stem().ok_or_else(|| {
-                        eyre!("could not get file stem of `{}`", f_path.display())
-                    })?;
+                    let file_stem = f_path
+                        .file_stem()
+                        .ok_or_else(|| eyre!("could not get file stem of `{}`", f_path.display()))?;
                     let file_stem = file_stem
                         .to_str()
                         .ok_or_else(|| {
@@ -121,8 +118,8 @@ fn determine_git_hash() -> eyre::Result<Option<String>> {
     match Command::new("git").arg("rev-parse").arg("HEAD").output() {
         Ok(output) => {
             if !output.status.success() {
-                let stderr = String::from_utf8(output.stderr)
-                    .expect("`git rev-parse head` did not return valid utf8");
+                let stderr =
+                    String::from_utf8(output.stderr).expect("`git rev-parse head` did not return valid utf8");
                 return Err(eyre!(
                     "problem running `git` to determine the current revision hash: {}",
                     stderr

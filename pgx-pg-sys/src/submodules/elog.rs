@@ -400,8 +400,7 @@ macro_rules! ereport {
     };
 
     ($loglevel:expr, $errcode:expr, $message:expr) => {
-        $crate::panic::ErrorReport::new($errcode, $message, $crate::function_name!())
-            .report($loglevel);
+        $crate::panic::ErrorReport::new($errcode, $message, $crate::function_name!()).report($loglevel);
     };
 
     ($loglevel:expr, $errcode:expr, $message:expr, $detail:expr) => {

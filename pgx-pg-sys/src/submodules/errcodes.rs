@@ -11,8 +11,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_WARNING = MAKE_SQLSTATE('0', '1', '0', '0', '0') as isize,
     ERRCODE_WARNING_DYNAMIC_RESULT_SETS_RETURNED = MAKE_SQLSTATE('0', '1', '0', '0', 'C') as isize,
     ERRCODE_WARNING_IMPLICIT_ZERO_BIT_PADDING = MAKE_SQLSTATE('0', '1', '0', '0', '8') as isize,
-    ERRCODE_WARNING_NULL_VALUE_ELIMINATED_IN_SET_FUNCTION =
-        MAKE_SQLSTATE('0', '1', '0', '0', '3') as isize,
+    ERRCODE_WARNING_NULL_VALUE_ELIMINATED_IN_SET_FUNCTION = MAKE_SQLSTATE('0', '1', '0', '0', '3') as isize,
     ERRCODE_WARNING_PRIVILEGE_NOT_GRANTED = MAKE_SQLSTATE('0', '1', '0', '0', '7') as isize,
     ERRCODE_WARNING_PRIVILEGE_NOT_REVOKED = MAKE_SQLSTATE('0', '1', '0', '0', '6') as isize,
     ERRCODE_WARNING_STRING_DATA_RIGHT_TRUNCATION = MAKE_SQLSTATE('0', '1', '0', '0', '4') as isize,
@@ -20,8 +19,7 @@ pub enum PgSqlErrorCode {
 
     /// Class 02 - No Data (this is also a warning class per the SQL standard) as isize,
     ERRCODE_NO_DATA = MAKE_SQLSTATE('0', '2', '0', '0', '0') as isize,
-    ERRCODE_NO_ADDITIONAL_DYNAMIC_RESULT_SETS_RETURNED =
-        MAKE_SQLSTATE('0', '2', '0', '0', '1') as isize,
+    ERRCODE_NO_ADDITIONAL_DYNAMIC_RESULT_SETS_RETURNED = MAKE_SQLSTATE('0', '2', '0', '0', '1') as isize,
 
     /// Class 03 - SQL Statement Not Yet Complete
     ERRCODE_SQL_STATEMENT_NOT_YET_COMPLETE = MAKE_SQLSTATE('0', '3', '0', '0', '0') as isize,
@@ -30,8 +28,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_CONNECTION_EXCEPTION = MAKE_SQLSTATE('0', '8', '0', '0', '0') as isize,
     ERRCODE_CONNECTION_DOES_NOT_EXIST = MAKE_SQLSTATE('0', '8', '0', '0', '3') as isize,
     ERRCODE_CONNECTION_FAILURE = MAKE_SQLSTATE('0', '8', '0', '0', '6') as isize,
-    ERRCODE_SQLCLIENT_UNABLE_TO_ESTABLISH_SQLCONNECTION =
-        MAKE_SQLSTATE('0', '8', '0', '0', '1') as isize,
+    ERRCODE_SQLCLIENT_UNABLE_TO_ESTABLISH_SQLCONNECTION = MAKE_SQLSTATE('0', '8', '0', '0', '1') as isize,
     ERRCODE_SQLSERVER_REJECTED_ESTABLISHMENT_OF_SQLCONNECTION =
         MAKE_SQLSTATE('0', '8', '0', '0', '4') as isize,
     ERRCODE_TRANSACTION_RESOLUTION_UNKNOWN = MAKE_SQLSTATE('0', '8', '0', '0', '7') as isize,
@@ -84,8 +81,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_INVALID_ARGUMENT_FOR_NTILE = MAKE_SQLSTATE('2', '2', '0', '1', '4') as isize,
     ERRCODE_INVALID_ARGUMENT_FOR_NTH_VALUE = MAKE_SQLSTATE('2', '2', '0', '1', '6') as isize,
     ERRCODE_INVALID_ARGUMENT_FOR_POWER_FUNCTION = MAKE_SQLSTATE('2', '2', '0', '1', 'F') as isize,
-    ERRCODE_INVALID_ARGUMENT_FOR_WIDTH_BUCKET_FUNCTION =
-        MAKE_SQLSTATE('2', '2', '0', '1', 'G') as isize,
+    ERRCODE_INVALID_ARGUMENT_FOR_WIDTH_BUCKET_FUNCTION = MAKE_SQLSTATE('2', '2', '0', '1', 'G') as isize,
     ERRCODE_INVALID_CHARACTER_VALUE_FOR_CAST = MAKE_SQLSTATE('2', '2', '0', '1', '8') as isize,
     ERRCODE_INVALID_DATETIME_FORMAT = MAKE_SQLSTATE('2', '2', '0', '0', '7') as isize,
     ERRCODE_INVALID_ESCAPE_CHARACTER = MAKE_SQLSTATE('2', '2', '0', '1', '9') as isize,
@@ -97,8 +93,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_INVALID_PRECEDING_OR_FOLLOWING_SIZE = MAKE_SQLSTATE('2', '2', '0', '1', '3') as isize,
     ERRCODE_INVALID_REGULAR_EXPRESSION = MAKE_SQLSTATE('2', '2', '0', '1', 'B') as isize,
     ERRCODE_INVALID_ROW_COUNT_IN_LIMIT_CLAUSE = MAKE_SQLSTATE('2', '2', '0', '1', 'W') as isize,
-    ERRCODE_INVALID_ROW_COUNT_IN_RESULT_OFFSET_CLAUSE =
-        MAKE_SQLSTATE('2', '2', '0', '1', 'X') as isize,
+    ERRCODE_INVALID_ROW_COUNT_IN_RESULT_OFFSET_CLAUSE = MAKE_SQLSTATE('2', '2', '0', '1', 'X') as isize,
     ERRCODE_INVALID_TABLESAMPLE_ARGUMENT = MAKE_SQLSTATE('2', '2', '0', '2', 'H') as isize,
     ERRCODE_INVALID_TABLESAMPLE_REPEAT = MAKE_SQLSTATE('2', '2', '0', '2', 'G') as isize,
     ERRCODE_INVALID_TIME_ZONE_DISPLACEMENT_VALUE = MAKE_SQLSTATE('2', '2', '0', '0', '9') as isize,
@@ -156,8 +151,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_INVALID_TRANSACTION_STATE = MAKE_SQLSTATE('2', '5', '0', '0', '0') as isize,
     ERRCODE_ACTIVE_SQL_TRANSACTION = MAKE_SQLSTATE('2', '5', '0', '0', '1') as isize,
     ERRCODE_BRANCH_TRANSACTION_ALREADY_ACTIVE = MAKE_SQLSTATE('2', '5', '0', '0', '2') as isize,
-    ERRCODE_HELD_CURSOR_REQUIRES_SAME_ISOLATION_LEVEL =
-        MAKE_SQLSTATE('2', '5', '0', '0', '8') as isize,
+    ERRCODE_HELD_CURSOR_REQUIRES_SAME_ISOLATION_LEVEL = MAKE_SQLSTATE('2', '5', '0', '0', '8') as isize,
     ERRCODE_INAPPROPRIATE_ACCESS_MODE_FOR_BRANCH_TRANSACTION =
         MAKE_SQLSTATE('2', '5', '0', '0', '3') as isize,
     ERRCODE_INAPPROPRIATE_ISOLATION_LEVEL_FOR_BRANCH_TRANSACTION =
@@ -165,8 +159,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_NO_ACTIVE_SQL_TRANSACTION_FOR_BRANCH_TRANSACTION =
         MAKE_SQLSTATE('2', '5', '0', '0', '5') as isize,
     ERRCODE_READ_ONLY_SQL_TRANSACTION = MAKE_SQLSTATE('2', '5', '0', '0', '6') as isize,
-    ERRCODE_SCHEMA_AND_DATA_STATEMENT_MIXING_NOT_SUPPORTED =
-        MAKE_SQLSTATE('2', '5', '0', '0', '7') as isize,
+    ERRCODE_SCHEMA_AND_DATA_STATEMENT_MIXING_NOT_SUPPORTED = MAKE_SQLSTATE('2', '5', '0', '0', '7') as isize,
     ERRCODE_NO_ACTIVE_SQL_TRANSACTION = MAKE_SQLSTATE('2', '5', 'P', '0', '1') as isize,
     ERRCODE_IN_FAILED_SQL_TRANSACTION = MAKE_SQLSTATE('2', '5', 'P', '0', '2') as isize,
     ERRCODE_IDLE_IN_TRANSACTION_SESSION_TIMEOUT = MAKE_SQLSTATE('2', '5', 'P', '0', '3') as isize,
@@ -182,8 +175,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_INVALID_PASSWORD = MAKE_SQLSTATE('2', '8', 'P', '0', '1') as isize,
 
     /// Class 2B - Dependent Privilege Descriptors Still Exist
-    ERRCODE_DEPENDENT_PRIVILEGE_DESCRIPTORS_STILL_EXIST =
-        MAKE_SQLSTATE('2', 'B', '0', '0', '0') as isize,
+    ERRCODE_DEPENDENT_PRIVILEGE_DESCRIPTORS_STILL_EXIST = MAKE_SQLSTATE('2', 'B', '0', '0', '0') as isize,
     ERRCODE_DEPENDENT_OBJECTS_STILL_EXIST = MAKE_SQLSTATE('2', 'B', 'P', '0', '1') as isize,
 
     /// Class 2D - Invalid Transaction Termination
@@ -191,12 +183,9 @@ pub enum PgSqlErrorCode {
 
     /// Class 2F - SQL Routine Exception
     ERRCODE_SQL_ROUTINE_EXCEPTION = MAKE_SQLSTATE('2', 'F', '0', '0', '0') as isize,
-    ERRCODE_S_R_E_FUNCTION_EXECUTED_NO_RETURN_STATEMENT =
-        MAKE_SQLSTATE('2', 'F', '0', '0', '5') as isize,
-    ERRCODE_S_R_E_MODIFYING_SQL_DATA_NOT_PERMITTED =
-        MAKE_SQLSTATE('2', 'F', '0', '0', '2') as isize,
-    ERRCODE_S_R_E_PROHIBITED_SQL_STATEMENT_ATTEMPTED =
-        MAKE_SQLSTATE('2', 'F', '0', '0', '3') as isize,
+    ERRCODE_S_R_E_FUNCTION_EXECUTED_NO_RETURN_STATEMENT = MAKE_SQLSTATE('2', 'F', '0', '0', '5') as isize,
+    ERRCODE_S_R_E_MODIFYING_SQL_DATA_NOT_PERMITTED = MAKE_SQLSTATE('2', 'F', '0', '0', '2') as isize,
+    ERRCODE_S_R_E_PROHIBITED_SQL_STATEMENT_ATTEMPTED = MAKE_SQLSTATE('2', 'F', '0', '0', '3') as isize,
     ERRCODE_S_R_E_READING_SQL_DATA_NOT_PERMITTED = MAKE_SQLSTATE('2', 'F', '0', '0', '4') as isize,
 
     /// Class 34 - Invalid Cursor Name
@@ -205,10 +194,8 @@ pub enum PgSqlErrorCode {
     /// Class 38 - External Routine Exception
     ERRCODE_EXTERNAL_ROUTINE_EXCEPTION = MAKE_SQLSTATE('3', '8', '0', '0', '0') as isize,
     ERRCODE_E_R_E_CONTAINING_SQL_NOT_PERMITTED = MAKE_SQLSTATE('3', '8', '0', '0', '1') as isize,
-    ERRCODE_E_R_E_MODIFYING_SQL_DATA_NOT_PERMITTED =
-        MAKE_SQLSTATE('3', '8', '0', '0', '2') as isize,
-    ERRCODE_E_R_E_PROHIBITED_SQL_STATEMENT_ATTEMPTED =
-        MAKE_SQLSTATE('3', '8', '0', '0', '3') as isize,
+    ERRCODE_E_R_E_MODIFYING_SQL_DATA_NOT_PERMITTED = MAKE_SQLSTATE('3', '8', '0', '0', '2') as isize,
+    ERRCODE_E_R_E_PROHIBITED_SQL_STATEMENT_ATTEMPTED = MAKE_SQLSTATE('3', '8', '0', '0', '3') as isize,
     ERRCODE_E_R_E_READING_SQL_DATA_NOT_PERMITTED = MAKE_SQLSTATE('3', '8', '0', '0', '4') as isize,
 
     /// Class 39 - External Routine Invocation Exception
@@ -217,8 +204,7 @@ pub enum PgSqlErrorCode {
     ERRCODE_E_R_I_E_NULL_VALUE_NOT_ALLOWED = MAKE_SQLSTATE('3', '9', '0', '0', '4') as isize,
     ERRCODE_E_R_I_E_TRIGGER_PROTOCOL_VIOLATED = MAKE_SQLSTATE('3', '9', 'P', '0', '1') as isize,
     ERRCODE_E_R_I_E_SRF_PROTOCOL_VIOLATED = MAKE_SQLSTATE('3', '9', 'P', '0', '2') as isize,
-    ERRCODE_E_R_I_E_EVENT_TRIGGER_PROTOCOL_VIOLATED =
-        MAKE_SQLSTATE('3', '9', 'P', '0', '3') as isize,
+    ERRCODE_E_R_I_E_EVENT_TRIGGER_PROTOCOL_VIOLATED = MAKE_SQLSTATE('3', '9', 'P', '0', '3') as isize,
 
     /// Class 3B - Savepoint Exception
     ERRCODE_SAVEPOINT_EXCEPTION = MAKE_SQLSTATE('3', 'B', '0', '0', '0') as isize,
@@ -336,20 +322,17 @@ pub enum PgSqlErrorCode {
     ERRCODE_FDW_COLUMN_NAME_NOT_FOUND = MAKE_SQLSTATE('H', 'V', '0', '0', '5') as isize,
     ERRCODE_FDW_DYNAMIC_PARAMETER_VALUE_NEEDED = MAKE_SQLSTATE('H', 'V', '0', '0', '2') as isize,
     ERRCODE_FDW_FUNCTION_SEQUENCE_ERROR = MAKE_SQLSTATE('H', 'V', '0', '1', '0') as isize,
-    ERRCODE_FDW_INCONSISTENT_DESCRIPTOR_INFORMATION =
-        MAKE_SQLSTATE('H', 'V', '0', '2', '1') as isize,
+    ERRCODE_FDW_INCONSISTENT_DESCRIPTOR_INFORMATION = MAKE_SQLSTATE('H', 'V', '0', '2', '1') as isize,
     ERRCODE_FDW_INVALID_ATTRIBUTE_VALUE = MAKE_SQLSTATE('H', 'V', '0', '2', '4') as isize,
     ERRCODE_FDW_INVALID_COLUMN_NAME = MAKE_SQLSTATE('H', 'V', '0', '0', '7') as isize,
     ERRCODE_FDW_INVALID_COLUMN_NUMBER = MAKE_SQLSTATE('H', 'V', '0', '0', '8') as isize,
     ERRCODE_FDW_INVALID_DATA_TYPE = MAKE_SQLSTATE('H', 'V', '0', '0', '4') as isize,
     ERRCODE_FDW_INVALID_DATA_TYPE_DESCRIPTORS = MAKE_SQLSTATE('H', 'V', '0', '0', '6') as isize,
-    ERRCODE_FDW_INVALID_DESCRIPTOR_FIELD_IDENTIFIER =
-        MAKE_SQLSTATE('H', 'V', '0', '9', '1') as isize,
+    ERRCODE_FDW_INVALID_DESCRIPTOR_FIELD_IDENTIFIER = MAKE_SQLSTATE('H', 'V', '0', '9', '1') as isize,
     ERRCODE_FDW_INVALID_HANDLE = MAKE_SQLSTATE('H', 'V', '0', '0', 'B') as isize,
     ERRCODE_FDW_INVALID_OPTION_INDEX = MAKE_SQLSTATE('H', 'V', '0', '0', 'C') as isize,
     ERRCODE_FDW_INVALID_OPTION_NAME = MAKE_SQLSTATE('H', 'V', '0', '0', 'D') as isize,
-    ERRCODE_FDW_INVALID_STRING_LENGTH_OR_BUFFER_LENGTH =
-        MAKE_SQLSTATE('H', 'V', '0', '9', '0') as isize,
+    ERRCODE_FDW_INVALID_STRING_LENGTH_OR_BUFFER_LENGTH = MAKE_SQLSTATE('H', 'V', '0', '9', '0') as isize,
     ERRCODE_FDW_INVALID_STRING_FORMAT = MAKE_SQLSTATE('H', 'V', '0', '0', 'A') as isize,
     ERRCODE_FDW_INVALID_USE_OF_NULL_POINTER = MAKE_SQLSTATE('H', 'V', '0', '0', '9') as isize,
     ERRCODE_FDW_TOO_MANY_HANDLES = MAKE_SQLSTATE('H', 'V', '0', '1', '4') as isize,
@@ -404,10 +387,7 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_WARNING_IMPLICIT_ZERO_BIT_PADDING as isize => {
                 PgSqlErrorCode::ERRCODE_WARNING_IMPLICIT_ZERO_BIT_PADDING
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_WARNING_NULL_VALUE_ELIMINATED_IN_SET_FUNCTION
-                    as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_WARNING_NULL_VALUE_ELIMINATED_IN_SET_FUNCTION as isize => {
                 PgSqlErrorCode::ERRCODE_WARNING_NULL_VALUE_ELIMINATED_IN_SET_FUNCTION
             }
 
@@ -425,9 +405,7 @@ impl From<isize> for PgSqlErrorCode {
             }
 
             x if x == PgSqlErrorCode::ERRCODE_NO_DATA as isize => PgSqlErrorCode::ERRCODE_NO_DATA,
-            x if x
-                == PgSqlErrorCode::ERRCODE_NO_ADDITIONAL_DYNAMIC_RESULT_SETS_RETURNED as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_NO_ADDITIONAL_DYNAMIC_RESULT_SETS_RETURNED as isize => {
                 PgSqlErrorCode::ERRCODE_NO_ADDITIONAL_DYNAMIC_RESULT_SETS_RETURNED
             }
 
@@ -444,16 +422,11 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_CONNECTION_FAILURE as isize => {
                 PgSqlErrorCode::ERRCODE_CONNECTION_FAILURE
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_SQLCLIENT_UNABLE_TO_ESTABLISH_SQLCONNECTION as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_SQLCLIENT_UNABLE_TO_ESTABLISH_SQLCONNECTION as isize => {
                 PgSqlErrorCode::ERRCODE_SQLCLIENT_UNABLE_TO_ESTABLISH_SQLCONNECTION
             }
 
-            x if x
-                == PgSqlErrorCode::ERRCODE_SQLSERVER_REJECTED_ESTABLISHMENT_OF_SQLCONNECTION
-                    as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_SQLSERVER_REJECTED_ESTABLISHMENT_OF_SQLCONNECTION as isize => {
                 PgSqlErrorCode::ERRCODE_SQLSERVER_REJECTED_ESTABLISHMENT_OF_SQLCONNECTION
             }
 
@@ -498,8 +471,7 @@ impl From<isize> for PgSqlErrorCode {
                 PgSqlErrorCode::ERRCODE_DIAGNOSTICS_EXCEPTION
             }
             x if x
-                == PgSqlErrorCode::ERRCODE_STACKED_DIAGNOSTICS_ACCESSED_WITHOUT_ACTIVE_HANDLER
-                    as isize =>
+                == PgSqlErrorCode::ERRCODE_STACKED_DIAGNOSTICS_ACCESSED_WITHOUT_ACTIVE_HANDLER as isize =>
             {
                 PgSqlErrorCode::ERRCODE_STACKED_DIAGNOSTICS_ACCESSED_WITHOUT_ACTIVE_HANDLER
             }
@@ -553,9 +525,7 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_INVALID_ARGUMENT_FOR_POWER_FUNCTION as isize => {
                 PgSqlErrorCode::ERRCODE_INVALID_ARGUMENT_FOR_POWER_FUNCTION
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_INVALID_ARGUMENT_FOR_WIDTH_BUCKET_FUNCTION as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_INVALID_ARGUMENT_FOR_WIDTH_BUCKET_FUNCTION as isize => {
                 PgSqlErrorCode::ERRCODE_INVALID_ARGUMENT_FOR_WIDTH_BUCKET_FUNCTION
             }
 
@@ -592,9 +562,7 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_INVALID_ROW_COUNT_IN_LIMIT_CLAUSE as isize => {
                 PgSqlErrorCode::ERRCODE_INVALID_ROW_COUNT_IN_LIMIT_CLAUSE
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_INVALID_ROW_COUNT_IN_RESULT_OFFSET_CLAUSE as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_INVALID_ROW_COUNT_IN_RESULT_OFFSET_CLAUSE as isize => {
                 PgSqlErrorCode::ERRCODE_INVALID_ROW_COUNT_IN_RESULT_OFFSET_CLAUSE
             }
 
@@ -634,9 +602,7 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_SUBSTRING_ERROR as isize => {
                 PgSqlErrorCode::ERRCODE_SUBSTRING_ERROR
             }
-            x if x == PgSqlErrorCode::ERRCODE_TRIM_ERROR as isize => {
-                PgSqlErrorCode::ERRCODE_TRIM_ERROR
-            }
+            x if x == PgSqlErrorCode::ERRCODE_TRIM_ERROR as isize => PgSqlErrorCode::ERRCODE_TRIM_ERROR,
             x if x == PgSqlErrorCode::ERRCODE_UNTERMINATED_C_STRING as isize => {
                 PgSqlErrorCode::ERRCODE_UNTERMINATED_C_STRING
             }
@@ -754,40 +720,28 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_BRANCH_TRANSACTION_ALREADY_ACTIVE as isize => {
                 PgSqlErrorCode::ERRCODE_BRANCH_TRANSACTION_ALREADY_ACTIVE
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_HELD_CURSOR_REQUIRES_SAME_ISOLATION_LEVEL as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_HELD_CURSOR_REQUIRES_SAME_ISOLATION_LEVEL as isize => {
                 PgSqlErrorCode::ERRCODE_HELD_CURSOR_REQUIRES_SAME_ISOLATION_LEVEL
             }
 
-            x if x
-                == PgSqlErrorCode::ERRCODE_INAPPROPRIATE_ACCESS_MODE_FOR_BRANCH_TRANSACTION
-                    as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_INAPPROPRIATE_ACCESS_MODE_FOR_BRANCH_TRANSACTION as isize => {
                 PgSqlErrorCode::ERRCODE_INAPPROPRIATE_ACCESS_MODE_FOR_BRANCH_TRANSACTION
             }
 
             x if x
-                == PgSqlErrorCode::ERRCODE_INAPPROPRIATE_ISOLATION_LEVEL_FOR_BRANCH_TRANSACTION
-                    as isize =>
+                == PgSqlErrorCode::ERRCODE_INAPPROPRIATE_ISOLATION_LEVEL_FOR_BRANCH_TRANSACTION as isize =>
             {
                 PgSqlErrorCode::ERRCODE_INAPPROPRIATE_ISOLATION_LEVEL_FOR_BRANCH_TRANSACTION
             }
 
-            x if x
-                == PgSqlErrorCode::ERRCODE_NO_ACTIVE_SQL_TRANSACTION_FOR_BRANCH_TRANSACTION
-                    as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_NO_ACTIVE_SQL_TRANSACTION_FOR_BRANCH_TRANSACTION as isize => {
                 PgSqlErrorCode::ERRCODE_NO_ACTIVE_SQL_TRANSACTION_FOR_BRANCH_TRANSACTION
             }
 
             x if x == PgSqlErrorCode::ERRCODE_READ_ONLY_SQL_TRANSACTION as isize => {
                 PgSqlErrorCode::ERRCODE_READ_ONLY_SQL_TRANSACTION
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_SCHEMA_AND_DATA_STATEMENT_MIXING_NOT_SUPPORTED
-                    as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_SCHEMA_AND_DATA_STATEMENT_MIXING_NOT_SUPPORTED as isize => {
                 PgSqlErrorCode::ERRCODE_SCHEMA_AND_DATA_STATEMENT_MIXING_NOT_SUPPORTED
             }
 
@@ -816,9 +770,7 @@ impl From<isize> for PgSqlErrorCode {
                 PgSqlErrorCode::ERRCODE_INVALID_PASSWORD
             }
 
-            x if x
-                == PgSqlErrorCode::ERRCODE_DEPENDENT_PRIVILEGE_DESCRIPTORS_STILL_EXIST as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_DEPENDENT_PRIVILEGE_DESCRIPTORS_STILL_EXIST as isize => {
                 PgSqlErrorCode::ERRCODE_DEPENDENT_PRIVILEGE_DESCRIPTORS_STILL_EXIST
             }
 
@@ -833,9 +785,7 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_SQL_ROUTINE_EXCEPTION as isize => {
                 PgSqlErrorCode::ERRCODE_SQL_ROUTINE_EXCEPTION
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_S_R_E_FUNCTION_EXECUTED_NO_RETURN_STATEMENT as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_S_R_E_FUNCTION_EXECUTED_NO_RETURN_STATEMENT as isize => {
                 PgSqlErrorCode::ERRCODE_S_R_E_FUNCTION_EXECUTED_NO_RETURN_STATEMENT
             }
 
@@ -926,15 +876,11 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION as isize => {
                 PgSqlErrorCode::ERRCODE_SYNTAX_ERROR_OR_ACCESS_RULE_VIOLATION
             }
-            x if x == PgSqlErrorCode::ERRCODE_SYNTAX_ERROR as isize => {
-                PgSqlErrorCode::ERRCODE_SYNTAX_ERROR
-            }
+            x if x == PgSqlErrorCode::ERRCODE_SYNTAX_ERROR as isize => PgSqlErrorCode::ERRCODE_SYNTAX_ERROR,
             x if x == PgSqlErrorCode::ERRCODE_INSUFFICIENT_PRIVILEGE as isize => {
                 PgSqlErrorCode::ERRCODE_INSUFFICIENT_PRIVILEGE
             }
-            x if x == PgSqlErrorCode::ERRCODE_CANNOT_COERCE as isize => {
-                PgSqlErrorCode::ERRCODE_CANNOT_COERCE
-            }
+            x if x == PgSqlErrorCode::ERRCODE_CANNOT_COERCE as isize => PgSqlErrorCode::ERRCODE_CANNOT_COERCE,
             x if x == PgSqlErrorCode::ERRCODE_GROUPING_ERROR as isize => {
                 PgSqlErrorCode::ERRCODE_GROUPING_ERROR
             }
@@ -947,15 +893,9 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_INVALID_FOREIGN_KEY as isize => {
                 PgSqlErrorCode::ERRCODE_INVALID_FOREIGN_KEY
             }
-            x if x == PgSqlErrorCode::ERRCODE_INVALID_NAME as isize => {
-                PgSqlErrorCode::ERRCODE_INVALID_NAME
-            }
-            x if x == PgSqlErrorCode::ERRCODE_NAME_TOO_LONG as isize => {
-                PgSqlErrorCode::ERRCODE_NAME_TOO_LONG
-            }
-            x if x == PgSqlErrorCode::ERRCODE_RESERVED_NAME as isize => {
-                PgSqlErrorCode::ERRCODE_RESERVED_NAME
-            }
+            x if x == PgSqlErrorCode::ERRCODE_INVALID_NAME as isize => PgSqlErrorCode::ERRCODE_INVALID_NAME,
+            x if x == PgSqlErrorCode::ERRCODE_NAME_TOO_LONG as isize => PgSqlErrorCode::ERRCODE_NAME_TOO_LONG,
+            x if x == PgSqlErrorCode::ERRCODE_RESERVED_NAME as isize => PgSqlErrorCode::ERRCODE_RESERVED_NAME,
             x if x == PgSqlErrorCode::ERRCODE_DATATYPE_MISMATCH as isize => {
                 PgSqlErrorCode::ERRCODE_DATATYPE_MISMATCH
             }
@@ -1067,12 +1007,8 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_INSUFFICIENT_RESOURCES as isize => {
                 PgSqlErrorCode::ERRCODE_INSUFFICIENT_RESOURCES
             }
-            x if x == PgSqlErrorCode::ERRCODE_DISK_FULL as isize => {
-                PgSqlErrorCode::ERRCODE_DISK_FULL
-            }
-            x if x == PgSqlErrorCode::ERRCODE_OUT_OF_MEMORY as isize => {
-                PgSqlErrorCode::ERRCODE_OUT_OF_MEMORY
-            }
+            x if x == PgSqlErrorCode::ERRCODE_DISK_FULL as isize => PgSqlErrorCode::ERRCODE_DISK_FULL,
+            x if x == PgSqlErrorCode::ERRCODE_OUT_OF_MEMORY as isize => PgSqlErrorCode::ERRCODE_OUT_OF_MEMORY,
             x if x == PgSqlErrorCode::ERRCODE_TOO_MANY_CONNECTIONS as isize => {
                 PgSqlErrorCode::ERRCODE_TOO_MANY_CONNECTIONS
             }
@@ -1096,9 +1032,7 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE as isize => {
                 PgSqlErrorCode::ERRCODE_OBJECT_NOT_IN_PREREQUISITE_STATE
             }
-            x if x == PgSqlErrorCode::ERRCODE_OBJECT_IN_USE as isize => {
-                PgSqlErrorCode::ERRCODE_OBJECT_IN_USE
-            }
+            x if x == PgSqlErrorCode::ERRCODE_OBJECT_IN_USE as isize => PgSqlErrorCode::ERRCODE_OBJECT_IN_USE,
             x if x == PgSqlErrorCode::ERRCODE_CANT_CHANGE_RUNTIME_PARAM as isize => {
                 PgSqlErrorCode::ERRCODE_CANT_CHANGE_RUNTIME_PARAM
             }
@@ -1128,9 +1062,7 @@ impl From<isize> for PgSqlErrorCode {
                 PgSqlErrorCode::ERRCODE_DATABASE_DROPPED
             }
 
-            x if x == PgSqlErrorCode::ERRCODE_SYSTEM_ERROR as isize => {
-                PgSqlErrorCode::ERRCODE_SYSTEM_ERROR
-            }
+            x if x == PgSqlErrorCode::ERRCODE_SYSTEM_ERROR as isize => PgSqlErrorCode::ERRCODE_SYSTEM_ERROR,
             x if x == PgSqlErrorCode::ERRCODE_IO_ERROR as isize => PgSqlErrorCode::ERRCODE_IO_ERROR,
             x if x == PgSqlErrorCode::ERRCODE_UNDEFINED_FILE as isize => {
                 PgSqlErrorCode::ERRCODE_UNDEFINED_FILE
@@ -1150,9 +1082,7 @@ impl From<isize> for PgSqlErrorCode {
                 PgSqlErrorCode::ERRCODE_LOCK_FILE_EXISTS
             }
 
-            x if x == PgSqlErrorCode::ERRCODE_FDW_ERROR as isize => {
-                PgSqlErrorCode::ERRCODE_FDW_ERROR
-            }
+            x if x == PgSqlErrorCode::ERRCODE_FDW_ERROR as isize => PgSqlErrorCode::ERRCODE_FDW_ERROR,
             x if x == PgSqlErrorCode::ERRCODE_FDW_COLUMN_NAME_NOT_FOUND as isize => {
                 PgSqlErrorCode::ERRCODE_FDW_COLUMN_NAME_NOT_FOUND
             }
@@ -1194,9 +1124,7 @@ impl From<isize> for PgSqlErrorCode {
             x if x == PgSqlErrorCode::ERRCODE_FDW_INVALID_OPTION_NAME as isize => {
                 PgSqlErrorCode::ERRCODE_FDW_INVALID_OPTION_NAME
             }
-            x if x
-                == PgSqlErrorCode::ERRCODE_FDW_INVALID_STRING_LENGTH_OR_BUFFER_LENGTH as isize =>
-            {
+            x if x == PgSqlErrorCode::ERRCODE_FDW_INVALID_STRING_LENGTH_OR_BUFFER_LENGTH as isize => {
                 PgSqlErrorCode::ERRCODE_FDW_INVALID_STRING_LENGTH_OR_BUFFER_LENGTH
             }
 
@@ -1237,18 +1165,12 @@ impl From<isize> for PgSqlErrorCode {
                 PgSqlErrorCode::ERRCODE_FDW_UNABLE_TO_ESTABLISH_CONNECTION
             }
 
-            x if x == PgSqlErrorCode::ERRCODE_PLPGSQL_ERROR as isize => {
-                PgSqlErrorCode::ERRCODE_PLPGSQL_ERROR
-            }
+            x if x == PgSqlErrorCode::ERRCODE_PLPGSQL_ERROR as isize => PgSqlErrorCode::ERRCODE_PLPGSQL_ERROR,
             x if x == PgSqlErrorCode::ERRCODE_RAISE_EXCEPTION as isize => {
                 PgSqlErrorCode::ERRCODE_RAISE_EXCEPTION
             }
-            x if x == PgSqlErrorCode::ERRCODE_NO_DATA_FOUND as isize => {
-                PgSqlErrorCode::ERRCODE_NO_DATA_FOUND
-            }
-            x if x == PgSqlErrorCode::ERRCODE_TOO_MANY_ROWS as isize => {
-                PgSqlErrorCode::ERRCODE_TOO_MANY_ROWS
-            }
+            x if x == PgSqlErrorCode::ERRCODE_NO_DATA_FOUND as isize => PgSqlErrorCode::ERRCODE_NO_DATA_FOUND,
+            x if x == PgSqlErrorCode::ERRCODE_TOO_MANY_ROWS as isize => PgSqlErrorCode::ERRCODE_TOO_MANY_ROWS,
             x if x == PgSqlErrorCode::ERRCODE_ASSERT_FAILURE as isize => {
                 PgSqlErrorCode::ERRCODE_ASSERT_FAILURE
             }

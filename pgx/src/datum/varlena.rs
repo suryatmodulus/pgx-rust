@@ -9,9 +9,8 @@ Use of this source code is governed by the MIT license that can be found in the 
 //! Wrapper for Postgres 'varlena' type, over Rust types of a fixed size (ie, `impl Copy`)
 use crate::pg_sys::{VARATT_SHORT_MAX, VARHDRSZ_SHORT};
 use crate::{
-    pg_sys, rust_regtypein, set_varsize, set_varsize_short, vardata_any, varsize_any,
-    varsize_any_exhdr, void_mut_ptr, FromDatum, IntoDatum, PgMemoryContexts, PostgresType,
-    StringInfo,
+    pg_sys, rust_regtypein, set_varsize, set_varsize_short, vardata_any, varsize_any, varsize_any_exhdr,
+    void_mut_ptr, FromDatum, IntoDatum, PgMemoryContexts, PostgresType, StringInfo,
 };
 use pgx_pg_sys::varlena;
 use pgx_utils::sql_entity_graph::metadata::{
@@ -34,8 +33,8 @@ impl Clone for PallocdVarlena {
         // SAFETY:  we know that `self.ptr` is valid as the only way we could have gotten one
         // is internally via Postgres
         let ptr = unsafe {
-            PgMemoryContexts::Of(self.ptr as void_mut_ptr)
-                .copy_ptr_into(self.ptr as void_mut_ptr, len) as *mut pg_sys::varlena
+            PgMemoryContexts::Of(self.ptr as void_mut_ptr).copy_ptr_into(self.ptr as void_mut_ptr, len)
+                as *mut pg_sys::varlena
         };
 
         PallocdVarlena { ptr, len }
@@ -298,11 +297,7 @@ impl<T> FromDatum for PgVarlena<T>
 where
     T: Copy + Sized,
 {
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        _typoid: u32,
-    ) -> Option<Self> {
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, _typoid: u32) -> Option<Self> {
         if is_null {
             None
         } else {
@@ -350,11 +345,7 @@ impl<'de, T> FromDatum for T
 where
     T: PostgresType + Deserialize<'de>,
 {
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        _typoid: u32,
-    ) -> Option<Self> {
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, _typoid: u32) -> Option<Self> {
         if is_null {
             None
         } else {

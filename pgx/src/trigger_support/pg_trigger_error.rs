@@ -4,13 +4,9 @@ pub enum PgTriggerError {
     NotTrigger,
     #[error("`PgTrigger`s cannot be built from `NULL` `pgx::pg_sys::FunctionCallInfo`s")]
     NullFunctionCallInfo,
-    #[error(
-        "`InvalidPgTriggerWhen` cannot be built from `event & TRIGGER_EVENT_TIMINGMASK` of `{0}"
-    )]
+    #[error("`InvalidPgTriggerWhen` cannot be built from `event & TRIGGER_EVENT_TIMINGMASK` of `{0}")]
     InvalidPgTriggerWhen(u32),
-    #[error(
-        "`InvalidPgTriggerOperation` cannot be built from `event & TRIGGER_EVENT_OPMASK` of `{0}"
-    )]
+    #[error("`InvalidPgTriggerOperation` cannot be built from `event & TRIGGER_EVENT_OPMASK` of `{0}")]
     InvalidPgTriggerOperation(u32),
     #[error("core::str::Utf8Error: {0}")]
     CoreUtf8(#[from] core::str::Utf8Error),

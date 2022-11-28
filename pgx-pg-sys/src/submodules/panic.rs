@@ -13,9 +13,7 @@ use std::any::Any;
 use std::cell::Cell;
 use std::fmt::{Display, Formatter};
 use std::hint::unreachable_unchecked;
-use std::panic::{
-    catch_unwind, panic_any, resume_unwind, Location, PanicInfo, RefUnwindSafe, UnwindSafe,
-};
+use std::panic::{catch_unwind, panic_any, resume_unwind, Location, PanicInfo, RefUnwindSafe, UnwindSafe};
 
 use crate::elog::PgLogLevel;
 use crate::errcodes::PgSqlErrorCode;
@@ -112,11 +110,7 @@ impl ErrorReport {
     ///
     /// Embedded "file:line:col" location information is taken from the caller's location
     #[track_caller]
-    pub fn new<S: Into<String>>(
-        sqlerrcode: PgSqlErrorCode,
-        message: S,
-        funcname: &'static str,
-    ) -> Self {
+    pub fn new<S: Into<String>>(sqlerrcode: PgSqlErrorCode, message: S, funcname: &'static str) -> Self {
         let mut location: ErrorReportLocation = Location::caller().into();
         location.funcname = Some(funcname.to_string());
 

@@ -25,11 +25,7 @@ pub(crate) const USECS_PER_DAY: u64 = USECS_PER_HOUR * 24;
 pub struct Time(pub u64 /* Microseconds since midnight */);
 impl FromDatum for Time {
     #[inline]
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        _typoid: u32,
-    ) -> Option<Time> {
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, _typoid: u32) -> Option<Time> {
         if is_null {
             None
         } else {
@@ -134,14 +130,13 @@ impl serde::Serialize for Time {
                         serde::ser::Error::custom(format!("Time invalid format problem: {:?}", e))
                     })?,
                 )
-                .map_err(|e| {
-                    serde::ser::Error::custom(format!("Time formatting problem: {:?}", e))
-                })?,
+                .map_err(|e| serde::ser::Error::custom(format!("Time formatting problem: {:?}", e)))?,
             )
         } else {
-            serializer.serialize_str(&t.format(&DEFAULT_TIME_FORMAT).map_err(|e| {
-                serde::ser::Error::custom(format!("Time formatting problem: {:?}", e))
-            })?)
+            serializer.serialize_str(
+                &t.format(&DEFAULT_TIME_FORMAT)
+                    .map_err(|e| serde::ser::Error::custom(format!("Time formatting problem: {:?}", e)))?,
+            )
         }
     }
 }

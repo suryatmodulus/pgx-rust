@@ -439,10 +439,8 @@ where
         fcinfo: FunctionCallInfo,
         f: F,
     ) -> R {
-        let aggregate_memory_context =
-            unsafe { Self::memory_context(fcinfo) }.unwrap_or_else(|| {
-                error!("Cannot access Aggregate memory contexts when not an aggregate.")
-            });
+        let aggregate_memory_context = unsafe { Self::memory_context(fcinfo) }
+            .unwrap_or_else(|| error!("Cannot access Aggregate memory contexts when not an aggregate."));
         PgMemoryContexts::For(aggregate_memory_context).switch_to(f)
     }
 }

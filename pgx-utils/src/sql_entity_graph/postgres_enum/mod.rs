@@ -68,8 +68,7 @@ impl PostgresEnum {
     }
 
     pub fn from_derive_input(derive_input: DeriveInput) -> Result<Self, syn::Error> {
-        let to_sql_config =
-            ToSqlConfig::from_attributes(derive_input.attrs.as_slice())?.unwrap_or_default();
+        let to_sql_config = ToSqlConfig::from_attributes(derive_input.attrs.as_slice())?.unwrap_or_default();
         let data_enum = match derive_input.data {
             syn::Data::Enum(data_enum) => data_enum,
             syn::Data::Union(_) | syn::Data::Struct(_) => {
@@ -83,8 +82,7 @@ impl PostgresEnum {
 impl Parse for PostgresEnum {
     fn parse(input: ParseStream) -> Result<Self, syn::Error> {
         let parsed: ItemEnum = input.parse()?;
-        let to_sql_config =
-            ToSqlConfig::from_attributes(parsed.attrs.as_slice())?.unwrap_or_default();
+        let to_sql_config = ToSqlConfig::from_attributes(parsed.attrs.as_slice())?.unwrap_or_default();
         Self::new(parsed.ident, parsed.generics, parsed.variants, to_sql_config)
     }
 }
@@ -99,9 +97,7 @@ impl ToTokens for PostgresEnum {
             .clone()
             .into_iter()
             .flat_map(|param| match param {
-                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => {
-                    Some(item)
-                }
+                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => Some(item),
                 syn::GenericParam::Lifetime(mut lifetime) => {
                     lifetime.lifetime.ident = Ident::new("static", Span::call_site());
                     Some(syn::GenericParam::Lifetime(lifetime))
@@ -114,9 +110,7 @@ impl ToTokens for PostgresEnum {
             .clone()
             .into_iter()
             .flat_map(|param| match param {
-                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => {
-                    Some(item)
-                }
+                item @ syn::GenericParam::Type(_) | item @ syn::GenericParam::Const(_) => Some(item),
                 syn::GenericParam::Lifetime(_) => None,
             })
             .collect();

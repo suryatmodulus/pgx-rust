@@ -89,9 +89,7 @@ fn query_toml(query_args: &QueryCargoVersionArgs) {
     // default to <cwd>/pgx-version-updater/Cargo.toml where <cwd> is assumed to be
     // the root of a PGX checkout directory
     let filepath = match &query_args.file_path {
-        Some(path) => {
-            fullpath(&path).expect(format!("Could not get full path for file: {}", path).as_str())
-        }
+        Some(path) => fullpath(&path).expect(format!("Could not get full path for file: {}", path).as_str()),
         None => {
             let mut current_dir = env::current_dir().expect("Could not get current_dir!");
             current_dir.push("pgx-version-updater/Cargo.toml");
@@ -103,9 +101,9 @@ fn query_toml(query_args: &QueryCargoVersionArgs) {
     let data = fs::read_to_string(&filepath)
         .expect(format!("Unable to open file at {}", &filepath.display()).as_str());
 
-    let doc = data.parse::<Document>().expect(
-        format!("File at location {} is an invalid Cargo.toml file", &filepath.display()).as_str(),
-    );
+    let doc = data
+        .parse::<Document>()
+        .expect(format!("File at location {} is an invalid Cargo.toml file", &filepath.display()).as_str());
 
     if let Some(package_version) = doc.get("package").and_then(|p| p.get("version")) {
         println!("{}", package_version.as_str().expect("Could not turn package version into str"));
@@ -134,27 +132,20 @@ fn update_files(args: &UpdateFilesArgs) {
     // *dependency* version updates.
     let mut exclude_version_files = HashSet::new();
     for file in &args.exclude_from_version_change {
-        exclude_version_files.insert(
-            fullpath(&file).expect(format!("Could not get full path for file: {}", file).as_str()),
-        );
+        exclude_version_files
+            .insert(fullpath(&file).expect(format!("Could not get full path for file: {}", file).as_str()));
     }
 
     // Recursively walk down all directories to extract out any existing Cargo.toml files
-    for entry in WalkDir::new(&current_dir)
-        .into_iter()
-        .filter_entry(|e| is_not_excluded_dir(e))
-        .filter_map(|v| v.ok())
+    for entry in
+        WalkDir::new(&current_dir).into_iter().filter_entry(|e| is_not_excluded_dir(e)).filter_map(|v| v.ok())
     {
         if is_cargo_toml_file(&entry) {
-            let filepath = fullpath(entry.path()).expect(
-                format!("Could not get full path for file {}", entry.path().display()).as_str(),
-            );
+            let filepath = fullpath(entry.path())
+                .expect(format!("Could not get full path for file {}", entry.path().display()).as_str());
 
-            let mut output = format!(
-                "{} Cargo.toml file at {}",
-                "Discovered".bold().green(),
-                &filepath.display().cyan()
-            );
+            let mut output =
+                format!("{} Cargo.toml file at {}", "Discovered".bold().green(), &filepath.display().cyan());
 
             // Extract the package name if possible
             if !exclude_version_files.contains(&filepath) {
@@ -183,8 +174,7 @@ fn update_files(args: &UpdateFilesArgs) {
 
     // Loop through all files that are included for dependency updates via CLI params
     for file in &args.include_for_dep_updates {
-        let filepath =
-            fullpath(&file).expect(format!("Could not get full path for file {}", file).as_str());
+        let filepath = fullpath(&file).expect(format!("Could not get full path for file {}", file).as_str());
 
         let mut output = format!(
             "{} Cargo.toml file at {} for processing",
@@ -219,29 +209,21 @@ fn update_files(args: &UpdateFilesArgs) {
     // Print out information about package names that were automatically discovered
     // and parsed
     for package_name in &updatable_package_names {
-        println!(
-            "{} {} found for version updating",
-            "   Package".bold().green(),
-            package_name.cyan()
-        );
+        println!("{} {} found for version updating", "   Package".bold().green(), package_name.cyan());
     }
 
     // Loop through every TOML file (automatically discovered and manually included
     // via command line params) and update package versions and dependency
     // versions where applicable
     for filepath in files_to_process {
-        let mut output = format!(
-            "{} Cargo.toml file at {}",
-            "Processing".bold().green(),
-            &filepath.display().cyan()
-        );
+        let mut output =
+            format!("{} Cargo.toml file at {}", "Processing".bold().green(), &filepath.display().cyan());
 
         let data = fs::read_to_string(&filepath)
             .expect(format!("Unable to open file at {}", &filepath.display()).as_str());
 
         let mut doc = data.parse::<Document>().expect(
-            format!("File at location {} is an invalid Cargo.toml file", &filepath.display())
-                .as_str(),
+            format!("File at location {} is an invalid Cargo.toml file", &filepath.display()).as_str(),
         );
 
         if exclude_version_files.contains(&filepath) {
@@ -253,27 +235,21 @@ fn update_files(args: &UpdateFilesArgs) {
             )
         } else {
             // Bump package version if we can
-            if let Some(package_version) = doc.get_mut("package").and_then(|p| p.get_mut("version"))
-            {
+            if let Some(package_version) = doc.get_mut("package").and_then(|p| p.get_mut("version")) {
                 *package_version = value(args.update_version.clone());
             }
         }
 
         let update_package_version = |item: &mut Item| {
             if let Some(current_version_specifier) = item.as_str() {
-                *item = value(parse_new_version(
-                    current_version_specifier,
-                    &args.update_version.as_str(),
-                ))
+                *item = value(parse_new_version(current_version_specifier, &args.update_version.as_str()))
             }
         };
 
         // Process dependencies in each file. Generally dependencies can be found in
         // [dependencies], [dependencies.foo], [build-dependencies], [dev-dependencies]
         for updatable_table_name in ["dependencies", "build-dependencies", "dev-dependencies"] {
-            if let Some(updatable_table) =
-                doc.get_mut(updatable_table_name).and_then(|i| i.as_table_mut())
-            {
+            if let Some(updatable_table) = doc.get_mut(updatable_table_name).and_then(|i| i.as_table_mut()) {
                 for package in &updatable_package_names {
                     // Tables can contain other tables, and if that's the case we're
                     // probably at a case of a table like this:
@@ -327,12 +303,8 @@ fn update_files(args: &UpdateFilesArgs) {
             for output_line in child_output.stdout.lines().skip(2) {
                 if let Ok(line) = output_line {
                     match line.chars().nth(0) {
-                        Some('-') => {
-                            diff_output.push_str(format!("\n            {}", line.red()).as_str())
-                        }
-                        Some('+') => {
-                            diff_output.push_str(format!("\n            {}", line.green()).as_str())
-                        }
+                        Some('-') => diff_output.push_str(format!("\n            {}", line.red()).as_str()),
+                        Some('+') => diff_output.push_str(format!("\n            {}", line.green()).as_str()),
                         Some(_) => diff_output.push_str(format!("\n           {line}").as_str()),
                         _ => {}
                     }
@@ -341,9 +313,8 @@ fn update_files(args: &UpdateFilesArgs) {
 
             // The "diff" command will not print out anything if there is no difference.
             if diff_output.is_empty() {
-                diff_output.push_str(
-                    format!("\n           {}", "* No detectable diff found".dimmed()).as_str(),
-                )
+                diff_output
+                    .push_str(format!("\n           {}", "* No detectable diff found".dimmed()).as_str())
             } else {
                 diff_output = format!("\n           {}", "* Diff:".dimmed()) + diff_output.as_str();
             }
@@ -376,9 +347,9 @@ fn fullpath<P: AsRef<Path>>(test_path: P) -> Result<PathBuf, std::io::Error> {
 // Walkdir filter, ensure we don't traverse down a directory that should be ignored
 // e.g. .git/ and target/ directories should never be traversed.
 fn is_not_excluded_dir(entry: &DirEntry) -> bool {
-    let metadata = entry.metadata().expect(
-        format!("Could not get metadata for: {}", entry.file_name().to_string_lossy()).as_str(),
-    );
+    let metadata = entry
+        .metadata()
+        .expect(format!("Could not get metadata for: {}", entry.file_name().to_string_lossy()).as_str());
 
     if metadata.is_dir() {
         return !IGNORE_DIRS.contains(&entry.file_name().to_string_lossy().as_ref());
@@ -389,9 +360,9 @@ fn is_not_excluded_dir(entry: &DirEntry) -> bool {
 
 // Check if a specific DirEntry is named "Cargo.toml"
 fn is_cargo_toml_file(entry: &DirEntry) -> bool {
-    let metadata = entry.metadata().expect(
-        format!("Could not get metadata for: {}", entry.file_name().to_string_lossy()).as_str(),
-    );
+    let metadata = entry
+        .metadata()
+        .expect(format!("Could not get metadata for: {}", entry.file_name().to_string_lossy()).as_str());
 
     if metadata.is_file() {
         return entry.file_name().eq_ignore_ascii_case("Cargo.toml");
@@ -430,10 +401,7 @@ fn parse_new_version(current_version_specifier: &str, new_version: &str) -> Stri
                 result.push_str(&current_version_specifier[..version_pos]);
                 result.push_str(&new_version.clone());
             } else {
-                panic!(
-                    "Could not find an actual version in specifier: '{}'",
-                    current_version_specifier
-                );
+                panic!("Could not find an actual version in specifier: '{}'", current_version_specifier);
             }
         }
         None => panic!("Version specifier '{}' is not valid!", current_version_specifier),
@@ -450,9 +418,9 @@ fn extract_package_name<P: AsRef<Path>>(filepath: P) -> Option<String> {
     let data = fs::read_to_string(&filepath)
         .expect(format!("Unable to open file at {}", &filepath.display()).as_str());
 
-    let doc = data.parse::<Document>().expect(
-        format!("File at location {} is an invalid Cargo.toml file", &filepath.display()).as_str(),
-    );
+    let doc = data
+        .parse::<Document>()
+        .expect(format!("File at location {} is an invalid Cargo.toml file", &filepath.display()).as_str());
 
     doc.get("package")?.as_table()?.get("name")?.as_str().map(|s| s.to_string())
 }

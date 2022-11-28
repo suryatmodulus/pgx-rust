@@ -6,9 +6,7 @@
 to the `pgx` framework and very subject to change between versions. While you may use this, please do it with caution.
 
 */
-use crate::sql_entity_graph::{
-    PgxSql, SqlGraphEntity, SqlGraphIdentifier, ToSql, ToSqlConfigEntity,
-};
+use crate::sql_entity_graph::{PgxSql, SqlGraphEntity, SqlGraphIdentifier, ToSql, ToSqlConfigEntity};
 use core::cmp::{Eq, Ord, Ordering, PartialEq, PartialOrd};
 use core::fmt::Debug;
 use core::hash::Hash;

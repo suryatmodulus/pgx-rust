@@ -22,8 +22,7 @@ mod tests {
 
     #[pg_test]
     fn test_return_bytes() {
-        let bytes =
-            Spi::get_one::<&[u8]>("SELECT tests.return_bytes();").expect("SPI result was null");
+        let bytes = Spi::get_one::<&[u8]>("SELECT tests.return_bytes();").expect("SPI result was null");
         assert_eq!(bytes, b"bytes")
     }
 
@@ -46,8 +45,7 @@ mod tests {
 
     #[pg_test]
     fn test_return_vec_bytes() {
-        let vec = Spi::get_one::<Vec<u8>>("SELECT tests.return_vec_bytes();")
-            .expect("SPI result was null");
+        let vec = Spi::get_one::<Vec<u8>>("SELECT tests.return_vec_bytes();").expect("SPI result was null");
         assert_eq!(vec.as_slice(), b"bytes")
     }
 

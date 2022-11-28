@@ -39,9 +39,7 @@ impl Internal {
     /// The value will be dropped when the [PgMemoryContexts::CurrentMemoryContext] is deleted.
     #[inline(always)]
     pub fn new<T>(t: T) -> Self {
-        Self(Some(pg_sys::Datum::from(
-            PgMemoryContexts::CurrentMemoryContext.leak_and_drop_on_delete(t),
-        )))
+        Self(Some(pg_sys::Datum::from(PgMemoryContexts::CurrentMemoryContext.leak_and_drop_on_delete(t))))
     }
 
     /// Returns true if the internal value is initialized. If false, this is a null pointer.
@@ -74,9 +72,8 @@ impl Internal {
     /// your responsibility.
     #[inline(always)]
     pub unsafe fn insert<T>(&mut self, value: T) -> &mut T {
-        let datum = pg_sys::Datum::from(
-            PgMemoryContexts::CurrentMemoryContext.leak_and_drop_on_delete(value),
-        );
+        let datum =
+            pg_sys::Datum::from(PgMemoryContexts::CurrentMemoryContext.leak_and_drop_on_delete(value));
         let ptr = self.0.insert(datum);
         &mut *(ptr.cast_mut_ptr::<T>())
     }
@@ -138,8 +135,7 @@ impl Internal {
     {
         let ptr = self.0.get_or_insert_with(|| {
             let result = f();
-            let datum =
-                PgMemoryContexts::CurrentMemoryContext.leak_and_drop_on_delete(result).into();
+            let datum = PgMemoryContexts::CurrentMemoryContext.leak_and_drop_on_delete(result).into();
             datum
         });
         &mut *(ptr.cast_mut_ptr::<T>())

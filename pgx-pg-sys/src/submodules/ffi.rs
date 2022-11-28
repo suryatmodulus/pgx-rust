@@ -111,16 +111,21 @@ unsafe fn pg_guard_ffi_boundary_impl<T, F: FnOnce() -> T>(f: F) -> T {
                 .is_null()
                 .then(|| String::from("<null error message>"))
                 .unwrap_or_else(|| CStr::from_ptr(errdata.message).to_string_lossy().to_string());
-            let detail = errdata.detail.is_null().then(|| None).unwrap_or_else(|| {
-                Some(CStr::from_ptr(errdata.detail).to_string_lossy().to_string())
-            });
-            let funcname = errdata.funcname.is_null().then(|| None).unwrap_or_else(|| {
-                Some(CStr::from_ptr(errdata.funcname).to_string_lossy().to_string())
-            });
-            let file =
-                errdata.filename.is_null().then(|| String::from("<null filename>")).unwrap_or_else(
-                    || CStr::from_ptr(errdata.filename).to_string_lossy().to_string(),
-                );
+            let detail = errdata
+                .detail
+                .is_null()
+                .then(|| None)
+                .unwrap_or_else(|| Some(CStr::from_ptr(errdata.detail).to_string_lossy().to_string()));
+            let funcname = errdata
+                .funcname
+                .is_null()
+                .then(|| None)
+                .unwrap_or_else(|| Some(CStr::from_ptr(errdata.funcname).to_string_lossy().to_string()));
+            let file = errdata
+                .filename
+                .is_null()
+                .then(|| String::from("<null filename>"))
+                .unwrap_or_else(|| CStr::from_ptr(errdata.filename).to_string_lossy().to_string());
             let line = errdata.lineno as _;
 
             // clean up after ourselves by freeing the result of [CopyErrorData] and restoring

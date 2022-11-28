@@ -121,16 +121,7 @@ pub trait PgHooks {
             completion_tag: *mut pg_sys::QueryCompletion,
         ) -> HookResult<()>,
     ) -> HookResult<()> {
-        prev_hook(
-            pstmt,
-            query_string,
-            read_only_tree,
-            context,
-            params,
-            query_env,
-            dest,
-            completion_tag,
-        )
+        prev_hook(pstmt, query_string, read_only_tree, context, params, query_env, dest, completion_tag)
     }
 
     /// Hook for plugins to get control of the planner
@@ -210,20 +201,15 @@ pub unsafe fn register_hook(hook: &'static mut (dyn PgHooks)) {
         prev_process_utility_hook: pg_sys::ProcessUtility_hook
             .replace(pgx_process_utility)
             .or(Some(pgx_standard_process_utility_wrapper)),
-        prev_planner_hook: pg_sys::planner_hook
-            .replace(pgx_planner)
-            .or(Some(pgx_standard_planner_wrapper)),
-        prev_post_parse_analyze_hook: pg_sys::post_parse_analyze_hook
-            .replace(pgx_post_parse_analyze),
+        prev_planner_hook: pg_sys::planner_hook.replace(pgx_planner).or(Some(pgx_standard_planner_wrapper)),
+        prev_post_parse_analyze_hook: pg_sys::post_parse_analyze_hook.replace(pgx_post_parse_analyze),
     });
 
     #[pg_guard]
     unsafe extern "C" fn xact_callback(event: pg_sys::XactEvent, _data: void_mut_ptr) {
         match event {
             pg_sys::XactEvent_XACT_EVENT_ABORT => HOOKS.as_mut().unwrap().current_hook.abort(),
-            pg_sys::XactEvent_XACT_EVENT_PRE_COMMIT => {
-                HOOKS.as_mut().unwrap().current_hook.commit()
-            }
+            pg_sys::XactEvent_XACT_EVENT_PRE_COMMIT => HOOKS.as_mut().unwrap().current_hook.commit(),
             _ => { /* noop */ }
         }
     }
@@ -235,10 +221,7 @@ pub unsafe fn register_hook(hook: &'static mut (dyn PgHooks)) {
 unsafe extern "C" fn pgx_executor_start(query_desc: *mut pg_sys::QueryDesc, eflags: i32) {
     fn prev(query_desc: PgBox<pg_sys::QueryDesc>, eflags: i32) -> HookResult<()> {
         unsafe {
-            (HOOKS.as_mut().unwrap().prev_executor_start_hook.as_ref().unwrap())(
-                query_desc.into_pg(),
-                eflags,
-            )
+            (HOOKS.as_mut().unwrap().prev_executor_start_hook.as_ref().unwrap())(query_desc.into_pg(), eflags)
         }
         HookResult::new(())
     }
@@ -276,11 +259,7 @@ unsafe extern "C" fn pgx_executor_run(
 #[pg_guard]
 unsafe extern "C" fn pgx_executor_finish(query_desc: *mut pg_sys::QueryDesc) {
     fn prev(query_desc: PgBox<pg_sys::QueryDesc>) -> HookResult<()> {
-        unsafe {
-            (HOOKS.as_mut().unwrap().prev_executor_finish_hook.as_ref().unwrap())(
-                query_desc.into_pg(),
-            )
-        }
+        unsafe { (HOOKS.as_mut().unwrap().prev_executor_finish_hook.as_ref().unwrap())(query_desc.into_pg()) }
         HookResult::new(())
     }
     let hook = &mut HOOKS.as_mut().unwrap().current_hook;
@@ -290,9 +269,7 @@ unsafe extern "C" fn pgx_executor_finish(query_desc: *mut pg_sys::QueryDesc) {
 #[pg_guard]
 unsafe extern "C" fn pgx_executor_end(query_desc: *mut pg_sys::QueryDesc) {
     fn prev(query_desc: PgBox<pg_sys::QueryDesc>) -> HookResult<()> {
-        unsafe {
-            (HOOKS.as_mut().unwrap().prev_executor_end_hook.as_ref().unwrap())(query_desc.into_pg())
-        }
+        unsafe { (HOOKS.as_mut().unwrap().prev_executor_end_hook.as_ref().unwrap())(query_desc.into_pg()) }
         HookResult::new(())
     }
     let hook = &mut HOOKS.as_mut().unwrap().current_hook;
@@ -304,10 +281,7 @@ unsafe extern "C" fn pgx_executor_check_perms(
     range_table: *mut pg_sys::List,
     ereport_on_violation: bool,
 ) -> bool {
-    fn prev(
-        range_table: PgList<*mut pg_sys::RangeTblEntry>,
-        ereport_on_violation: bool,
-    ) -> HookResult<bool> {
+    fn prev(range_table: PgList<*mut pg_sys::RangeTblEntry>, ereport_on_violation: bool) -> HookResult<bool> {
         HookResult::new(unsafe {
             (HOOKS.as_mut().unwrap().prev_executor_check_perms_hook.as_ref().unwrap())(
                 range_table.into_pg(),
@@ -474,22 +448,13 @@ unsafe extern "C" fn pgx_planner_impl(
         })
     }
     let hook = &mut HOOKS.as_mut().unwrap().current_hook;
-    hook.planner(
-        PgBox::from_pg(parse),
-        query_string,
-        cursor_options,
-        PgBox::from_pg(bound_params),
-        prev,
-    )
-    .inner
+    hook.planner(PgBox::from_pg(parse), query_string, cursor_options, PgBox::from_pg(bound_params), prev)
+        .inner
 }
 
 #[cfg(any(feature = "pg10", feature = "pg11", feature = "pg12", feature = "pg13"))]
 #[pg_guard]
-unsafe extern "C" fn pgx_post_parse_analyze(
-    parse_state: *mut pg_sys::ParseState,
-    query: *mut pg_sys::Query,
-) {
+unsafe extern "C" fn pgx_post_parse_analyze(parse_state: *mut pg_sys::ParseState, query: *mut pg_sys::Query) {
     fn prev(
         parse_state: PgBox<pg_sys::ParseState>,
         query: PgBox<pg_sys::Query>,
@@ -522,9 +487,7 @@ unsafe extern "C" fn pgx_post_parse_analyze(
         HookResult::new(unsafe {
             match HOOKS.as_mut().unwrap().prev_post_parse_analyze_hook.as_ref() {
                 None => (),
-                Some(f) => {
-                    (f)(parse_state.as_ptr(), query.as_ptr(), jumble_state.unwrap().as_ptr())
-                }
+                Some(f) => (f)(parse_state.as_ptr(), query.as_ptr(), jumble_state.unwrap().as_ptr()),
             }
         })
     }
@@ -540,10 +503,7 @@ unsafe extern "C" fn pgx_post_parse_analyze(
 }
 
 #[pg_guard]
-unsafe extern "C" fn pgx_standard_executor_start_wrapper(
-    query_desc: *mut pg_sys::QueryDesc,
-    eflags: i32,
-) {
+unsafe extern "C" fn pgx_standard_executor_start_wrapper(query_desc: *mut pg_sys::QueryDesc, eflags: i32) {
     pg_sys::standard_ExecutorStart(query_desc, eflags)
 }
 
@@ -586,15 +546,7 @@ unsafe extern "C" fn pgx_standard_process_utility_wrapper(
     dest: *mut pg_sys::DestReceiver,
     completion_tag: *mut pg_sys::QueryCompletion,
 ) {
-    pg_sys::standard_ProcessUtility(
-        pstmt,
-        query_string,
-        context,
-        params,
-        query_env,
-        dest,
-        completion_tag,
-    )
+    pg_sys::standard_ProcessUtility(pstmt, query_string, context, params, query_env, dest, completion_tag)
 }
 
 #[cfg(any(feature = "pg14", feature = "pg15"))]

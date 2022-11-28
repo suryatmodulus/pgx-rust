@@ -52,14 +52,11 @@ impl TimestampWithTimeZone {
     and this fn will be removed in a future version"
     )]
     pub fn new(time: time::PrimitiveDateTime, at_tz_offset: UtcOffset) -> Self {
-        let offset = time.assume_utc()
-                        .to_offset(
-                            UtcOffset::from_whole_seconds(-at_tz_offset.whole_seconds())
-                                .expect("Unexpected error in `UtcOffset::from_whole_seconds` during `TimestampWithTimeZone::new`")
-                        );
-        offset
-            .try_into()
-            .expect("unable to convert time::PrimitiveDateTime to pgx::TimestampWithTimeZone")
+        let offset =
+            time.assume_utc().to_offset(UtcOffset::from_whole_seconds(-at_tz_offset.whole_seconds()).expect(
+                "Unexpected error in `UtcOffset::from_whole_seconds` during `TimestampWithTimeZone::new`",
+            ));
+        offset.try_into().expect("unable to convert time::PrimitiveDateTime to pgx::TimestampWithTimeZone")
     }
 }
 
@@ -144,11 +141,7 @@ impl IntoDatum for TimestampWithTimeZone {
 }
 
 impl FromDatum for TimestampWithTimeZone {
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        _: pg_sys::Oid,
-    ) -> Option<Self>
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, _: pg_sys::Oid) -> Option<Self>
     where
         Self: Sized,
     {

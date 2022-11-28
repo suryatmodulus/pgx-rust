@@ -86,10 +86,7 @@ mod arguments {
 
         #[pg_extern]
         fn gets_name_field_default_variadic(
-            dogs: default!(
-                VariadicArray<pgx::composite_type!("Dog")>,
-                "ARRAY[ROW('Nami', 0)]::Dog[]"
-            ),
+            dogs: default!(VariadicArray<pgx::composite_type!("Dog")>, "ARRAY[ROW('Nami', 0)]::Dog[]"),
         ) -> Vec<String> {
             // Gets resolved to:
             let dogs: pgx::VariadicArray<PgHeapTuple<AllocatedByRust>> = dogs;
@@ -140,9 +137,7 @@ mod arguments {
         use super::*;
 
         #[pg_extern]
-        fn sum_scritches_for_names(
-            dogs: Option<Vec<pgx::composite_type!(DOG_COMPOSITE_TYPE)>>,
-        ) -> i32 {
+        fn sum_scritches_for_names(dogs: Option<Vec<pgx::composite_type!(DOG_COMPOSITE_TYPE)>>) -> i32 {
             // Gets resolved to:
             let dogs: Option<Vec<PgHeapTuple<AllocatedByRust>>> = dogs;
 
@@ -205,10 +200,7 @@ mod arguments {
 
         #[pg_extern]
         fn sum_scritches_for_names_default_optional_items(
-            dogs: pgx::default!(
-                Vec<Option<pgx::composite_type!("Dog")>>,
-                "ARRAY[ROW('Nami', 0)]::Dog[]"
-            ),
+            dogs: pgx::default!(Vec<Option<pgx::composite_type!("Dog")>>, "ARRAY[ROW('Nami', 0)]::Dog[]"),
         ) -> i32 {
             // Gets resolved to:
             let dogs: Vec<Option<PgHeapTuple<AllocatedByRust>>> = dogs;
@@ -245,9 +237,7 @@ mod arguments {
         use super::*;
 
         #[pg_extern]
-        fn sum_scritches_for_names_array(
-            dogs: Option<pgx::Array<pgx::composite_type!("Dog")>>,
-        ) -> i32 {
+        fn sum_scritches_for_names_array(dogs: Option<pgx::Array<pgx::composite_type!("Dog")>>) -> i32 {
             // Gets resolved to:
             let dogs: Option<pgx::Array<PgHeapTuple<AllocatedByRust>>> = dogs;
 
@@ -264,10 +254,7 @@ mod arguments {
 
         #[pg_extern]
         fn sum_scritches_for_names_array_default(
-            dogs: pgx::default!(
-                pgx::Array<pgx::composite_type!("Dog")>,
-                "ARRAY[ROW('Nami', 0)]::Dog[]"
-            ),
+            dogs: pgx::default!(pgx::Array<pgx::composite_type!("Dog")>, "ARRAY[ROW('Nami', 0)]::Dog[]"),
         ) -> i32 {
             // Gets resolved to:
             let dogs: pgx::Array<PgHeapTuple<AllocatedByRust>> = dogs;
@@ -283,9 +270,7 @@ mod arguments {
         }
 
         #[pg_extern]
-        fn sum_scritches_for_names_array_strict(
-            dogs: pgx::Array<pgx::composite_type!("Dog")>,
-        ) -> i32 {
+        fn sum_scritches_for_names_array_strict(dogs: pgx::Array<pgx::composite_type!("Dog")>) -> i32 {
             // Gets resolved to:
             let dogs: pgx::Array<PgHeapTuple<AllocatedByRust>> = dogs;
 
@@ -319,9 +304,7 @@ mod returning {
         }
 
         #[pg_extern]
-        fn scritch(
-            maybe_dog: Option<::pgx::composite_type!("Dog")>,
-        ) -> Option<pgx::composite_type!("Dog")> {
+        fn scritch(maybe_dog: Option<::pgx::composite_type!("Dog")>) -> Option<pgx::composite_type!("Dog")> {
             // Gets resolved to:
             let maybe_dog: Option<PgHeapTuple<AllocatedByRust>> = maybe_dog;
 
@@ -358,8 +341,7 @@ mod returning {
 
             let maybe_dogs = if let Some(mut dogs) = maybe_dogs {
                 for dog in dogs.iter_mut() {
-                    dog.set_by_name("scritches", dog.get_by_name::<i32>("scritches").unwrap())
-                        .unwrap();
+                    dog.set_by_name("scritches", dog.get_by_name::<i32>("scritches").unwrap()).unwrap();
                 }
                 Some(dogs)
             } else {
@@ -392,8 +374,7 @@ mod returning {
             let maybe_dogs = if let Some(mut dogs) = maybe_dogs {
                 for dog in dogs.iter_mut() {
                     if let Some(ref mut dog) = dog {
-                        dog.set_by_name("scritches", dog.get_by_name::<i32>("scritches").unwrap())
-                            .unwrap();
+                        dog.set_by_name("scritches", dog.get_by_name::<i32>("scritches").unwrap()).unwrap();
                     }
                 }
                 Some(dogs)
@@ -419,10 +400,7 @@ mod sql_generator_tests {
             Option<Vec<Option<::pgx::composite_type!("Cat")>>>,
             "ARRAY[ROW('Sally', 0)]::Cat[]"
         ),
-        _a_single_fish: pgx::default!(
-            Option<::pgx::composite_type!("Fish")>,
-            "ROW('Bob', 0)::Fish"
-        ),
+        _a_single_fish: pgx::default!(Option<::pgx::composite_type!("Fish")>, "ROW('Bob', 0)::Fish"),
         _dogs: pgx::default!(
             Option<::pgx::VariadicArray<::pgx::composite_type!("Dog")>>,
             "ARRAY[ROW('Nami', 0), ROW('Brandy', 0)]::Dog[]"
@@ -461,10 +439,7 @@ mod sql_generator_tests {
     #[pg_extern]
     fn iterable_named_table_array_elems() -> TableIterator<
         'static,
-        (
-            name!(dog, Vec<::pgx::composite_type!("Dog")>),
-            name!(cat, Vec<::pgx::composite_type!("Cat")>),
-        ),
+        (name!(dog, Vec<::pgx::composite_type!("Dog")>), name!(cat, Vec<::pgx::composite_type!("Cat")>)),
     > {
         TableIterator::once(Default::default())
     }
@@ -503,8 +478,7 @@ mod sql_generator_tests {
     }
 
     #[pg_extern]
-    fn return_table_single_bare(
-    ) -> TableIterator<'static, (name!(dog, pgx::composite_type!("Dog")),)> {
+    fn return_table_single_bare() -> TableIterator<'static, (name!(dog, pgx::composite_type!("Dog")),)> {
         let mut tuple = PgHeapTuple::new_composite_type("Dog").unwrap();
 
         tuple.set_by_name("scritches", 0).unwrap();
@@ -534,10 +508,7 @@ mod sql_generator_tests {
     #[pg_extern]
     fn return_table_two_optional() -> TableIterator<
         'static,
-        (
-            name!(dog, Option<pgx::composite_type!("Dog")>),
-            name!(cat, Option<pgx::composite_type!("Cat")>),
-        ),
+        (name!(dog, Option<pgx::composite_type!("Dog")>), name!(cat, Option<pgx::composite_type!("Cat")>)),
     > {
         TableIterator::once((None, None))
     }
@@ -737,9 +708,12 @@ mod tests {
 
     #[pg_test]
     fn test_sum_scritches_for_names_optional_items() {
-        let retval = Spi::get_one::<i32>("
+        let retval = Spi::get_one::<i32>(
+            "
             SELECT sum_scritches_for_names_optional_items(ARRAY[ROW('Nami', 1), ROW('Brandy', 42)]::Dog[])
-        ").expect("SQL select failed");
+        ",
+        )
+        .expect("SQL select failed");
         assert_eq!(retval, 43);
     }
 
@@ -767,9 +741,12 @@ mod tests {
 
     #[pg_test]
     fn test_sum_scritches_for_names_array_strict() {
-        let retval = Spi::get_one::<i32>("
+        let retval = Spi::get_one::<i32>(
+            "
             SELECT sum_scritches_for_names_array_strict(ARRAY[ROW('Nami', 1), ROW('Brandy', 42)]::Dog[])
-        ").expect("SQL select failed");
+        ",
+        )
+        .expect("SQL select failed");
         assert_eq!(retval, 43);
     }
 
@@ -889,27 +866,15 @@ mod tests {
         );
 
         // These are **deliberately** the wrong types.
-        assert_eq!(
-            heap_tuple.set_by_name("name", 1_i32),
-            Err(TryFromDatumError::IncompatibleTypes),
-        );
-        assert_eq!(
-            heap_tuple.set_by_name("age", "Brandy"),
-            Err(TryFromDatumError::IncompatibleTypes),
-        );
+        assert_eq!(heap_tuple.set_by_name("name", 1_i32), Err(TryFromDatumError::IncompatibleTypes),);
+        assert_eq!(heap_tuple.set_by_name("age", "Brandy"), Err(TryFromDatumError::IncompatibleTypes),);
 
         // Now set them properly, to test that we get errors when they're set...
         heap_tuple.set_by_name("name", "Brandy".to_string()).unwrap();
         heap_tuple.set_by_name("age", 42).unwrap();
 
         // These are **deliberately** the wrong types.
-        assert_eq!(
-            heap_tuple.get_by_name::<i32>("name"),
-            Err(TryFromDatumError::IncompatibleTypes),
-        );
-        assert_eq!(
-            heap_tuple.get_by_name::<String>("age"),
-            Err(TryFromDatumError::IncompatibleTypes),
-        );
+        assert_eq!(heap_tuple.get_by_name::<i32>("name"), Err(TryFromDatumError::IncompatibleTypes),);
+        assert_eq!(heap_tuple.get_by_name::<String>("age"), Err(TryFromDatumError::IncompatibleTypes),);
     }
 }

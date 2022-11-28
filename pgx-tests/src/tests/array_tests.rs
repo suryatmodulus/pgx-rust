@@ -245,10 +245,8 @@ mod tests {
 
     #[pg_test]
     fn test_serde_serialize_array() {
-        let json = Spi::get_one::<Json>(
-            "SELECT serde_serialize_array(ARRAY['one', null, 'two', 'three'])",
-        )
-        .expect("returned json was null");
+        let json = Spi::get_one::<Json>("SELECT serde_serialize_array(ARRAY['one', null, 'two', 'three'])")
+            .expect("returned json was null");
         assert_eq!(json.0, json! {{"values": ["one", null, "two", "three"]}});
     }
 
@@ -294,10 +292,7 @@ mod tests {
                 .select(
                     "SELECT serde_serialize_array_i32($1)",
                     None,
-                    Some(vec![(
-                        PgBuiltInOids::INT4ARRAYOID.oid(),
-                        owned_vec.as_slice().into_datum(),
-                    )]),
+                    Some(vec![(PgBuiltInOids::INT4ARRAYOID.oid(), owned_vec.as_slice().into_datum())]),
                 )
                 .first()
                 .get_one::<Json>()
@@ -326,16 +321,14 @@ mod tests {
 
     #[pg_test]
     fn test_display_get_arr_nullbitmap() {
-        let bitmap_str = Spi::get_one::<String>(
-            "SELECT display_get_arr_nullbitmap(ARRAY[1,NULL,3,NULL,5]::int[])",
-        )
-        .expect("failed to get SPI result");
+        let bitmap_str =
+            Spi::get_one::<String>("SELECT display_get_arr_nullbitmap(ARRAY[1,NULL,3,NULL,5]::int[])")
+                .expect("failed to get SPI result");
 
         assert_eq!(bitmap_str, "0b00010101");
 
-        let bitmap_str =
-            Spi::get_one::<String>("SELECT display_get_arr_nullbitmap(ARRAY[1,2,3,4,5]::int[])")
-                .expect("failed to get SPI result");
+        let bitmap_str = Spi::get_one::<String>("SELECT display_get_arr_nullbitmap(ARRAY[1,2,3,4,5]::int[])")
+            .expect("failed to get SPI result");
 
         assert_eq!(bitmap_str, "");
     }
@@ -372,8 +365,7 @@ mod tests {
     #[pg_test]
     #[should_panic]
     fn test_arr_sort_uniq_with_null() {
-        let _result =
-            Spi::get_one::<Vec<i32>>("SELECT arr_sort_uniq(ARRAY[3,2,NULL,2,1]::integer[])");
+        let _result = Spi::get_one::<Vec<i32>>("SELECT arr_sort_uniq(ARRAY[3,2,NULL,2,1]::integer[])");
         // No assert because we're testing for the panic.
     }
 }

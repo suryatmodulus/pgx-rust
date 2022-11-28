@@ -27,11 +27,7 @@ impl Aggregate for DemoSum {
     type State = i32;
     type MovingState = i32;
 
-    fn state(
-        mut current: Self::State,
-        arg: Self::Args,
-        _fcinfo: pg_sys::FunctionCallInfo,
-    ) -> Self::State {
+    fn state(mut current: Self::State, arg: Self::Args, _fcinfo: pg_sys::FunctionCallInfo) -> Self::State {
         current += arg;
         current
     }
@@ -72,11 +68,7 @@ impl Aggregate for DemoUnique {
     type State = Internal;
     type Finalize = i32;
 
-    fn state(
-        mut current: Self::State,
-        arg: Self::Args,
-        _fcinfo: pg_sys::FunctionCallInfo,
-    ) -> Self::State {
+    fn state(mut current: Self::State, arg: Self::Args, _fcinfo: pg_sys::FunctionCallInfo) -> Self::State {
         let inner = unsafe { current.get_or_insert_default::<HashSet<String>>() };
 
         inner.insert(arg.to_string());
@@ -117,11 +109,7 @@ impl Aggregate for DemoPercentileDisc {
     const ORDERED_SET: bool = true;
     type OrderedSetArgs = name!(percentile, f64);
 
-    fn state(
-        mut current: Self::State,
-        arg: Self::Args,
-        _fcinfo: pg_sys::FunctionCallInfo,
-    ) -> Self::State {
+    fn state(mut current: Self::State, arg: Self::Args, _fcinfo: pg_sys::FunctionCallInfo) -> Self::State {
         let inner = unsafe { current.get_or_insert_default::<Vec<i32>>() };
 
         inner.push(arg);
@@ -151,9 +139,8 @@ mod tests {
 
     #[pg_test]
     fn aggregate_demo_sum() {
-        let retval =
-            Spi::get_one::<i32>("SELECT demo_sum(value) FROM UNNEST(ARRAY [1, 1, 2]) as value;")
-                .expect("SQL select failed");
+        let retval = Spi::get_one::<i32>("SELECT demo_sum(value) FROM UNNEST(ARRAY [1, 1, 2]) as value;")
+            .expect("SQL select failed");
         assert_eq!(retval, 4);
 
         // Moving-aggregate mode
@@ -172,10 +159,9 @@ mod tests {
 
     #[pg_test]
     fn aggregate_demo_unique() {
-        let retval = Spi::get_one::<i32>(
-            "SELECT DemoUnique(value) FROM UNNEST(ARRAY ['a', 'a', 'b']) as value;",
-        )
-        .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<i32>("SELECT DemoUnique(value) FROM UNNEST(ARRAY ['a', 'a', 'b']) as value;")
+                .expect("SQL select failed");
         assert_eq!(retval, 2);
     }
 

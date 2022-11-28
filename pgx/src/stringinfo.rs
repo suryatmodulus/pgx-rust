@@ -149,9 +149,7 @@ impl StringInfo {
     #[inline]
     pub fn push_raw(&mut self, ptr: void_mut_ptr, len: usize) {
         // safe:  self.sid will never be null
-        unsafe {
-            pg_sys::appendBinaryStringInfo(self.sid, ptr as *const std::os::raw::c_char, len as i32)
-        }
+        unsafe { pg_sys::appendBinaryStringInfo(self.sid, ptr as *const std::os::raw::c_char, len as i32) }
     }
 
     /// Reset the size of the `StringInfo` back to zero-length.  This does/// *not** free any

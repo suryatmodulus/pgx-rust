@@ -137,8 +137,7 @@ fn make_friendship(
     dog: pgx::composite_type!(DOG_COMPOSITE_TYPE),
     cat: pgx::composite_type!(CAT_COMPOSITE_TYPE),
 ) -> pgx::composite_type!(CAT_AND_DOG_FRIENDSHIP_COMPOSITE_TYPE) {
-    let mut friendship =
-        PgHeapTuple::new_composite_type(CAT_AND_DOG_FRIENDSHIP_COMPOSITE_TYPE).unwrap();
+    let mut friendship = PgHeapTuple::new_composite_type(CAT_AND_DOG_FRIENDSHIP_COMPOSITE_TYPE).unwrap();
     friendship.set_by_name("dog", dog).unwrap();
     friendship.set_by_name("cat", cat).unwrap();
     friendship
@@ -169,11 +168,7 @@ impl Aggregate for SumScritches {
     const INITIAL_CONDITION: Option<&'static str> = Some("0");
     type Args = pgx::name!(value, pgx::composite_type!("Dog"));
 
-    fn state(
-        current: Self::State,
-        arg: Self::Args,
-        _fcinfo: pg_sys::FunctionCallInfo,
-    ) -> Self::State {
+    fn state(current: Self::State, arg: Self::Args, _fcinfo: pg_sys::FunctionCallInfo) -> Self::State {
         let arg_scritches: i32 = arg
             .get_by_name("scritches")
             .unwrap() // Unwrap the result of the conversion
@@ -205,11 +200,7 @@ impl Aggregate for ScritchCollector {
     type State = Option<pgx::composite_type!("Dog")>;
     type Args = i32;
 
-    fn state(
-        current: Self::State,
-        arg: Self::Args,
-        _fcinfo: pg_sys::FunctionCallInfo,
-    ) -> Self::State {
+    fn state(current: Self::State, arg: Self::Args, _fcinfo: pg_sys::FunctionCallInfo) -> Self::State {
         let mut current = match current {
             Some(v) => v,
             None => PgHeapTuple::new_composite_type(DOG_COMPOSITE_TYPE).unwrap(),
@@ -241,10 +232,7 @@ CREATE OPERATOR + (
 */
 #[pg_operator]
 #[opname(+)]
-fn add_scritches_to_dog(
-    mut left: pgx::composite_type!("Dog"),
-    right: i32,
-) -> pgx::composite_type!("Dog") {
+fn add_scritches_to_dog(mut left: pgx::composite_type!("Dog"), right: i32) -> pgx::composite_type!("Dog") {
     let left_scritches: i32 = left.get_by_name("scritches").unwrap().unwrap_or_default();
     left.set_by_name("scritches", left_scritches + right).unwrap();
     left
@@ -306,8 +294,8 @@ mod tests {
 
     #[pg_test]
     fn test_dog_add_operator() {
-        let retval = Spi::get_one::<i32>("SELECT (ROW('Nami', 0)::Dog + 1).scritches;")
-            .expect("SQL select failed");
+        let retval =
+            Spi::get_one::<i32>("SELECT (ROW('Nami', 0)::Dog + 1).scritches;").expect("SQL select failed");
         assert_eq!(retval, 1);
     }
 }

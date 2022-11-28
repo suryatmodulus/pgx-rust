@@ -29,8 +29,8 @@ INSERT INTO spi_example (title) VALUES ('I like pudding');
 );
 
 #[pg_extern]
-fn spi_return_query(
-) -> TableIterator<'static, (name!(oid, Option<pg_sys::Oid>), name!(name, Option<String>))> {
+fn spi_return_query() -> TableIterator<'static, (name!(oid, Option<pg_sys::Oid>), name!(name, Option<String>))>
+{
     #[cfg(feature = "pg11")]
     let query = "SELECT oid, relname::text || '-pg11' FROM pg_class";
     #[cfg(feature = "pg12")]
@@ -99,9 +99,7 @@ fn spi_insert_title(title: &str) -> i64 {
 }
 
 #[pg_extern]
-fn spi_insert_title2(
-    title: &str,
-) -> TableIterator<(name!(id, Option<i64>), name!(title, Option<String>))> {
+fn spi_insert_title2(title: &str) -> TableIterator<(name!(id, Option<i64>), name!(title, Option<String>))> {
     let tuple = Spi::get_two_with_args(
         "INSERT INTO spi.spi_example(title) VALUES ($1) RETURNING id, title",
         vec![(PgBuiltInOids::TEXTOID.oid(), title.into_datum())],
@@ -132,8 +130,7 @@ mod tests {
 
     #[pg_test]
     fn test_spi_query_by_id_via_spi() {
-        let result =
-            Spi::get_one::<&str>("SELECT spi.spi_query_by_id(1)").expect("SPI result was NULL");
+        let result = Spi::get_one::<&str>("SELECT spi.spi_query_by_id(1)").expect("SPI result was NULL");
 
         assert_eq!("This is a test", result)
     }

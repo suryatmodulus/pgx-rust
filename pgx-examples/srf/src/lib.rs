@@ -28,8 +28,7 @@ fn vector_of_static_values() -> SetOfIterator<'static, &'static str> {
 }
 
 #[pg_extern]
-fn return_tuple(
-) -> TableIterator<'static, (name!(id, i32), name!(name, &'static str), name!(age, f64))> {
+fn return_tuple() -> TableIterator<'static, (name!(id, i32), name!(name, &'static str), name!(age, f64))> {
     TableIterator::once((1, "Brandy", 4.5))
 }
 

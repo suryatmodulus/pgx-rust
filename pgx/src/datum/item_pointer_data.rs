@@ -7,9 +7,7 @@ All rights reserved.
 Use of this source code is governed by the MIT license that can be found in the LICENSE file.
 */
 
-use crate::{
-    item_pointer_get_both, item_pointer_set_all, pg_sys, FromDatum, IntoDatum, PgMemoryContexts,
-};
+use crate::{item_pointer_get_both, item_pointer_set_all, pg_sys, FromDatum, IntoDatum, PgMemoryContexts};
 
 impl FromDatum for pg_sys::ItemPointerData {
     #[inline]
@@ -35,8 +33,7 @@ impl IntoDatum for pg_sys::ItemPointerData {
     #[inline]
     fn into_datum(self) -> Option<pg_sys::Datum> {
         let tid = self;
-        let tid_ptr =
-            PgMemoryContexts::CurrentMemoryContext.palloc_struct::<pg_sys::ItemPointerData>();
+        let tid_ptr = PgMemoryContexts::CurrentMemoryContext.palloc_struct::<pg_sys::ItemPointerData>();
         let (blockno, offno) = item_pointer_get_both(tid);
 
         item_pointer_set_all(unsafe { &mut *tid_ptr }, blockno, offno);

@@ -135,10 +135,10 @@ impl UsedType {
         let (resolved_ty, variadic, optional) = match resolved_ty {
             syn::Type::Path(type_path) => {
                 let path = &type_path.path;
-                let last_segment = path.segments.last().ok_or(syn::Error::new(
-                    path.span(),
-                    "No last segment found while scanning path",
-                ))?;
+                let last_segment = path
+                    .segments
+                    .last()
+                    .ok_or(syn::Error::new(path.span(), "No last segment found while scanning path"))?;
                 let ident_string = last_segment.ident.to_string();
                 match ident_string.as_str() {
                     "Option" => {
@@ -192,10 +192,12 @@ impl UsedType {
                                 }
                             }
                             // Option<T>
-                            _ => return Err(syn::Error::new(
-                                type_path.span().clone(),
-                                "Unexpected Item found inside `Option` (expected Angle Brackets)",
-                            )),
+                            _ => {
+                                return Err(syn::Error::new(
+                                    type_path.span().clone(),
+                                    "Unexpected Item found inside `Option` (expected Angle Brackets)",
+                                ))
+                            }
                         }
                     }
                     // VariadicArray<T>
@@ -260,9 +262,7 @@ pub struct UsedTypeEntity {
     pub metadata: FunctionMetadataTypeEntity,
 }
 
-fn resolve_vec_inner(
-    original: syn::TypePath,
-) -> syn::Result<(syn::Type, Option<CompositeTypeMacro>)> {
+fn resolve_vec_inner(original: syn::TypePath) -> syn::Result<(syn::Type, Option<CompositeTypeMacro>)> {
     let segments = &original.path;
     let last = segments
         .segments
@@ -290,10 +290,11 @@ fn resolve_vec_inner(
                     }
                 }
                 syn::Type::Path(arg_type_path) => {
-                    let last = arg_type_path.path.segments.last().ok_or(syn::Error::new(
-                        arg_type_path.span(),
-                        "No last segment in type path",
-                    ))?;
+                    let last = arg_type_path
+                        .path
+                        .segments
+                        .last()
+                        .ok_or(syn::Error::new(arg_type_path.span(), "No last segment in type path"))?;
                     match last.ident.to_string().as_str() {
                         "Option" => {
                             let (inner_ty, expr) = resolve_option_inner(arg_type_path)?;
@@ -352,10 +353,11 @@ fn resolve_variadic_array_inner(
                         }
                     }
                     syn::Type::Path(arg_type_path) => {
-                        let last = arg_type_path.path.segments.last().ok_or(syn::Error::new(
-                            arg_type_path.span(),
-                            "No last segment in type path",
-                        ))?;
+                        let last = arg_type_path
+                            .path
+                            .segments
+                            .last()
+                            .ok_or(syn::Error::new(arg_type_path.span(), "No last segment in type path"))?;
                         match last.ident.to_string().as_str() {
                             "Option" => {
                                 let (inner_ty, expr) = resolve_option_inner(arg_type_path)?;
@@ -376,9 +378,7 @@ fn resolve_variadic_array_inner(
     }
 }
 
-fn resolve_array_inner(
-    mut original: syn::TypePath,
-) -> syn::Result<(syn::Type, Option<CompositeTypeMacro>)> {
+fn resolve_array_inner(mut original: syn::TypePath) -> syn::Result<(syn::Type, Option<CompositeTypeMacro>)> {
     let original_span = original.span().clone();
     let last = original
         .path
@@ -414,10 +414,11 @@ fn resolve_array_inner(
                         }
                     }
                     syn::Type::Path(arg_type_path) => {
-                        let last = arg_type_path.path.segments.last().ok_or(syn::Error::new(
-                            arg_type_path.span(),
-                            "No last segment in type path",
-                        ))?;
+                        let last = arg_type_path
+                            .path
+                            .segments
+                            .last()
+                            .ok_or(syn::Error::new(arg_type_path.span(), "No last segment in type path"))?;
                         match last.ident.to_string().as_str() {
                             "Option" => {
                                 let (inner_ty, expr) = resolve_option_inner(arg_type_path)?;
@@ -438,9 +439,7 @@ fn resolve_array_inner(
     }
 }
 
-fn resolve_option_inner(
-    original: syn::TypePath,
-) -> syn::Result<(syn::Type, Option<CompositeTypeMacro>)> {
+fn resolve_option_inner(original: syn::TypePath) -> syn::Result<(syn::Type, Option<CompositeTypeMacro>)> {
     let segments = &original.path;
     let last = segments
         .segments
@@ -469,10 +468,11 @@ fn resolve_option_inner(
                         }
                     }
                     syn::Type::Path(arg_type_path) => {
-                        let last = arg_type_path.path.segments.last().ok_or(syn::Error::new(
-                            arg_type_path.span(),
-                            "No last segment in type path",
-                        ))?;
+                        let last = arg_type_path
+                            .path
+                            .segments
+                            .last()
+                            .ok_or(syn::Error::new(arg_type_path.span(), "No last segment in type path"))?;
                         match last.ident.to_string().as_str() {
                             // Option<Vec<composite_type!(..)>>
                             // Option<Vec<Option<composite_type!(..)>>>
@@ -560,20 +560,14 @@ fn handle_default_macro(mac: &syn::Macro) -> syn::Result<(syn::Type, Option<Stri
                 } else {
                     return Err(syn::Error::new(
                         Span::call_site(),
-                        format!(
-                            "Unable to parse default value of `default!()` macro, got: {:?}",
-                            out.expr
-                        ),
+                        format!("Unable to parse default value of `default!()` macro, got: {:?}", out.expr),
                     ));
                 }
             }
             _ => {
                 return Err(syn::Error::new(
                     Span::call_site(),
-                    format!(
-                        "Unable to parse default value of `default!()` macro, got: {:?}",
-                        out.expr
-                    ),
+                    format!("Unable to parse default value of `default!()` macro, got: {:?}", out.expr),
                 ))
             }
         },
@@ -585,10 +579,7 @@ fn handle_default_macro(mac: &syn::Macro) -> syn::Result<(syn::Type, Option<Stri
             } else {
                 return Err(syn::Error::new(
                     Span::call_site(),
-                    format!(
-                        "Unable to parse default value of `default!()` macro, got: {:?}",
-                        out.expr
-                    ),
+                    format!("Unable to parse default value of `default!()` macro, got: {:?}", out.expr),
                 ));
             }
         }

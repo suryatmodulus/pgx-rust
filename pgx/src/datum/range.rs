@@ -9,8 +9,7 @@ Use of this source code is governed by the MIT license that can be found in the 
 
 //! Utility functions for working with `pg_sys::RangeType` structs
 use crate::{
-    pg_sys, void_mut_ptr, AnyNumeric, Date, FromDatum, IntoDatum, Numeric, Timestamp,
-    TimestampWithTimeZone,
+    pg_sys, void_mut_ptr, AnyNumeric, Date, FromDatum, IntoDatum, Numeric, Timestamp, TimestampWithTimeZone,
 };
 use pgx_pg_sys::{Oid, RangeBound};
 use pgx_utils::sql_entity_graph::metadata::{
@@ -66,11 +65,7 @@ where
     /// function requires that
     /// - is_null is true OR datum represents a PG RangeType datum
     #[inline]
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        _: pg_sys::Oid,
-    ) -> Option<Self>
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, _: pg_sys::Oid) -> Option<Self>
     where
         Self: Sized,
     {
@@ -181,16 +176,13 @@ where
         lower_inc: bool,
         upper_inc: bool,
     ) -> Self {
-        let mut lower_bound =
-            RangeBound { lower: true, inclusive: lower_inc, ..Default::default() };
+        let mut lower_bound = RangeBound { lower: true, inclusive: lower_inc, ..Default::default() };
 
-        let mut upper_bound =
-            RangeBound { lower: false, inclusive: upper_inc, ..Default::default() };
+        let mut upper_bound = RangeBound { lower: false, inclusive: upper_inc, ..Default::default() };
 
         match lower_val {
             Some(lower_val) => {
-                lower_bound.val =
-                    lower_val.into_datum().expect("Couldn't convert lower_val to Datum");
+                lower_bound.val = lower_val.into_datum().expect("Couldn't convert lower_val to Datum");
             }
             None => {
                 lower_bound.infinite = true;
@@ -199,8 +191,7 @@ where
 
         match upper_val {
             Some(upper_val) => {
-                upper_bound.val =
-                    upper_val.into_datum().expect("Couldn't convert upper_val to Datum");
+                upper_bound.val = upper_val.into_datum().expect("Couldn't convert upper_val to Datum");
             }
             None => {
                 upper_bound.infinite = true;
@@ -261,12 +252,8 @@ where
             let mut upper_bound = range_data.upper;
 
             // PG will serialize these lower/upper RangeBounds to a *RangeType ptr/datum
-            let range_type = pg_sys::make_range(
-                typecache,
-                &mut lower_bound,
-                &mut upper_bound,
-                range_data.is_empty,
-            );
+            let range_type =
+                pg_sys::make_range(typecache, &mut lower_bound, &mut upper_bound, range_data.is_empty);
 
             // *RangeType into Datum
             range_type.into()

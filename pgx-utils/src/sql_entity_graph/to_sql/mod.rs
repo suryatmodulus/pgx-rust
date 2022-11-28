@@ -44,11 +44,10 @@ pub trait ToSql {
 ///
 /// Implementations can invoke `ToSql::to_sql(entity, context)` on the unwrapped SqlGraphEntity
 /// type should they wish to delegate to the default behavior for any reason.
-pub type ToSqlFn =
-    fn(
-        &SqlGraphEntity,
-        &PgxSql,
-    ) -> std::result::Result<String, Box<dyn std::error::Error + Send + Sync + 'static>>;
+pub type ToSqlFn = fn(
+    &SqlGraphEntity,
+    &PgxSql,
+) -> std::result::Result<String, Box<dyn std::error::Error + Send + Sync + 'static>>;
 
 /// A parsed `sql` option from a `pgx` related procedural macro.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -85,10 +84,7 @@ impl ToSqlConfig {
     /// Used for general purpose parsing from an attribute
     pub fn from_attribute(attr: &Attribute) -> Result<Option<Self>, syn::Error> {
         if attr.style != AttrStyle::Outer {
-            return Err(syn::Error::new(
-                attr.span(),
-                "#[pgx(sql = ..)] is only valid in an outer context",
-            ));
+            return Err(syn::Error::new(attr.span(), "#[pgx(sql = ..)] is only valid in an outer context"));
         }
 
         let attr = attr.parse_args::<PgxAttribute>()?;
@@ -110,11 +106,7 @@ impl ToSqlConfig {
                         return Ok(Some(Self { enabled: b.value, callback: None, content: None }));
                     }
                     ArgValue::Lit(Lit::Str(ref s)) => {
-                        return Ok(Some(Self {
-                            enabled: true,
-                            callback: None,
-                            content: Some(s.clone()),
-                        }));
+                        return Ok(Some(Self { enabled: true, callback: None, content: Some(s.clone()) }));
                     }
                     ArgValue::Lit(ref other) => {
                         return Err(syn::Error::new(other.span(), INVALID_ATTR_CONTENT));

@@ -165,15 +165,8 @@ impl PgxSql {
         let mapped_schemas = initialize_schemas(&mut graph, bootstrap, finalize, schemas)?;
         let mapped_enums = initialize_enums(&mut graph, root, bootstrap, finalize, enums)?;
         let mapped_types = initialize_types(&mut graph, root, bootstrap, finalize, types)?;
-        let (mapped_externs, mut mapped_builtin_types) = initialize_externs(
-            &mut graph,
-            root,
-            bootstrap,
-            finalize,
-            externs,
-            &mapped_types,
-            &mapped_enums,
-        )?;
+        let (mapped_externs, mut mapped_builtin_types) =
+            initialize_externs(&mut graph, root, bootstrap, finalize, externs, &mapped_types, &mapped_enums)?;
         let mapped_ords = initialize_ords(&mut graph, root, bootstrap, finalize, ords)?;
         let mapped_hashes = initialize_hashes(&mut graph, root, bootstrap, finalize, hashes)?;
         let mapped_aggregates = initialize_aggregates(
@@ -425,9 +418,7 @@ impl PgxSql {
     }
 
     pub fn schema_prefix_for(&self, target: &NodeIndex) -> String {
-        self.schema_alias_of(target)
-            .map(|v| (v + ".").to_string())
-            .unwrap_or_else(|| "".to_string())
+        self.schema_alias_of(target).map(|v| (v + ".").to_string()).unwrap_or_else(|| "".to_string())
     }
 
     #[instrument(level = "error", skip(self))]
@@ -577,9 +568,7 @@ pub fn find_positioning_ref_target<'a>(
                 }
             }
             for (other, other_index) in externs {
-                if *last_segment == other.unaliased_name
-                    && other.module_path.ends_with(&module_path)
-                {
+                if *last_segment == other.unaliased_name && other.module_path.ends_with(&module_path) {
                     return Some(&other_index);
                 }
             }
@@ -590,8 +579,7 @@ pub fn find_positioning_ref_target<'a>(
             }
 
             for (other, other_index) in triggers {
-                if last_segment == &other.function_name && other.module_path.ends_with(&module_path)
-                {
+                if last_segment == &other.function_name && other.module_path.ends_with(&module_path) {
                     return Some(&other_index);
                 }
             }
@@ -717,14 +705,7 @@ fn connect_enums(
     schemas: &HashMap<SchemaEntity, NodeIndex>,
 ) {
     for (item, &index) in enums {
-        make_schema_connection(
-            graph,
-            "Enum",
-            index,
-            &item.rust_identifier(),
-            item.module_path,
-            schemas,
-        );
+        make_schema_connection(graph, "Enum", index, &item.rust_identifier(), item.module_path, schemas);
     }
 }
 
@@ -753,14 +734,7 @@ fn connect_types(
     schemas: &HashMap<SchemaEntity, NodeIndex>,
 ) {
     for (item, &index) in types {
-        make_schema_connection(
-            graph,
-            "Type",
-            index,
-            &item.rust_identifier(),
-            item.module_path,
-            schemas,
-        );
+        make_schema_connection(graph, "Type", index, &item.rust_identifier(), item.module_path, schemas);
     }
 }
 
@@ -797,13 +771,9 @@ fn initialize_externs(
                 }
             }
             if !found {
-                mapped_builtin_types.entry(arg.used_ty.full_path.to_string()).or_insert_with(
-                    || {
-                        graph.add_node(SqlGraphEntity::BuiltinType(
-                            arg.used_ty.full_path.to_string(),
-                        ))
-                    },
-                );
+                mapped_builtin_types.entry(arg.used_ty.full_path.to_string()).or_insert_with(|| {
+                    graph.add_node(SqlGraphEntity::BuiltinType(arg.used_ty.full_path.to_string()))
+                });
             }
         }
 
@@ -830,9 +800,7 @@ fn initialize_externs(
                 }
             }
             PgExternReturnEntity::Iterated { tys: iterated_returns, optional: _ } => {
-                for PgExternReturnEntityIteratedItem { ty: return_ty_entity, .. } in
-                    iterated_returns
-                {
+                for PgExternReturnEntityIteratedItem { ty: return_ty_entity, .. } in iterated_returns {
                     let mut found = false;
                     for (ty_item, &_ty_index) in mapped_types {
                         if ty_item.id_matches(&return_ty_entity.ty_id) {
@@ -847,13 +815,13 @@ fn initialize_externs(
                         }
                     }
                     if !found {
-                        mapped_builtin_types
-                            .entry(return_ty_entity.ty_source.to_string())
-                            .or_insert_with(|| {
+                        mapped_builtin_types.entry(return_ty_entity.ty_source.to_string()).or_insert_with(
+                            || {
                                 graph.add_node(SqlGraphEntity::BuiltinType(
                                     return_ty_entity.ty_source.to_string(),
                                 ))
-                            });
+                            },
+                        );
                     }
                 }
             }
@@ -905,7 +873,9 @@ fn connect_externs(
                         }
                     }
                     if !found_schema_declaration {
-                        return Err(eyre!("Got manual `schema = \"{declared_schema_name}\"` setting, but that schema did not exist."));
+                        return Err(eyre!(
+                            "Got manual `schema = \"{declared_schema_name}\"` setting, but that schema did not exist."
+                        ));
                     }
                 }
                 _ => (),
@@ -925,8 +895,7 @@ fn connect_externs(
 
         // The hash function must be defined after the {typename}_eq function.
         for (hash_item, &hash_index) in hashes {
-            if item.module_path == hash_item.module_path
-                && item.name == hash_item.name.to_lowercase() + "_eq"
+            if item.module_path == hash_item.module_path && item.name == hash_item.name.to_lowercase() + "_eq"
             {
                 tracing::debug!(from = hash_item.full_path, to = ?item.full_path, "Adding Hash after Extern edge");
                 graph.add_edge(index, hash_index, SqlGraphRelationship::RequiredBy);
@@ -963,14 +932,14 @@ fn connect_externs(
             }
             if !found {
                 for (ext_item, ext_index) in extension_sqls {
-                    if let Some(_) = ext_item.has_sql_declared_entity(&SqlDeclared::Type(
-                        arg.used_ty.full_path.to_string(),
-                    )) {
+                    if let Some(_) = ext_item
+                        .has_sql_declared_entity(&SqlDeclared::Type(arg.used_ty.full_path.to_string()))
+                    {
                         tracing::debug!(from = %item.rust_identifier(), to = %arg.rust_identifier(), "Adding Extern(arg) after Extension SQL (due to argument) edge");
                         graph.add_edge(*ext_index, index, SqlGraphRelationship::RequiredByArg);
-                    } else if let Some(_) = ext_item.has_sql_declared_entity(&SqlDeclared::Enum(
-                        arg.used_ty.full_path.to_string(),
-                    )) {
+                    } else if let Some(_) = ext_item
+                        .has_sql_declared_entity(&SqlDeclared::Enum(arg.used_ty.full_path.to_string()))
+                    {
                         tracing::debug!(from = %item.rust_identifier(), to = %arg.rust_identifier(), "Adding Extern(arg) after Extension SQL (due to argument) edge");
                         graph.add_edge(*ext_index, index, SqlGraphRelationship::RequiredByArg);
                     }
@@ -1008,13 +977,13 @@ fn connect_externs(
                 }
                 if !found {
                     for (ext_item, ext_index) in extension_sqls {
-                        if let Some(_) = ext_item
-                            .has_sql_declared_entity(&SqlDeclared::Type(ty.full_path.to_string()))
+                        if let Some(_) =
+                            ext_item.has_sql_declared_entity(&SqlDeclared::Type(ty.full_path.to_string()))
                         {
                             tracing::debug!(from = %item.rust_identifier(), to = ty.full_path, "Adding Extern(arg) after Extension SQL (due to argument) edge");
                             graph.add_edge(*ext_index, index, SqlGraphRelationship::RequiredByArg);
-                        } else if let Some(_) = ext_item
-                            .has_sql_declared_entity(&SqlDeclared::Enum(ty.full_path.to_string()))
+                        } else if let Some(_) =
+                            ext_item.has_sql_declared_entity(&SqlDeclared::Enum(ty.full_path.to_string()))
                         {
                             tracing::debug!(from = %item.rust_identifier(), to = ty.full_path, "Adding Extern(arg) after Extension SQL (due to argument) edge");
                             graph.add_edge(*ext_index, index, SqlGraphRelationship::RequiredByArg);
@@ -1037,28 +1006,18 @@ fn connect_externs(
                         for (ty_item, &ty_index) in enums {
                             if ty_item.id_matches(&type_entity.ty_id) {
                                 tracing::debug!(from = %item.rust_identifier(), to = %ty_item.rust_identifier(), "Adding Extern after Enum (due to return) edge");
-                                graph.add_edge(
-                                    ty_index,
-                                    index,
-                                    SqlGraphRelationship::RequiredByReturn,
-                                );
+                                graph.add_edge(ty_index, index, SqlGraphRelationship::RequiredByReturn);
                                 found = true;
                                 break;
                             }
                         }
                     }
                     if !found {
-                        let builtin_index =
-                            builtin_types.get(&type_entity.ty_source.to_string()).expect(&format!(
-                                "Could not fetch Builtin Type {}.",
-                                type_entity.ty_source,
-                            ));
+                        let builtin_index = builtin_types
+                            .get(&type_entity.ty_source.to_string())
+                            .expect(&format!("Could not fetch Builtin Type {}.", type_entity.ty_source,));
                         tracing::debug!(from = %item.rust_identifier(), to = type_entity.ty_source, "Adding Extern after BuiltIn Type (due to return) edge");
-                        graph.add_edge(
-                            *builtin_index,
-                            index,
-                            SqlGraphRelationship::RequiredByReturn,
-                        );
+                        graph.add_edge(*builtin_index, index, SqlGraphRelationship::RequiredByReturn);
                     }
                     if !found {
                         for (ext_item, ext_index) in extension_sqls {
@@ -1066,20 +1025,12 @@ fn connect_externs(
                                 type_entity.ty_source.to_string(),
                             )) {
                                 tracing::debug!(from = %item.rust_identifier(), to = %ext_item.rust_identifier(), "Adding Extern(arg) after Extension SQL (due to argument) edge");
-                                graph.add_edge(
-                                    *ext_index,
-                                    index,
-                                    SqlGraphRelationship::RequiredByArg,
-                                );
-                            } else if let Some(_) = ext_item.has_sql_declared_entity(
-                                &SqlDeclared::Enum(type_entity.ty_source.to_string()),
-                            ) {
+                                graph.add_edge(*ext_index, index, SqlGraphRelationship::RequiredByArg);
+                            } else if let Some(_) = ext_item.has_sql_declared_entity(&SqlDeclared::Enum(
+                                type_entity.ty_source.to_string(),
+                            )) {
                                 tracing::debug!(from = %item.rust_identifier(), to = %ext_item.rust_identifier(), "Adding Extern(arg) after Extension SQL (due to argument) edge");
-                                graph.add_edge(
-                                    *ext_index,
-                                    index,
-                                    SqlGraphRelationship::RequiredByArg,
-                                );
+                                graph.add_edge(*ext_index, index, SqlGraphRelationship::RequiredByArg);
                             }
                         }
                     }
@@ -1118,24 +1069,9 @@ fn connect_ords(
     externs: &HashMap<PgExternEntity, NodeIndex>,
 ) {
     for (item, &index) in ords {
-        make_schema_connection(
-            graph,
-            "Ord",
-            index,
-            &item.rust_identifier(),
-            item.module_path,
-            schemas,
-        );
+        make_schema_connection(graph, "Ord", index, &item.rust_identifier(), item.module_path, schemas);
 
-        make_type_or_enum_connection(
-            graph,
-            "Ord",
-            index,
-            &item.rust_identifier(),
-            &item.id,
-            types,
-            enums,
-        );
+        make_type_or_enum_connection(graph, "Ord", index, &item.rust_identifier(), &item.id, types, enums);
 
         // Make PostgresOrdEntities (which will be translated into `CREATE OPERATOR CLASS` statements) depend
         // on the operators which they will reference. For example, a pgx-defined Postgres type `parakeet`
@@ -1144,9 +1080,8 @@ fn connect_ords(
         // < operator (along with all the others) is emitted before the `OPERATOR CLASS` itself.
 
         for (extern_item, &extern_index) in externs {
-            let fn_matches = |fn_name| {
-                item.module_path == extern_item.module_path && extern_item.name == fn_name
-            };
+            let fn_matches =
+                |fn_name| item.module_path == extern_item.module_path && extern_item.name == fn_name;
             let cmp_fn_matches = fn_matches(item.cmp_fn_name());
             let lt_fn_matches = fn_matches(item.lt_fn_name());
             let lte_fn_matches = fn_matches(item.le_fn_name());
@@ -1195,24 +1130,9 @@ fn connect_hashes(
     externs: &HashMap<PgExternEntity, NodeIndex>,
 ) {
     for (item, &index) in hashes {
-        make_schema_connection(
-            graph,
-            "Hash",
-            index,
-            &item.rust_identifier(),
-            item.module_path,
-            schemas,
-        );
+        make_schema_connection(graph, "Hash", index, &item.rust_identifier(), item.module_path, schemas);
 
-        make_type_or_enum_connection(
-            graph,
-            "Hash",
-            index,
-            &item.rust_identifier(),
-            &item.id,
-            types,
-            enums,
-        );
+        make_type_or_enum_connection(graph, "Hash", index, &item.rust_identifier(), &item.id, types, enums);
 
         for (extern_item, &extern_index) in externs {
             let hash_fn_name = item.fn_name();
@@ -1259,13 +1179,9 @@ fn initialize_aggregates(
                 }
             }
             if !found {
-                mapped_builtin_types.entry(arg.used_ty.full_path.to_string()).or_insert_with(
-                    || {
-                        graph.add_node(SqlGraphEntity::BuiltinType(
-                            arg.used_ty.full_path.to_string(),
-                        ))
-                    },
-                );
+                mapped_builtin_types.entry(arg.used_ty.full_path.to_string()).or_insert_with(|| {
+                    graph.add_node(SqlGraphEntity::BuiltinType(arg.used_ty.full_path.to_string()))
+                });
             }
         }
 
@@ -1286,14 +1202,7 @@ fn connect_aggregate(
     builtin_types: &HashMap<String, NodeIndex>,
     externs: &HashMap<PgExternEntity, NodeIndex>,
 ) -> eyre::Result<()> {
-    make_schema_connection(
-        graph,
-        "Aggregate",
-        index,
-        &item.rust_identifier(),
-        item.module_path,
-        schemas,
-    );
+    make_schema_connection(graph, "Aggregate", index, &item.rust_identifier(), item.module_path, schemas);
 
     make_type_or_enum_connection(
         graph,
@@ -1496,14 +1405,7 @@ fn connect_triggers(
     schemas: &HashMap<SchemaEntity, NodeIndex>,
 ) {
     for (item, &index) in triggers {
-        make_schema_connection(
-            graph,
-            "Trigger",
-            index,
-            &item.rust_identifier(),
-            item.module_path,
-            schemas,
-        );
+        make_schema_connection(graph, "Trigger", index, &item.rust_identifier(), item.module_path, schemas);
     }
 }
 

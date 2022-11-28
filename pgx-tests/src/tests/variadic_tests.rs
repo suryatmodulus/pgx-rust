@@ -28,10 +28,9 @@ mod tests {
 
     #[pg_test]
     fn test_func_with_variadic_array_args() {
-        let result = Spi::get_one::<String>(
-            "SELECT test.func_with_variadic_array_args('test', 'a', 'b', 'c');",
-        )
-        .expect("didn't get SPI result");
+        let result =
+            Spi::get_one::<String>("SELECT test.func_with_variadic_array_args('test', 'a', 'b', 'c');")
+                .expect("didn't get SPI result");
         assert_eq!(result, String::from("a"));
     }
 }

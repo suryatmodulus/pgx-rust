@@ -52,9 +52,8 @@ impl CommandExecute for Install {
         let metadata = crate::metadata::metadata(&self.features, self.manifest_path.as_ref())
             .wrap_err("couldn't get cargo metadata")?;
         crate::metadata::validate(&metadata)?;
-        let package_manifest_path =
-            crate::manifest::manifest_path(&metadata, self.package.as_ref())
-                .wrap_err("Couldn't get manifest path")?;
+        let package_manifest_path = crate::manifest::manifest_path(&metadata, self.package.as_ref())
+            .wrap_err("Couldn't get manifest path")?;
         let package_manifest =
             Manifest::from_path(&package_manifest_path).wrap_err("Couldn't parse manifest")?;
 
@@ -65,8 +64,7 @@ impl CommandExecute for Install {
         let pg_version = format!("pg{}", pg_config.major_version()?);
         let profile = CargoProfile::from_flags(self.release, self.profile.as_deref())?;
 
-        let features =
-            crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
+        let features = crate::manifest::features_for_version(self.features, &package_manifest, &pg_version);
 
         install_extension(
             self.manifest_path.as_ref(),
@@ -99,8 +97,7 @@ pub(crate) fn install_extension(
     features: &clap_cargo::Features,
 ) -> eyre::Result<()> {
     let base_directory = base_directory.unwrap_or("/".into());
-    tracing::Span::current()
-        .record("base_directory", &tracing::field::display(&base_directory.display()));
+    tracing::Span::current().record("base_directory", &tracing::field::display(&base_directory.display()));
 
     let manifest = Manifest::from_path(&package_manifest_path)?;
     let (control_file, extname) = find_control_file(&package_manifest_path)?;
@@ -119,8 +116,7 @@ pub(crate) fn install_extension(
     let build_command_bytes = build_command_output.stdout;
     let build_command_reader = BufReader::new(build_command_bytes.as_slice());
     let build_command_stream = cargo_metadata::Message::parse_stream(build_command_reader);
-    let build_command_messages =
-        build_command_stream.collect::<Result<Vec<_>, std::io::Error>>()?;
+    let build_command_messages = build_command_stream.collect::<Result<Vec<_>, std::io::Error>>()?;
 
     println!("{} extension", "  Installing".bold().green(),);
     let pkgdir = make_relative(pg_config.pkglibdir()?);
@@ -155,9 +151,8 @@ pub(crate) fn install_extension(
             // issue highlighted by the following apple documentation:
             // https://developer.apple.com/documentation/security/updating_mac_software
             if dest.exists() {
-                std::fs::remove_file(&dest).wrap_err_with(|| {
-                    format!("unable to remove existing file {}", dest.display())
-                })?;
+                std::fs::remove_file(&dest)
+                    .wrap_err_with(|| format!("unable to remove existing file {}", dest.display()))?;
             }
         }
         copy_file(&shlibpath, &dest, "shared library", false, &package_manifest_path)?;
@@ -197,17 +192,15 @@ fn copy_file(
 
     if do_filter {
         // we want to filter the contents of the file we're to copy
-        let input = std::fs::read_to_string(&src)
-            .wrap_err_with(|| format!("failed to read `{}`", src.display()))?;
+        let input =
+            std::fs::read_to_string(&src).wrap_err_with(|| format!("failed to read `{}`", src.display()))?;
         let input = filter_contents(package_manifest_path, input)?;
 
-        std::fs::write(&dest, &input).wrap_err_with(|| {
-            format!("failed writing `{}` to `{}`", src.display(), dest.display())
-        })?;
+        std::fs::write(&dest, &input)
+            .wrap_err_with(|| format!("failed writing `{}` to `{}`", src.display(), dest.display()))?;
     } else {
-        std::fs::copy(&src, &dest).wrap_err_with(|| {
-            format!("failed copying `{}` to `{}`", src.display(), dest.display())
-        })?;
+        std::fs::copy(&src, &dest)
+            .wrap_err_with(|| format!("failed copying `{}` to `{}`", src.display(), dest.display()))?;
     }
 
     Ok(())
@@ -370,8 +363,7 @@ pub(crate) fn find_library_file(
             | _ => (),
         }
     }
-    let library_file =
-        library_file.ok_or(eyre!("Could not get shared object file from Cargo output."))?;
+    let library_file = library_file.ok_or(eyre!("Could not get shared object file from Cargo output."))?;
     let library_file_path = PathBuf::from(library_file);
 
     Ok(library_file_path)
@@ -423,11 +415,7 @@ fn make_relative(path: PathBuf) -> PathBuf {
 
 pub(crate) fn format_display_path(path: impl AsRef<Path>) -> eyre::Result<String> {
     let path = path.as_ref();
-    let out = path
-        .strip_prefix(get_target_dir()?.parent().unwrap())
-        .unwrap_or(&path)
-        .display()
-        .to_string();
+    let out = path.strip_prefix(get_target_dir()?.parent().unwrap()).unwrap_or(&path).display().to_string();
     Ok(out)
 }
 

@@ -61,10 +61,7 @@ impl std::fmt::Display for ReturnsError {
                 write!(f, "Cannot use bare u8")
             }
             ReturnsError::Datum => {
-                write!(
-                    f,
-                    "A Datum as a return means that `sql = \"...\"` must be set in the declaration"
-                )
+                write!(f, "A Datum as a return means that `sql = \"...\"` must be set in the declaration")
             }
         }
     }

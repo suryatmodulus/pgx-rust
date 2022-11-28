@@ -46,11 +46,7 @@ fn validate_extension_name(extname: &str) -> eyre::Result<()> {
 }
 
 #[tracing::instrument(skip_all, fields(path, name))]
-pub(crate) fn create_crate_template(
-    path: PathBuf,
-    name: &str,
-    is_bgworker: bool,
-) -> eyre::Result<()> {
+pub(crate) fn create_crate_template(path: PathBuf, name: &str, is_bgworker: bool) -> eyre::Result<()> {
     create_directory_structure(&path)?;
     create_control_file(&path, name)?;
     create_cargo_toml(&path, name)?;
@@ -118,9 +114,7 @@ fn create_lib_rs(path: &PathBuf, name: &str, is_bgworker: bool) -> Result<(), st
     let mut file = std::fs::File::create(filename)?;
 
     if is_bgworker {
-        file.write_all(
-            &format!(include_str!("../templates/bgworker_lib_rs"), name = name).as_bytes(),
-        )?;
+        file.write_all(&format!(include_str!("../templates/bgworker_lib_rs"), name = name).as_bytes())?;
     } else {
         file.write_all(&format!(include_str!("../templates/lib_rs"), name = name).as_bytes())?;
     }

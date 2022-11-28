@@ -98,10 +98,7 @@ impl<'a, T> PgLwLockInner<T> {
     fn new(name: &'static str, data: *mut T) -> Self {
         unsafe {
             let lock = std::ffi::CString::new(name).expect("CString::new failed");
-            PgLwLockInner {
-                lock_ptr: &mut (*pg_sys::GetNamedLWLockTranche(lock.as_ptr())).lock,
-                data,
-            }
+            PgLwLockInner { lock_ptr: &mut (*pg_sys::GetNamedLWLockTranche(lock.as_ptr())).lock, data }
         }
     }
 

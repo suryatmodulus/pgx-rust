@@ -39,11 +39,7 @@ impl IntoDatum for AnyNumeric {
 
 impl<const P: u32, const S: u32> FromDatum for Numeric<P, S> {
     #[inline]
-    unsafe fn from_polymorphic_datum(
-        datum: pg_sys::Datum,
-        is_null: bool,
-        typoid: pg_sys::Oid,
-    ) -> Option<Self>
+    unsafe fn from_polymorphic_datum(datum: pg_sys::Datum, is_null: bool, typoid: pg_sys::Oid) -> Option<Self>
     where
         Self: Sized,
     {

@@ -223,9 +223,7 @@ impl<'a, T: FromDatum> Array<'a, T> {
         }
         match (self.elem_layout.size_matches::<T>(), self.raw.as_ref()) {
             // SAFETY: Rust slice layout matches Postgres data layout and this array is "owned"
-            (Some(1 | 2 | 4 | DATUM_SIZE), Some(raw)) => unsafe {
-                raw.assume_init_data_slice::<T>()
-            },
+            (Some(1 | 2 | 4 | DATUM_SIZE), Some(raw)) => unsafe { raw.assume_init_data_slice::<T>() },
             (_, _) => panic!("no correctly-sized slice exists"),
         }
     }
@@ -467,8 +465,7 @@ impl<'a, T: FromDatum> FromDatum for Array<'a, T> {
         } else {
             let ptr = NonNull::new(datum.cast_mut_ptr())?;
             let array = pg_sys::pg_detoast_datum(datum.cast_mut_ptr()) as *mut pg_sys::ArrayType;
-            let raw =
-                RawArray::from_ptr(NonNull::new(array).expect("detoast returned null ArrayType*"));
+            let raw = RawArray::from_ptr(NonNull::new(array).expect("detoast returned null ArrayType*"));
             let oid = raw.oid();
             let layout = Layout::lookup_oid(oid);
 
@@ -525,11 +522,7 @@ where
 {
     fn into_datum(self) -> Option<pg_sys::Datum> {
         let mut state = unsafe {
-            pg_sys::initArrayResult(
-                T::type_oid(),
-                PgMemoryContexts::CurrentMemoryContext.value(),
-                false,
-            )
+            pg_sys::initArrayResult(T::type_oid(), PgMemoryContexts::CurrentMemoryContext.value(), false)
         };
         for s in self {
             let datum = s.into_datum();
@@ -550,9 +543,7 @@ where
             // shoudln't happen
             None
         } else {
-            Some(unsafe {
-                pg_sys::makeArrayResult(state, PgMemoryContexts::CurrentMemoryContext.value())
-            })
+            Some(unsafe { pg_sys::makeArrayResult(state, PgMemoryContexts::CurrentMemoryContext.value()) })
         }
     }
 
@@ -572,11 +563,7 @@ where
 {
     fn into_datum(self) -> Option<pg_sys::Datum> {
         let mut state = unsafe {
-            pg_sys::initArrayResult(
-                T::type_oid(),
-                PgMemoryContexts::CurrentMemoryContext.value(),
-                false,
-            )
+            pg_sys::initArrayResult(T::type_oid(), PgMemoryContexts::CurrentMemoryContext.value(), false)
         };
         for s in self {
             let datum = s.into_datum();
@@ -597,9 +584,7 @@ where
             // shoudln't happen
             None
         } else {
-            Some(unsafe {
-                pg_sys::makeArrayResult(state, PgMemoryContexts::CurrentMemoryContext.value())
-            })
+            Some(unsafe { pg_sys::makeArrayResult(state, PgMemoryContexts::CurrentMemoryContext.value()) })
         }
     }
 
@@ -628,9 +613,7 @@ where
 
     fn return_sql() -> Result<Returns, ReturnsError> {
         match T::return_sql()? {
-            Returns::One(SqlMapping::As(sql)) => {
-                Ok(Returns::One(SqlMapping::As(format!("{sql}[]"))))
-            }
+            Returns::One(SqlMapping::As(sql)) => Ok(Returns::One(SqlMapping::As(format!("{sql}[]")))),
             Returns::One(SqlMapping::Composite { array_brackets: _ }) => {
                 Ok(Returns::One(SqlMapping::Composite { array_brackets: true }))
             }
@@ -659,9 +642,7 @@ where
 
     fn return_sql() -> Result<Returns, ReturnsError> {
         match T::return_sql()? {
-            Returns::One(SqlMapping::As(sql)) => {
-                Ok(Returns::One(SqlMapping::As(format!("{sql}[]"))))
-            }
+            Returns::One(SqlMapping::As(sql)) => Ok(Returns::One(SqlMapping::As(format!("{sql}[]")))),
             Returns::One(SqlMapping::Composite { array_brackets: _ }) => {
                 Ok(Returns::One(SqlMapping::Composite { array_brackets: true }))
             }

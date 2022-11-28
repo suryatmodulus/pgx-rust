@@ -50,10 +50,7 @@ fn init_active_thread(tid: NonZeroUsize) {
 #[inline(never)]
 #[track_caller]
 fn thread_id_check_failed() -> ! {
-    panic!(
-        "{}:  postgres FFI may not not be called from multiple threads.",
-        std::panic::Location::caller()
-    );
+    panic!("{}:  postgres FFI may not not be called from multiple threads.", std::panic::Location::caller());
 }
 
 fn nonzero_thread_id() -> NonZeroUsize {

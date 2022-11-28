@@ -48,11 +48,7 @@ impl ToSqlConfigEntity {
     /// ```rust,ignore
     /// config.to_sql(entity, context).unwrap_or_else(|| entity.to_sql(context))?
     /// ```
-    pub fn to_sql(
-        &self,
-        entity: &SqlGraphEntity,
-        context: &PgxSql,
-    ) -> Option<eyre::Result<String>> {
+    pub fn to_sql(&self, entity: &SqlGraphEntity, context: &PgxSql) -> Option<eyre::Result<String>> {
         use eyre::{eyre, WrapErr};
 
         if !self.enabled {

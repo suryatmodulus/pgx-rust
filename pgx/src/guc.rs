@@ -68,11 +68,7 @@ pub struct GucSetting<T> {
 
 impl<T> GucSetting<T> {
     pub const fn new(value: T) -> Self {
-        GucSetting {
-            value: Cell::new(value),
-            char_p: Cell::new(std::ptr::null_mut()),
-            enum_o: Cell::new(0),
-        }
+        GucSetting { value: Cell::new(value), char_p: Cell::new(std::ptr::null_mut()), enum_o: Cell::new(0) }
     }
 }
 

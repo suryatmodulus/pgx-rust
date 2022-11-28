@@ -55,9 +55,7 @@ impl Layout {
     pub(crate) fn size_matches<T>(&self) -> Option<usize> {
         const DATUM_SIZE: usize = mem::size_of::<pg_sys::Datum>();
         match (self.pass, mem::size_of::<T>(), self.size.try_as_usize()) {
-            (PassBy::Value, rs @ (1 | 2 | 4 | 8), Some(pg @ (1 | 2 | 4 | 8))) if rs == pg => {
-                Some(rs)
-            }
+            (PassBy::Value, rs @ (1 | 2 | 4 | 8), Some(pg @ (1 | 2 | 4 | 8))) if rs == pg => Some(rs),
             (PassBy::Value, _, _) => None,
             (PassBy::Ref, DATUM_SIZE, _) => Some(DATUM_SIZE),
             (PassBy::Ref, _, _) => None,

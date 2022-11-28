@@ -71,10 +71,7 @@ impl ControlFile {
         Ok(ControlFile {
             comment: temp
                 .get("comment")
-                .ok_or(ControlFileError::MissingField {
-                    field: "comment",
-                    context: SpanTrace::capture(),
-                })?
+                .ok_or(ControlFileError::MissingField { field: "comment", context: SpanTrace::capture() })?
                 .to_string(),
             default_version: temp
                 .get("default_version")
